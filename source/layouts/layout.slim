@@ -1,0 +1,16 @@
+doctype html
+html
+  head
+    meta charset="utf-8"
+    title "Route 477"
+
+    == stylesheet_link_tag "normalize", "all"
+    == javascript_include_tag  "all"
+
+  body class="#{page_classes}"
+    h1
+      == link_to "w.route477.net", "/"
+
+    #content
+      == yield
+
