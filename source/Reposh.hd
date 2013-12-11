@@ -1,0 +1,39 @@
+svnやgit等を、サブコマンドだけで使えるようにするシェルです。
+
+{{toc_here}}
+
+!インストール
+ gem install reposh
+
+!使い方
+reposh[Enter] で起動。
+ディレクトリ構成から自動的にsvn/git/hg等を判定します。
+
+<<<
+c:\proj\_3svk>reposh
+Welcome to reposh 0.1.0 (mode: svk)
+svk >
+M   todo.hd
+svk > di todo.hd
+=== todo.hd
+==================================================================
+--- todo.hd     (revision 602)
++++ todo.hd     (local)
+@@ -376,7 +376,40 @@
+   (<item> <item> <item> . (another template))
+   #(<item> <item> <item>)
+   ((<item> ...) (<item> <item> ...))
++!! 11.19 Macro transformers
+(中略)
+svk >
+c:\proj\_3svk>
+>>>
+「di」や「ci」などと打つと、それをsvk等のコマンドに渡して実行します。
+空Enterで「st」を実行します(設定で変更可)。
+
+終了は exit か quit か ^D(^Z) で。
+
+あと「:ls」のようにコロンから始めると、通常のシェルのコマンドを実行できます。
+
+!リポジトリ
+* https://github.com/yhara/reposh

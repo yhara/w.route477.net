@@ -1,0 +1,87 @@
+http://www.sinatrarb.com/
+
+!! まずはここから
+http://www.sinatrarb.com/intro.html
+
+* Hello World
+* ルーティング (get, post, put, delete)
+* 静的ファイル (./public)
+* ビューとテンプレート (./views/index.erb, template :layout, template :foo)
+* ヘルパー (helper)
+* フィルタ (before)
+* 停止 (halt)
+* 別のルーティングの使用 (pass)
+* 設定 (configure)
+* エラー処理 (not_found, error)
+* MIMEタイプ (mime)
+* Rackミドルウェア (use)
+* テスト (Sinatra::Test)
+* コマンドライン (-h)
+* 開発版の使用
+
+
+!! もっと詳しく (The Sinatra Book)
+http://www.sinatrarb.com/book.html
+
+* [[はじめに|http://www.sinatrarb.com/book.html#introduction]]
+** [[Sinatraについて|http://www.sinatrarb.com/book.html#what_is_sinatra]]
+** [[インストール|http://www.sinatrarb.com/book.html#installation]]
+** [[Hello World|http://www.sinatrarb.com/book.html#hello_world_application]]
+** [[利用例|http://www.sinatrarb.com/book.html#real_world_applications_in_sinatra]]
+*** こっちも参照： http://www.sinatrarb.com/wild.html
+* [[ルーティング|http://www.sinatrarb.com/book.html#routes]]
+** [[基本|http://www.sinatrarb.com/book.html#basic]]
+** [[パターンマッチ|http://www.sinatrarb.com/book.html#splats]]
+** [[User Agent|http://www.sinatrarb.com/book.html#user_agent]]
+** [[PUTとDELETEについて|http://www.sinatrarb.com/book.html#the_put_and_delete_methods]]
+** [[複数ファイルに分ける|http://www.sinatrarb.com/book.html#splitting_into_multiple_files]]
+* [[ハンドラ|http://www.sinatrarb.com/book.html#handlers]] (コントローラ部分についてのその他)
+** [[リダイレクト|http://www.sinatrarb.com/book.html#redirect]]
+** [[セッション|http://www.sinatrarb.com/book.html#sessions]]
+** [[クッキー|http://www.sinatrarb.com/book.html#cookies]]
+** [[ステータスコード|http://www.sinatrarb.com/book.html#status]]
+* [[フィルタ|http://www.sinatrarb.com/book.html#filters]] (Beforeフィルタ)
+* [[ビュー|http://www.sinatrarb.com/book.html#views]]
+** [[テンプレートエンジン|http://www.sinatrarb.com/book.html#template_languages]] (Haml, Sass, erb, Builder)
+** [[レイアウト|http://www.sinatrarb.com/book.html#layouts]]
+** [[ファイル内ビュー|http://www.sinatrarb.com/book.html#in_file_views]]
+* [[モデル|http://www.sinatrarb.com/book.html#models]]
+** [[Datamapperを使う|http://www.sinatrarb.com/book.html#datamapper]]
+** [[Sequelを使う|http://www.sinatrarb.com/book.html#sequel]]
+** [[ActiveRecordを使う|http://www.sinatrarb.com/book.html#activerecord]]
+* [[ヘルパー|http://www.sinatrarb.com/book.html#helpers]]
+* [[Rackのミドルウェア|http://www.sinatrarb.com/book.html#rack_middleware]]
+* [[エラー処理|http://www.sinatrarb.com/book.html#error_handling]]
+* 設定
+** http://www.sinatrarb.com/configuration.html
+* [[デプロイ|http://www.sinatrarb.com/book.html#deployment]]
+
+* ユニットテスト
+** http://www.sinatrarb.com/testing.html
+* プラグイン(Extension)を書く
+** http://www.sinatrarb.com/extensions.html
+
+!! FAQ(Tips)
+* [[セッションを使いたい|http://www.sinatrarb.com/faq.html#sessions]]
+* [[Railsのflashを使いたい|http://www.sinatrarb.com/faq.html#flash]]
+* [[アクセスされたURLを知りたい|http://www.sinatrarb.com/faq.html#path_info]]
+* [[partialなビューを扱いたい|http://www.sinatrarb.com/faq.html#partials]]
+* [[複数のURLに同じ挙動を割り当てたい|http://www.sinatrarb.com/faq.html#multiroute]]
+* [[URL末尾のスラッシュを無視したい|http://www.sinatrarb.com/faq.html#slash]]
+* [[テンプレートをサブディレクトリに分けたい|http://www.sinatrarb.com/faq.html#subdir]]
+* [[Thin使ってるとエラーが表示されない|http://www.sinatrarb.com/faq.html#thindebug]]
+* [[メールを送信したい|http://www.sinatrarb.com/faq.html#email]]
+* [[HTMLタグをエスケープしたい(h)|http://www.sinatrarb.com/faq.html#escape_html]]
+* [[ActiveRecordのマイグレーションを使いたい|http://www.sinatrarb.com/faq.html#ar-migrations]]
+* [[HTTPのBasic認証を使いたい|http://www.sinatrarb.com/faq.html#auth]]
+* [[HTTPのBasic認証をテストしたい|http://www.sinatrarb.com/faq.html#test_http_auth]]
+
+!! リンク
+
+* [[公式サイト|http://www.sinatrarb.com/]]
+** [[rdoc|http://www.sinatrarb.com/api/index.html]]
+** [[github|http://github.com/sinatra/sinatra/tree/master]]
+* [[バグトラッカー|https://sinatra.lighthouseapp.com/projects/9779-sinatra/overview]]
+* [[メーリングリスト|http://groups.google.com/group/sinatrarb]]
+* [[twitter|http://twitter.com/sinatra]]
+* IRC: #sinatra on freenode.net

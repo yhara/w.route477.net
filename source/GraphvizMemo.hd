@@ -1,0 +1,39 @@
+Graphvizに関するメモです。
+
+! Graphvizとは
+グラフを描くためのツールです(グラフ理論的な意味で)(折れ線グラフ的でない意味で)
+
+http://www.graphviz.org/
+
+! 使い方
+# dotファイルを書く(テキスト)
+# dot -Tpng x.dot -o x.png
+とか。
+
+! dotファイルの例
+<<<
+digraph G{
+  "foo" -> "bar";
+  "bar" -> "baz";
+}
+>>>
+
+* より詳しくは： http://homepage3.nifty.com/kaku-chan/graphviz/index.html
+
+! レイアウトエンジン
+dotコマンドの実行時に -Kneato とかを付けることで、グラフの並べ方を変更できます
+
+:-Kdot:スタンダードな奴。木構造とかに向いてる。横幅が長くなる弱点あり
+:-Kneato:
+:-Ktwopi:
+:-Kcirco:
+:-Kfdp:
+
+! Tips
+!! 横幅が長くなりすぎる
+解決策A: -Kneato
+
+解決策B: 横にしてみる
+  digraph G{
+    graph[rankdir=RL];
+    ...

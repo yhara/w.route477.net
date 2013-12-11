@@ -1,0 +1,11 @@
+!!!html
+
+dp.SyntaxHighlighter.HighlightAll("code");
+
+!!!shCore : dp.SyntaxHighlighter.HighlightAll
+registered[alias] = brush;
+
+highlighter = new Brushes.Hoge();  < dp.sh.Highlighter()
+highlighter.Highlight;
+
+!!!shCore : dp.sh.Highlighter.prototype.Highlight = function(code)

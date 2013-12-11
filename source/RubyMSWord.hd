@@ -1,0 +1,89 @@
+RubyからWordにアクセスしたい。
+
+! WIN32OLEを使う
+WIN32OLEについては、るびまのcuzicさんの記事 (もしくは、書籍 "Ruby on Windows") を参照のこと。
+* http://jp.rubyist.net/magazine/?0003-Win32OLE
+
+WIN32OLE経由でWordに接続すれば、理論上Wordでできることは何でもできる…らしい。
+
+Wordマクロ(VBA)とAPIは同じなので、VBAの資料が参考になることもあるらしい
+
+! Hello, world!
+* http://beyond.cocolog-nifty.com/akutoku/2005/03/rubyword.html
+
+<<<
+# coding: utf-8
+
+require 'win32ole'
+
+word = WIN32OLE.new( 'Word.Application' )
+word.Visible = true
+doc = word.Documents.Add()
+para1 = doc.Content.Paragraphs.Add
+para1.Range.Text = "Hello, world!"
+>>>
+
+実行するとWordが起動し、新規ファイルが作成されて文字が入力される。
+
+! ヘルプを見る
+Word 2007の場合
+# 左上のWordボタン(?)→Wordのオプション→「開発」タブをリボンに表示する
+# 開発タブ左端の「Visual Basic」を押す
+# ヘルプ→MS VB ヘルプ→Word 2007 開発者用リファレンス
+
+ここにWordのオブジェクト一覧と、いくつかの例(「概念」の項)が載っている
+
+! 注意事項
+:大文字小文字は区別されない:word.ActiveDocumentは、word.activedocumentと書いても同じ。まあ大文字にしておいた方が、OLE関係のメソッドであるのが分かって良いと思う。
+
+! Wordのオブジェクト
+
+!! Application
+ word = WIN32OLE.new('Word.Application')
+
+!! Document (ドキュメント)
+新規作成
+ doc = word.Documents.Add
+
+アクティブなドキュメント
+ doc = word.ActiveDocument
+
+2個目(どういう順?)のドキュメント
+ doc = word.Documents(2)
+
+ファイルを開く
+ doc = word.Documents.Open :FileName => 'c:/Users/yhara/Documents/a.docx'
+
+WordにはDocumentとDocumentsという2種類の別のクラスがあるので注意 (前者は個々のドキュメント、後者は開いている全てのドキュメントを指す)
+
+see also:「概念」の「Documentオブジェクトを使用する」
+
+!! Selection (選択範囲)
+アクティブな選択範囲
+ sele = word.Selection
+
+see also:「概念」の「Selectionオブジェクトを使用する」
+
+!! Paragraph (段落)
+Word文書は段落の集まりである。行末に付く灰色の曲がり矢印が、段落の終わりのマークらしい。
+
+段落を追加する
+ para1 = doc.Content.Paragraphs.Add
+
+段落全体を表すRangeを取得する
+ para1.Range
+
+
+!! Range (範囲)
+Word文書の一部を操作したいときに使うオブジェクト。選択範囲は各ウィンドウ枠ごとに1つしか定義できないが、
+Rangeはいくつでも作れる。
+
+長さ0のRangeを作ることで、文書内の特定の位置を指すこともあるとか？
+
+範囲内を太字にする
+  range.Bold = true
+
+範囲の直前に文字を追加する
+  range.InsertBefore "foo"
+
+see also:「概念」の「Rangeオブジェクトを使用する」

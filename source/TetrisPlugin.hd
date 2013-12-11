@@ -1,0 +1,75 @@
+tDiary及びHiki上において、テトリスのフィールド図を簡単に作成するためのプラグインです。
+
+! 記法
+例えば
+<<<
+{{tetris "
+■　　　　　　　　　　■
+■　　　　　紫　　　　■
+■赤　緑　水紫紫　青　■
+■赤緑緑　水水紫　青　■
+■赤緑□□水橙橙青青　■
+■赤□□□□□橙黄黄　■
+■□□□□□□橙黄黄　■
+■■■■■■■■■■■■
+"}}
+
+{{tetris "
+○○○　○水○　○○○　○水○
+水水水　水水○　○水○　○水水
+○水○　○水○　水水水　○水○
+"}}
+>>>
+
+のように書くと、下のような図を生成します。
+
+{{tetris "
+■　　　　　　　　　　■
+■　　　　　紫　　　　■
+■赤　緑　水紫紫　青　■
+■赤緑緑　水水紫　青　■
+■赤緑□□水橙橙青青　■
+■赤□□□□□橙黄黄　■
+■□□□□□□橙黄黄　■
+■■■■■■■■■■■■
+"}}
+
+{{tetris "
+○○○　○水○　○○○　○水○
+水水水　水水○　○水○　○水水
+○水○　○水○　水水水　○水○
+"}}
+
+赤、青、黄、緑、橙、紫、水が各ブロックに対応しています。■は壁、□は任意のブロックです。
+
+○は、「何もない空間」を表現したいときに使います。
+
+! インストール
+[[tetris.rb|:../files/tetris.rb]]をダウンロードし、インストールしてください。
+
+色つけのために、テーマファイルに以下のようなものを記述する必要があります。
+<<<
+div.tetris{
+  line-height:100%;
+}
+span.tetris_red{    color:#d30; }
+span.tetris_blue{   color:#05e; }
+span.tetris_green{  color:#0d0; }
+span.tetris_yellow{ color:#dd0; }
+span.tetris_purple{ color:#d0e; }
+span.tetris_orange{ color:#d93; }
+span.tetris_cyan{   color:#0dd; }
+span.tetris_wall{   color:#333; }
+span.tetris_block{  color:#000; }
+span.tetris_empty{  color:#aaa; }
+>>>
+
+! 注意
+tDiaryでWikiスタイルを使っている場合、プラグインに複数行の引数を渡すためには
+新しいtDiaryがインストールされている必要があります。CVS HEADからインストールするか、
+開発版の2.1.3以降をインストールした上でtdiary/wiki_style.rbを
+[[Revision 1.15|http://cvs.sourceforge.net/viewcvs.py/tdiary/core/tdiary/wiki_style.rb?rev=1.15&view=log]]
+以降のものに差し替えて下さい。
+
+また、「何で今さらテトリス？」と思った方は[[アリカ|http://www.arika.co.jp/]]の「ムービーダウンロード」
+からTGMのムービーをダウンロードしてください。:-)

@@ -1,0 +1,58 @@
+CSSフレームワーク「Kube」のソースを読みます。
+
+Kubeを選んだ理由は、サイトデザインが気に入ったからです。
+
+{{toc_here}}
+
+! Kube
+* http://kubeframework.com/
+
+! ソース
+* [[ダウンロード(LESS版、zipファイル)|http://kubeframework.com/webdownload/kube/getdeveloper/]]
+
+!! メイン (kube.less)
+各lessファイルをimportしているだけ。
+
+!! 変数定義 (variables.less)
+@baseFontSize, @colorLinkなど。
+
+!! 共通 (mixins.less)
+.box-shadow, .border-radiusなど：-webkit, -mozなどブラウザ互換対策。
+
+!! 初期化 (base.less)
+* margin, padding等を0にしている
+* tableでcollapseをデフォルトにしている
+など。
+
+!! Typography (typo.less)
+* bodyを白地に黒文字にしている
+* bodyの文字サイズを @baseFontSize / 16 * 1em にしている
+など。
+
+!! Grid (grid.less, blocks.less)
+* .row, .half, .thirdなど。
+* gridとblockの違いがよくわからない
+** gridはdiv-divで、blockはul-li
+
+!!! responsive.less
+モバイルなどブラウザの幅が一定値より狭いとき、gridやblockを上下に並べる。
+
+  @media only screen and (max-width: 767px) {
+のようにして、767px以下の時だけ適用されるスタイルを書いている模様。
+
+.row .halfや.row .thirdなどを全部width: 100%にしている。
+
+formも狭い画面に合わせて微調整するみたい。
+
+!! Forms (forms.less)
+* .forms, table.tableformsなど。
+
+!! Tables (tables.less)
+table.simple, table.bordered, table.stripedなど。
+
+!! Goodies (goodies.less)
+* p.lead: 文字を大きめにする
+* .black, .gray, .red (.error), .green (.success) など。
+
+!! Buttons (buttons.less)
+* .btn, .btn-smallなど。

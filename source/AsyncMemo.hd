@@ -1,0 +1,53 @@
+メモです
+
+! 非同期プログラミングとは
+ネットワークとか、データベースへのアクセスとか、大きなファイルの読み書きを行うような場合、単純に
+  data = read();
+  write(data);
+ってやると、read()にすごい時間かかったときに他の作業が止まってしまって困りますよね。
+
+んでスレッド使って並列化してもいいんだけど、同期とかデッドロックとかが面倒。
+
+そんなときに
+ read(function(data){
+   write(data);
+ });
+みたいなAPIを用意するのが非同期プログラミング。
+
+だと思っている
+
+! 非同期処理のためのライブラリ
+
+* Ruby - eventmachine, cool.io(旧称rev)
+* PerlとかPythonとか - よく知らない
+* node.js - 本体組み込み
+
+! 非同期形式APIの問題点
+
+!! コールバック地獄
+ネストが深すぎて目が壊れる
+
+対策：
+* [[2010-09-26 - Node.js 用の非同期処理を簡単にしてくれるライブラリ async.js - 日記|http://d.hatena.ne.jp/koichik/20100926#1285502400]]
+* https://github.com/fjakobs/async.js
+
+!! 一箇所でもブロックすると他が止まってしまう
+たとえばスレッド使う場合は10秒かかる重たいメソッドとか書いてもちゃんと適当に並列実行してくれますが、非同期APIの世界は基本的にメソッドの途中で処理をちぎったりしないので
+そういうことをすると他の処理が全部止まる。
+
+対策：
+* たとえばEventMachineでキーボードからの入力を扱いたい場合はEM.open_keyboardを使う
+
+!  library
+
+!! Goliath
+
+* http://postrank-labs.github.com/goliath/
+* http://www.igvita.com/2011/03/08/goliath-non-blocking-ruby-19-web-server/
+
+uses Fiber to cope with callback hell
+
+!! Fastr
+
+* https://github.com/chrismoos/fastr
+* http://chrismoos.com/2010/06/08/fastr-ruby-web-framework/

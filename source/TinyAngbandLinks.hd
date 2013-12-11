@@ -1,0 +1,11 @@
+TinyAngbandのリンク集のようなもの。
+
+:スポイラーWiki:http://yahny.tm.land.to/wiki/index.php?FrontPage
+:自動抽出スポイラー(敵・アイテム一覧):http://banko.my.land.to/spo/index.html
+
+:おすすめ組み合わせ:http://d.hatena.ne.jp/dis-c/20090301/1235880413
+:必要能力の目安:http://d.hatena.ne.jp/dis-c/20090228/1235792766
+
+:公式:http://xangband.sourceforge.jp/tiny/
+
+自前コンパイルは svn co http://svn.sourceforge.jp/svnroot/xangband/TinyAngband/trunk tinyangband-svn

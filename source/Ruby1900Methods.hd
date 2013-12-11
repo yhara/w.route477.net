@@ -1,0 +1,476 @@
+2008-01-02 23:14:22 +0900
+! class Array 
+!! public class methods
+* try_convert (1.9.0-0 only)
+!! public instance methods
+* choice (1.9.0-0 only)
+* combination (1.9.0-0 only)
+* cycle (1.9.0-0 only)
+* indexes (1.8.6-p111 only)
+* indices (1.8.6-p111 only)
+* permutation (1.9.0-0 only)
+* product (1.9.0-0 only)
+* shuffle (1.9.0-0 only)
+* shuffle! (1.9.0-0 only)
+* zip (1.8.6-p111 only)
+! class BasicObject (1.9.0-0 only)
+!! public instance methods
+* ==
+* equal?
+* !
+* !=
+* __send__
+!! private instance methods
+* initialize
+* singleton_method_added
+* singleton_method_removed
+* singleton_method_undefined
+* method_missing
+!! constants
+* BasicObject
+! class Bignum 
+!! public instance methods
+* even? (1.9.0-0 only)
+* fdiv (1.9.0-0 only)
+* odd? (1.9.0-0 only)
+! class Binding 
+!! public instance methods
+* eval (1.9.0-0 only)
+! class Continuation (1.8.6-p111 only)
+!! public instance methods
+* []
+* call
+! class Dir 
+!! public class methods
+* exist? (1.9.0-0 only)
+* exists? (1.9.0-0 only)
+!! public instance methods
+* inspect (1.9.0-0 only)
+! class Encoding (1.9.0-0 only)
+!! public instance methods
+* to_s
+* inspect
+* name
+* based_encoding
+* dummy?
+* _dump
+!! public class methods
+* list
+* find
+* compatible?
+* _load
+* default_external
+* locale_charmap
+!! constants
+* ASCII_8BIT
+* EUC_JP
+* Shift_JIS
+* SHIFT_JIS
+* UTF_8
+* ISO_2022_JP
+* ASCII
+* BINARY
+* EucJP
+* EUCJP
+* SJIS
+! class Enumerable 
+!! public instance methods
+* count (1.9.0-0 only)
+* cycle (1.9.0-0 only)
+* drop (1.9.0-0 only)
+* drop_while (1.9.0-0 only)
+* each_cons (1.9.0-0 only)
+* each_slice (1.9.0-0 only)
+* find_index (1.9.0-0 only)
+* first (1.9.0-0 only)
+* group_by (1.9.0-0 only)
+* max_by (1.9.0-0 only)
+* min_by (1.9.0-0 only)
+* minmax (1.9.0-0 only)
+* minmax_by (1.9.0-0 only)
+* none? (1.9.0-0 only)
+* one? (1.9.0-0 only)
+* reduce (1.9.0-0 only)
+* take (1.9.0-0 only)
+* take_while (1.9.0-0 only)
+!! constants
+* Enumerator (1.9.0-0 only)
+! class Enumerable::Enumerator (1.9.0-0 only)
+!! public instance methods
+* each
+* with_index
+* next
+* rewind
+!! private instance methods
+* initialize
+* initialize_copy
+! class Errno 
+!! constants
+* NOERROR (1.9.0-0 only)
+! class Errno::NOERROR (1.9.0-0 only)
+!! public class methods
+* exception
+! class Exception 
+!! public instance methods
+* == (1.9.0-0 only)
+* to_str (1.8.6-p111 only)
+! class Fiber (1.9.0-0 only)
+!! public instance methods
+* resume
+!! public class methods
+* yield
+! class FiberError (1.9.0-0 only)
+!! public class methods
+* exception
+! class File 
+!! public class methods
+* path (1.9.0-0 only)
+* try_convert (1.9.0-0 only)
+* world_readable? (1.9.0-0 only)
+* world_writable? (1.9.0-0 only)
+!! public instance methods
+* to_path (1.9.0-0 only)
+! class File::Constants 
+!! constants
+* BINARY (1.9.0-0 only)
+! class File::Stat 
+!! public instance methods
+* world_readable? (1.9.0-0 only)
+* world_writable? (1.9.0-0 only)
+! class FileTest 
+!! public class methods
+* world_readable? (1.9.0-0 only)
+* world_writable? (1.9.0-0 only)
+!! private instance methods
+* world_readable? (1.9.0-0 only)
+* world_writable? (1.9.0-0 only)
+! class Fixnum 
+!! public instance methods
+* even? (1.9.0-0 only)
+* fdiv (1.9.0-0 only)
+* odd? (1.9.0-0 only)
+* succ (1.9.0-0 only)
+! class GC 
+!! public class methods
+* stress (1.9.0-0 only)
+* stress= (1.9.0-0 only)
+! class Gem (1.9.0-0 only)
+!! public class methods
+* default_dir
+* dir
+* path
+* set_home
+* set_paths
+* ensure_gem_subdirectories
+* push_gem_version_on_load_path
+* calculate_integers_for_gem_version
+* push_all_highest_version_gems_on_load_path
+* method_missing
+!! constants
+* Enable
+* ConfigMap
+* QuickLoader
+! class Gem::QuickLoader (1.9.0-0 only)
+!! public instance methods
+* push_gem_version_on_load_path
+* calculate_integers_for_gem_version
+* push_all_highest_version_gems_on_load_path
+* const_missing
+* method_missing
+!! public class methods
+* load_full_rubygems_library
+!! constants
+* GemPaths
+* GemVersions
+! class Hash 
+!! public class methods
+* try_convert (1.9.0-0 only)
+!! public instance methods
+* assoc (1.9.0-0 only)
+* compare_by_identity (1.9.0-0 only)
+* compare_by_identity? (1.9.0-0 only)
+* eql? (1.9.0-0 only)
+* flatten (1.9.0-0 only)
+* hash (1.9.0-0 only)
+* indexes (1.8.6-p111 only)
+* indices (1.8.6-p111 only)
+* key (1.9.0-0 only)
+* rassoc (1.9.0-0 only)
+* sort (1.8.6-p111 only)
+! class IO 
+!! public class methods
+* try_convert (1.9.0-0 only)
+!! public instance methods
+* bytes (1.9.0-0 only)
+* close_on_exec= (1.9.0-0 only)
+* close_on_exec? (1.9.0-0 only)
+* external_encoding (1.9.0-0 only)
+* getbyte (1.9.0-0 only)
+* internal_encoding (1.9.0-0 only)
+* lines (1.9.0-0 only)
+* readbyte (1.9.0-0 only)
+* set_encoding (1.9.0-0 only)
+! class Integer 
+!! public instance methods
+* even? (1.9.0-0 only)
+* odd? (1.9.0-0 only)
+* pred (1.9.0-0 only)
+! class Kernel 
+!! public class methods
+* __callee__ (1.9.0-0 only)
+* __method__ (1.9.0-0 only)
+* callcc (1.8.6-p111 only)
+* chomp (1.8.6-p111 only)
+* chomp! (1.8.6-p111 only)
+* chop (1.8.6-p111 only)
+* chop! (1.8.6-p111 only)
+* getc (1.8.6-p111 only)
+* gsub (1.8.6-p111 only)
+* gsub! (1.8.6-p111 only)
+* method_missing (1.8.6-p111 only)
+* scan (1.8.6-p111 only)
+* spawn (1.9.0-0 only)
+* split (1.8.6-p111 only)
+* sub (1.8.6-p111 only)
+* sub! (1.8.6-p111 only)
+!! public instance methods
+* !~ (1.9.0-0 only)
+* == (1.8.6-p111 only)
+* __send__ (1.8.6-p111 only)
+* define_singleton_method (1.9.0-0 only)
+* enum_for (1.9.0-0 only)
+* equal? (1.8.6-p111 only)
+* gem (1.9.0-0 only)
+* id (1.8.6-p111 only)
+* instance_exec (1.9.0-0 only)
+* public_method (1.9.0-0 only)
+* public_send (1.9.0-0 only)
+* tap (1.9.0-0 only)
+* to_a (1.8.6-p111 only)
+* to_enum (1.9.0-0 only)
+* type (1.8.6-p111 only)
+!! private instance methods
+* __callee__ (1.9.0-0 only)
+* __method__ (1.9.0-0 only)
+* callcc (1.8.6-p111 only)
+* chomp (1.8.6-p111 only)
+* chomp! (1.8.6-p111 only)
+* chop (1.8.6-p111 only)
+* chop! (1.8.6-p111 only)
+* getc (1.8.6-p111 only)
+* gsub (1.8.6-p111 only)
+* gsub! (1.8.6-p111 only)
+* method_missing (1.8.6-p111 only)
+* scan (1.8.6-p111 only)
+* singleton_method_added (1.8.6-p111 only)
+* singleton_method_removed (1.8.6-p111 only)
+* singleton_method_undefined (1.8.6-p111 only)
+* spawn (1.9.0-0 only)
+* split (1.8.6-p111 only)
+* sub (1.8.6-p111 only)
+* sub! (1.8.6-p111 only)
+! class KeyError (1.9.0-0 only)
+!! public class methods
+* exception
+! class MatchData 
+!! public instance methods
+* names (1.9.0-0 only)
+* regexp (1.9.0-0 only)
+! class Math 
+!! public class methods
+* log2 (1.9.0-0 only)
+!! private instance methods
+* log2 (1.9.0-0 only)
+! class Method 
+!! public instance methods
+* eql? (1.9.0-0 only)
+* hash (1.9.0-0 only)
+* name (1.9.0-0 only)
+* owner (1.9.0-0 only)
+* receiver (1.9.0-0 only)
+! class Module 
+!! public instance methods
+* class_exec (1.9.0-0 only)
+* class_variable_get (1.9.0-0 only)
+* class_variable_set (1.9.0-0 only)
+* module_exec (1.9.0-0 only)
+* public_instance_method (1.9.0-0 only)
+* remove_class_variable (1.9.0-0 only)
+!! private instance methods
+* class_variable_get (1.8.6-p111 only)
+* class_variable_set (1.8.6-p111 only)
+* remove_class_variable (1.8.6-p111 only)
+! class Mutex (1.9.0-0 only)
+!! public instance methods
+* locked?
+* try_lock
+* lock
+* unlock
+* sleep
+* synchronize
+!! private instance methods
+* initialize
+! class NameError::message 
+!! public class methods
+* ! (1.8.6-p111 only)
+!! public instance methods
+* == (1.9.0-0 only)
+! class Numeric 
+!! public instance methods
+* fdiv (1.9.0-0 only)
+* scalar? (1.9.0-0 only)
+! class Object 
+!! private instance methods
+* initialize (1.8.6-p111 only)
+!! constants
+* Continuation (1.8.6-p111 only)
+* Encoding (1.9.0-0 only)
+* Fiber (1.9.0-0 only)
+* FiberError (1.9.0-0 only)
+* Gem (1.9.0-0 only)
+* KeyError (1.9.0-0 only)
+* MatchingData (1.8.6-p111 only)
+* Mutex (1.9.0-0 only)
+* PLATFORM (1.8.6-p111 only)
+* RELEASE_DATE (1.8.6-p111 only)
+* RUBY_COPYRIGHT (1.9.0-0 only)
+* RUBY_DESCRIPTION (1.9.0-0 only)
+* RUBY_REVISION (1.9.0-0 only)
+* StopIteration (1.9.0-0 only)
+* VERSION (1.8.6-p111 only)
+* VM (1.9.0-0 only)
+! class ObjectSpace 
+!! public class methods
+* count_objects (1.9.0-0 only)
+!! private instance methods
+* count_objects (1.9.0-0 only)
+! class Proc 
+!! public instance methods
+* eql? (1.9.0-0 only)
+* hash (1.9.0-0 only)
+* lambda? (1.9.0-0 only)
+* yield (1.9.0-0 only)
+! class Process 
+!! public class methods
+* daemon (1.9.0-0 only)
+* exec (1.9.0-0 only)
+* spawn (1.9.0-0 only)
+!! private instance methods
+* daemon (1.9.0-0 only)
+! class Range 
+!! public instance methods
+* cover? (1.9.0-0 only)
+* max (1.9.0-0 only)
+* min (1.9.0-0 only)
+! class Regexp 
+!! public class methods
+* try_convert (1.9.0-0 only)
+!! public instance methods
+* encoding (1.9.0-0 only)
+* fixed_encoding? (1.9.0-0 only)
+* kcode (1.8.6-p111 only)
+* named_captures (1.9.0-0 only)
+* names (1.9.0-0 only)
+! class StopIteration (1.9.0-0 only)
+!! public class methods
+* exception
+! class String 
+!! public class methods
+* try_convert (1.9.0-0 only)
+!! public instance methods
+* ascii_only? (1.9.0-0 only)
+* bytes (1.9.0-0 only)
+* bytesize (1.9.0-0 only)
+* chr (1.9.0-0 only)
+* clear (1.9.0-0 only)
+* each (1.8.6-p111 only)
+* each_char (1.9.0-0 only)
+* encode (1.9.0-0 only)
+* encode! (1.9.0-0 only)
+* encoding (1.9.0-0 only)
+* end_with? (1.9.0-0 only)
+* force_encoding (1.9.0-0 only)
+* lines (1.9.0-0 only)
+* ord (1.9.0-0 only)
+* partition (1.9.0-0 only)
+* rpartition (1.9.0-0 only)
+* start_with? (1.9.0-0 only)
+* valid_encoding? (1.9.0-0 only)
+! class Symbol 
+!! public instance methods
+* <=> (1.9.0-0 only)
+* == (1.9.0-0 only)
+* =~ (1.9.0-0 only)
+* [] (1.9.0-0 only)
+* capitalize (1.9.0-0 only)
+* casecmp (1.9.0-0 only)
+* downcase (1.9.0-0 only)
+* empty? (1.9.0-0 only)
+* encoding (1.9.0-0 only)
+* intern (1.9.0-0 only)
+* length (1.9.0-0 only)
+* match (1.9.0-0 only)
+* next (1.9.0-0 only)
+* size (1.9.0-0 only)
+* slice (1.9.0-0 only)
+* succ (1.9.0-0 only)
+* swapcase (1.9.0-0 only)
+* to_int (1.8.6-p111 only)
+* to_proc (1.9.0-0 only)
+* upcase (1.9.0-0 only)
+! class Thread 
+!! public class methods
+* critical (1.8.6-p111 only)
+* critical= (1.8.6-p111 only)
+* exclusive (1.9.0-0 only)
+!! public instance methods
+* add_trace_func (1.9.0-0 only)
+* exit! (1.8.6-p111 only)
+* kill! (1.8.6-p111 only)
+* set_trace_func (1.9.0-0 only)
+* terminate! (1.8.6-p111 only)
+!! constants
+* MUTEX_FOR_THREAD_EXCLUSIVE (1.9.0-0 only)
+! class Time 
+!! public class methods
+* times (1.8.6-p111 only)
+!! public instance methods
+* friday? (1.9.0-0 only)
+* monday? (1.9.0-0 only)
+* nsec (1.9.0-0 only)
+* saturday? (1.9.0-0 only)
+* sunday? (1.9.0-0 only)
+* thursday? (1.9.0-0 only)
+* tuesday? (1.9.0-0 only)
+* tv_nsec (1.9.0-0 only)
+* wednesday? (1.9.0-0 only)
+! class UnboundMethod 
+!! public instance methods
+* eql? (1.9.0-0 only)
+* hash (1.9.0-0 only)
+* name (1.9.0-0 only)
+* owner (1.9.0-0 only)
+! class VM (1.9.0-0 only)
+!! constants
+* Env
+* USAGE_ANALYSIS_INSN
+* USAGE_ANALYSIS_REGS
+* USAGE_ANALYSIS_INSN_BIGRAM
+* OPTS
+* INSTRUCTION_NAMES
+* InstructionSequence
+! class VM::Env (1.9.0-0 only)
+! class VM::InstructionSequence (1.9.0-0 only)
+!! public instance methods
+* inspect
+* disasm
+* disassemble
+* to_a
+* eval
+!! public class methods
+* compile
+* compile_file
+* compile_option
+* compile_option=
+* disasm
+* disassemble

@@ -1,0 +1,121 @@
+まじで書きかけなんですが俺の検索用にうｐする。
+
+ 注：以下の記述は書きかけです。間違ってても知りませんよ。
+
+まず、組み込みクラスであるFiberの方から。これらのメソッドはrequireなしで呼べます。
+
+<<<
+= class Fiber < Object
+ノンプリエンティブな軽量スレッドのためのクラスです。
+
+== Class Methods
+
+--- new{|data| ...} -> Fiber
+与えられたブロックを実行する新しい軽量スレッドを作り、それを返します。
+この時点ではブロック内のコードはまだ実行されず、Fiber#resumeなどが呼ばれたときに初めて実行されます。
+
+Fiber#resumeの引数などがdataを通じて渡されます。
+
+--- yield(*args) -> ()
+現在の軽量スレッドの実行を中断し、実行元の軽量スレッドに処理を戻します。
+
+@param args  軽量スレッドに渡す値です。省略可能です。
+
+== Instance Methods
+
+--- resume(*args) -> ()
+軽量スレッドの実行を開始/再開します。
+軽量スレッドの実行が終了するか例外が発生した場合、現在の軽量スレッドに処理が戻ってきます。
+
+@param args  軽量スレッドに渡す値です。省略可能です。
+
+@raise FiberError 軽量スレッドが死んでいた(既に実行を終了していた)場合に発生します。
+>>>
+
+次に、require 'fiber' することで呼べるようになるメソッド。
+
+<<<
+= library Fiber
+== Class Methods
+
+--- current -> Fiber
+現在実行中の軽量スレッドを返します。
+
+== Instance Methods
+
+--- transfer(*args) -> ()
+軽量スレッドの実行を開始/再開します。Fiber#resume と違い、軽量スレッドの終了時や
+例外発生時にroot fiberに処理が戻ります。
+
+このメソッドはcallccと同じくらい危険であるため、自己責任で使用してください。
+
+@param args  軽量スレッドに渡す値です。省略可能です。
+
+--- alive? -> boolean
+軽量スレッドが生きているか(実行の途中かどうか)を返します。
+
+ a = Fiber.new{}   # => #<Fiber:0xc47494>
+ a.alive?          # => true
+ a.resume          # => nil
+ a.alive?          # => false
+>>>
+
+= class Fiber < Object
+
+ノンプリエンティブな軽量スレッドのためのクラスです。
+
+== Class Methods
+
+--- new{|data| ...} -> Fiber
+
+与えられたブロックを実行する新しい軽量スレッドを作り、それを返します。
+この時点では、ブロック内のコードはまだ実行されません。
+
+Fiber#resumeの引数などがdataを通じて渡されます。
+
+--- yield(*args) -> ()
+
+現在の軽量スレッドの実行を中断し、実行元の軽量スレッドに処理を戻します。
+
+@param args  軽量スレッドに渡す値です。省略可能です。
+
+== Instance Methods
+
+--- resume(*args) -> ()
+
+軽量スレッドの実行を開始/再開します。
+軽量スレッドの実行が終了するか例外が発生した場合、現在の軽量スレッドに処理が戻ってきます。
+
+@param args  軽量スレッドに渡す値です。省略可能です。
+
+@raise FiberError 軽量スレッドが死んでいた(既に実行を終了していた)場合に発生します。
+
+= library Fiber
+
+== Class Methods
+
+--- current -> Fiber
+
+現在実行中の軽量スレッドを返します。
+
+== Instance Methods
+
+--- transfer(*args) -> ()
+
+軽量スレッドの実行を開始/再開します。Fiber#resume と違い、軽量スレッドの終了時や
+例外発生時にroot fiberに処理が戻ります。
+
+このメソッドはcallccと同じくらい危険であるため、自己責任で使用してください。
+
+@param args  軽量スレッドに渡す値です。省略可能です。
+
+--- alive? -> boolean
+
+軽量スレッドが生きているか(実行の途中かどうか)を返します。
+
+ a = Fiber.new{}   # => #<Fiber:0xc47494>
+ a.alive?          # => true
+ a.resume          # => nil
+ a.alive?          # => false
+
+>>>

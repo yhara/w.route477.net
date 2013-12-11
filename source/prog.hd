@@ -1,0 +1,23 @@
+!! Ruby
+:[[Ruby初心者のためのTips]]:Rubyの文法はわかった、ぐらいの人に贈るTips集。知っておくと便利なこととか。
+:[[RubyでCGI]]:とりあえずメモ程度のこと。
+:[[Ruby関係のMLまとめ]]:Ruby界のメーリングリストについて。
+:[[ZenTestまとめ]]:Test::Unitをもっと楽に使うためのソフトウェア、ZenTestについて。
+:[[Ruby/SVN]]:Subversion付属のRubyバインディングについて。
+:[[RubySenna]]:全文検索エンジンSennaのRubyバインディングの非公式ドキュメント
+:[[HpricotShowcaseJa]]:HTMLから情報を抜き出すためのライブラリ、Hpricot
+
+!! Ruby/SDL
+[[Ruby/SDL|http://www.kmc.gr.jp/~ohai/rubysdl.html]]は、KMCの大林さんによるRubyで(ゲームなどの)マルチメディアアプリケーションを作成するためのライブラリです。
+:[[RubySDLStarterKit]]:メモ帳一本でゲームが作れる開発環境
+:[[RubySDLCompile]]:Ruby/SDLのWindows用バイナリを自分でコンパイルしてみる
+:[[RubySDLSmallFonts]]:Ruby/SDLから使える極小フォント集。
+
+!! Neta Language
+ネタで作られた(としか思えない)言語、ネタ言語(メタ言語ではない)について。
+
+:[[Befunge]]:「2次元プログラミング言語」Befungeについて。
+:[[BrainF**k]]:
+:[[WhiteSpace]]:
+:[[Shakespeare]]:
+:[[Wierd]]:

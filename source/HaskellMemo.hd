@@ -1,0 +1,88 @@
+Haskellに関するメモです。
+
+! dataとtypeとclass/instance
+
+!! data
+Cでいうstruct的な。
+
+ data Person = Person String String Int 
+   deriving (Eq, Show)
+アクセサ定義
+ data Person = Person { firstName :: String  
+                      , lastName :: String  
+                      , age :: Int  
+                      } deriving (Eq, Show) 
+型変数
+  data Maybe a = Nothing | Just a
+再帰的な例
+ data List a = Empty | Cons a (List a) deriving (Show, Read, Eq, Ord)  
+ -- data List a = Empty | Cons { listHead :: a, listTail :: List a} deriving (Show, Read, Eq, Ord)  
+ data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Read, Eq)  
+
+!! type
+Cでいうtypedef的な。
+
+ type String = [Char]  
+typeも型変数を使える。
+ type AssocList k v = [(k,v)]  
+
+!! newtype
+newtypeはtypeと違い、別名を付けるのではなく新しい型が作られる。
+  newtype UniqueID = UniqueID Int
+      deriving (Eq)
+http://book.realworldhaskell.org/read/using-typeclasses.html
+
+!! 型クラス(class/instance)
+OOPでいうクラスは関係ないので忘れるように。EqとかShowとかのこと。
+
+「==が定義できる型はEqというクラス(class)に分類しましょう」みたいな感じ。
+
+用途としてはRubyの「eachが定義できるクラスはEnumerableモジュールをincludeすると便利なメソッドが増えますよ」に近い。
+
+! Applicativeとか
+* [[Applicativeのススメ - あどけない話|http://d.hatena.ne.jp/kazu-yamamoto/20101211/1292021817]]
+* [[Route 477 - Functor, Monoid, Monad, Arrowなどについて解説した「Typeclassopedia」|http://route477.net/d/?date=20091024#p02]]
+
+!! Functor
+<<<
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+>>>
+Functor: 中に何か入ってるもの
+
+fmap: mapの一般的なもの。与えられた関数を中身全部に適用する。
+
+!! Applicative
+<<<
+class Functor f => Applicative f where
+  pure :: a -> f a
+  (<*>) :: f (a -> b) -> f a -> f b
+>>>
+
+pure: 値を包むやつ
+
+<*>: fmapと似てるが、関数自身も包まれてる
+
+別名：<$>=fmap, <*>=ap
+
+いくつかの法則を満たさないといけない。例:
+ fmap g x = (pure g) <*> x
+ 別の書き方をすると、g <$> x = (pure g) <*> x
+ つまり<$>を使うと左辺の関数をpureで包む手間が省けるということかな?
+
+!!! Applicativeスタイル
+<<<
+foo = do
+  a <- m1
+  b <- m2
+  return (f a b)
+>>>
+は、
+ foo = f <$> m1 <*> m2
+ (つまり foo = (pure f) <*> m1 <*> m2)
+と書き直せるらしい。
+
+
+! リンク
+* http://book.realworldhaskell.org/read/
+* http://learnyouahaskell.com/chapters

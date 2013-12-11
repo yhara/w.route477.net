@@ -1,0 +1,82 @@
+rubyでCGIを書いてみよう！という話。
+
+一応、ruby1.8.xを前提にしています。
+
+!導入
+*test.cgiという名前で、以下のようなファイルを用意
+  #!/usr/bin/env ruby
+  print "Content-type: text/html\n"
+  print "\n"
+  print "<html>"
+  print "これは<b>CGI</b>のテストです。"
+  print "</html>"
+*実行権限を付ける(chmod 755 test.cgi)
+*(環境によっては) .htaccessを用意
+  AddHandler cgi-script .cgi
+*http://..../test.cgi にアクセス(文字コードによっては文字化けすると思うので、metaタグを入れる(<meta http-equiv="Content-Type" content="text/html; charset=euc-jp"> 等)か、ブラウザで適宜切りかえてやってください。)
+
+!!文の量が多いときは
+[[ヒアドキュメント|http://www.ruby-lang.org/ja/man/index.cgi?cmd=view;name=%A5%EA%A5%C6%A5%E9%A5%EB#a.a5.d2.a5.a2.a5.c9.a5.ad.a5.e5.a5.e1.a5.f3.a5.c8.20.28.b9.d4.bb.d8.b8.fe.ca.b8.bb.fa.ce.f3.a5.ea.a5.c6.a5.e9.a5.eb.29]]を使うと便利です。
+  print <<EOD
+  Content-type: text/html
+  
+  <html>
+  これは<b>CGI</b>のテストです。
+  </html>
+  EOD
+(EODはEnd Of Dataの略ですが、別にEOSでもHOGEでも何でも構いません)
+
+「EOD」の代わりに「-EOD」とすることで、
+  def output
+    print <<-EOD
+    Content-type: text/html
+    
+    <html>
+    これは<b>CGI</b>のテストです。
+    </html>
+    EOD
+  end
+のように、終端の「EOD」をインデントすることができる。
+
+!!さらに文が多いときは
+[[ERB|http://www.ruby-lang.org/ja/man/?cmd=view;name=erb]]を使いましょう。
+
+ require 'erb'
+ 
+ puts ERB.new(File.read("hoge.rhtml")).result(binding)
+
+
+
+
+!添付ライブラリの[[cgi.rb|http://www.ruby-lang.org/ja/man/index.cgi?cmd=view;name=CGI]]を使う
+  require "cgi"
+  cgi = CGI.new
+  cgi.out do
+    "<html>テスト２</html>"
+  end
+
+!値を受け取る(HTTP GET)
+  http://..../test.cgi?foo=1&bar=2&baz=quux
+というURLにアクセスすると、
+  require "cgi"
+  cgi = CGI.new
+  p cgi["foo"] # => "1"
+  p cgi["bar"] # => "2"
+  p cgi["baz"] # => "quux"
+となる。
+
+!値を受け取る(HTTP POST)
+*以下のようなtest.htmlを用意する
+  <html>
+  <form action="test.cgi" mehtod="POST">
+  <input type="text" name="foo" value="なにか書いてください">
+  <input type="submit" value="送信">
+  </form>
+  </html>
+*test.htmlにアクセスして、送信ボタンを押と、test.cgiが実行され、
+  require "cgi"
+  cgi = CGI.new
+  p cgi["foo"] # => 入力された文字列
+となる。
+
+テキストボックス以外のものについては[[とほほのWWW入門|http://tohoho.wakusei.ne.jp/html/input.htm]]等を参照してください。

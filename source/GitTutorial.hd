@@ -1,0 +1,75 @@
+gitの簡単なチュートリアルです。
+
+書きかけ。
+
+まだ俺専用なんだからね！
+
+{{toc_here}}
+
+http://www8.atwiki.jp/git_jp/pub/Documentation.ja/user-manual.html
+
+! 特徴
+
+* チェンジセット？いいえ、スナップショットです
+** SVNは「変更点」を積み重ねていくシステムだけど、Gitは「スナップショット」を積み重ねていくモデル。
+** だから、「コミット」は差分を持たない。代わりに「スナップショット」へのポインタ、直前のコミットへのポインタ、コメントなどのメタデータを持つ。
+
+http://learn.github.com/images/snapshots.png
+
+* ブランチが超軽い
+** このように「コミット」が有向グラフを作ってる(一直線とは限らない！)モデルなので、ブランチを作るのも普通のコミットと変わらないコストでできる。
+** だからGitでは、バグ一件ごとにブランチを作って、直ったらマージして、とかも普通らしい。
+
+! github
+
+! コマンド一覧
+
+参考: ttp://ktown.kde.org/~zrusin/git/git-cheat-sheet-medium.png
+
+
+!! 開発を始める
+   checkout   リポジトリからファイルを取ってくる
+   clone      リポジトリを複製する
+   init       リポジトリを初期化する
+!! ファイルの操作
+   add        ファイルを追加する
+   commit     リポジトリに変更を保存する
+
+gitとsvnの使い方で一番異なるのがここ。svnでは「管理されているファイル」と「管理外のファイル」という2種類
+しかなかったけど、gitでは
+* (1) コミット対象のファイル
+* (2) コミット対象でないファイル
+* (3) 管理外のファイル
+という3種類に分けられる。
+
+addコマンドは(2)や(3)のファイルを、(1)の状態にする。commitコマンドの対象になるのは(1)のファイルだけなので、
+新しいファイルをコミットするにはaddしてからcommitしないといけない(これはsvnと一緒)。
+
+commit -aとすると、(1)に加え、(2)で変更されているファイルもコミット対象になる。
+
+   mv         ファイルを移動・リネームする
+   rm         ファイルを削除する
+   diff       差分を表示する
+   grep       ファイルから特定のパターンを検索する
+!! リポジトリ間の操作
+   fetch      別のリポジトリからファイルを取ってくる
+   pull       ファイルを受信する
+   push       ファイルを送信する
+!! 開発補助
+   bisect     バグが入ったリビジョンを調査する
+   log        ログを表示する
+
+!! ブランチ
+   branch     ブランチの操作
+
+   merge      Join two or more development histories together
+   rebase     Forward-port local commits to the updated upstream head
+   reset      Reset current HEAD to the specified state
+   show       Show various types of objects
+   status     Show the working tree status
+   tag        Create, list, delete or verify a tag object signed with GPG
+
+! リンク
+* http://learn.github.com/
+* http://sourceforge.jp/magazine/09/03/16/0831212
+* http://d.hatena.ne.jp/stellaqua/20081007/1223387003

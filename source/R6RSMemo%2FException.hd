@@ -1,0 +1,220 @@
+R6RSの例外およびコンディションに関するメモです。
+
+{{toc_here}}
+
+http://www.r6rs.org/final/html/r6rs-lib/r6rs-lib-Z-H-8.html#node_chap_7
+* 例外ハンドラは1引数の手続き
+* 内部的には"current exception handler"という概念がある
+* 例外を投げる＝カレント例外ハンドラを実行する
+** このときに例外の情報を表すオブジェクトを1つ渡す。任意のSchemeの値が許される
+* デフォルト(プログラム開始時)のカレント例外ハンドラ：
+** 全ての&seriousをキャッチする[ことが期待される]
+** このときは例外の情報を表示。そのあとは終了するなど
+** &serious以外の場合はexitしない[ことが期待される]
+** 要するに、処理系がクラッシュしたのではなく、例外で終了したのだ、と分かるようにすべき
+
+(with-exception-handler handler thunk)
+* handlerは1引数[should]の手続き[must]。thunkは0引数手続き[must]。
+* 返り値はthunkの実行結果。この間handlerがカレント例外ハンドラになる (todo: dynamic-wind?)
+* raise/raise-continuableによってhandlerが実行されるとき、処理系はhandlerが制限を満たしているかチェックする[must]。処理系はそれより前?にこのチェック?を行ってもよい[may]。
+
+(guard (<variable> <cond clause1> <cond clause2> ...) <body>)
+* condのような構文
+* 例外オブジェクトをcondのアルゴリズムで<cond clause>に分配するような例外ハンドラを作り、それをカレント例外ハンドラとして<body>を評価する
+* もしどの節にもマッチせずelseもなければ、上がった例外を再raiseする
+* guardが末尾の場合、cond節の最後の式も末尾
+
+(raise obj)
+* カレント例外ハンドラhandlerを、objを引数に呼ぶ
+** 継続はraiseの継続といっしょ
+** 呼ぶときのカレント例外ハンドラは、handlerがカレント例外ハンドラになったときの元のカレント例外ハンドラ
+* handlerから戻ったら、(handlerと同じ環境で)例外&non-continuableを発生させる 
+
+(raise-continuable obj)
+* カレント例外ハンドラhandlerを、objを引数に呼ぶ
+** 継続はraise-continuableの継続といっしょ
+** カレント例外ハンドラは、handlerがカレントになったときの元のカレント例外ハンドラ
+* handlerから戻ったら、handlerを再びカレント例外ハンドラにする。handlerの返り値がraise-continuableの値。
+
+-- 例外ここまで --
+
+結局のところ、「カレント例外ハンドラ」はwith-exception-handlerによってのみ更新されるということでいいのかな。
+
+  eh: デフォルトのやつ
+  (w/eh h1 
+    (λ () 
+
+!! Conditions
+
+じゃあobjって具体的に何を投げたらいいの？って感じだが、そのために用意されているのが
+Conditionたち。JavaやRubyの例外クラス階層みたいなもんだ。
+
+ただconditionはR6RS records(構造体)を基礎としてるので、
+「とりあえずは文字列投げといてくださいｗｗｗ」という実装もアリかと。
+
+* conditionにはsimple(単純)なものとcompound(複合)したものがある。
+
+&condition 
+* simpleなconditionに対応するレコード型。フィールドなし、sealedでない、opaqueでない。
+
+(condition condition1 ...) 
+* 引数をまとめたconditionを作る。
+
+(simple-conditions condition)
+* conditionをsimple conditionに分解する。
+* immutableな(変更してはいけない)リストを返す。リストは1次元になる
+
+(condition? obj) 
+* objがconditionなら#t、さもなくば#f (simpleかcompoundかは問わない)
+
+(condition-predicate rtd) 
+* rtdは、&conditionのサブタイプのrtd(record type descriptor)。
+* 1引数の述語を返す。
+* その型がsimpleの場合、述語は、引数がその型またはそのサブタイプのconditionとき#t
+* その型がcompoundの場合、述語は、引数が(その型またはそのサブタイプのcondition)を含むとき#t
+
+(condition-accessor rtd proc) 
+* procは1引数 (rtdの型のconditionを受け取る) 関数[should]。
+* 関数(アクセサ)を返す。
+* アクセサは1引数 (rtdの型のconditionを受け取る) [must]。
+** アクセサはconditionの最初の要素を引数にprocを呼び出し、その結果を返す。
+
+(define-condition-type <condition-type> <supertype> <constructor> <predicate> (<field1> <accessor1>) ...)
+* 新しいcondition型を定義する。non-opaque, non-sealed, immutable fields
+** <supertype>を親に持つ
+** <constructor>にコンストラクタが、<predicate>に述語が、<accessor>にアクセサが束縛される
+
+!! 標準のcondition型
+HTMLの画像が潰れているのでpdfから引用：
+
+http://gyazo.com/d56f1e03cb50e0f5a13de1dd1992cb0c.png
+
+* &condition : simple conditionを表す。
+** &warning : 警告であることを表す。
+** &serious : 無視して実行を続けられないような状況であることを表す。
+*** &error : エラー(ユーザや外界からの入力に起因する間違いなど)であることを表す。
+*** &violation : プログラムが間違っていて、言語仕様やライブラリ仕様に違反していることを表す。
+**** &assertion : 手続きに間違った数や型の引数を渡したことを表す。
+**** &non-continuable : raiseが起動した例外ハンドラが値を返したときに使われる。
+**** &implementation-restriction : 仕様上許された処理系の制限(NaN/Infiniteは実装していないよとか)に引っかかったことを表す。
+**** &lexical : 字句(datum syntax)レベルでエラーがあったことを表す。
+**** &syntax form subform: 構文エラーがあったことを表す。formはエラーのあるsyntax objectかコードを表すデータ。subformは#fか、エラーのあった場所をより正確に表現するようなsyntax objectやデータ。
+**** &undefined : 未定義の識別子が使われたことを表す。
+** &message message: 例外のメッセージを保持する。
+** &irritants irritants: 原因となったオブジェクトのリスト(手続きの引数リストとか)を保持する。
+*** error, assertion-violationで使われる
+** &who who: 原因となったものの名前(string/symbol)を保持する。 
+*** error, assertion-violation, syntax-violationで使われる
+
+!! r6rs 11.14  Errors and violations
+こっちは言語本体のほう。
+
+(error who message irritant1 ...), (assertion-violation who message irritant1 ...)
+* whoはstringかsymbolか#f、messageはString [must]。irritantは任意の値。
+* errorは&errorを、assertion-violationは&assertionを発生させる。
+** whoが#fでないとき、&whoも含む。
+** &messageも含む。
+** &irritantsも含む。 # irritantが0個の場合はどうすべき？空リストにするのか。
+
+(assert <expression>) 
+* <expression>を評価する。
+** 真値が返れば、それが返り値になる。
+** 偽(#f)なら、&assertion＋&messageを発生させる。メッセージの内容は処理系依存(でも発生箇所に関する情報が多い方がいい)。
+
+!! r6rs-lib 12.9  Syntax violations
+syntax-caseの章。
+
+(syntax-violation who message form subform?) (subformはオプショナル)
+* syntax-caseを使ったマクロ定義の中で、構文が間違ってたときに使うっぽい。
+* &syntax + &message (+ &who) を発生させる。
+
+
+! 実装に関する調査
+
+!! ypsilon
+stdlib/core/excepitons.scmにguardの定義がある。syntax-rulesで、with-exception-handler(とraise-continuable)に落としている。
+
+w/ehの定義はheap/boot/exceptions.scmに。ほとんどschemeレイヤで実装しているようだ。
+
+'current-excepiton-handler'と、'parent-exception-handler'という2つのparameter(関数型的グローバル変数)が存在する模様。
+
+w/ehの定義を読んでみよう。parent-ehの方は値を設定するだけで、使わないようだ(raiseで使われる)。
+<<<
+(define (with-exception-handler new-handler body)
+  ; この時点で、カレント=h1, 親=h0としよう
+  (let ((parent (current-exception-handler)))
+    ; 変数parentにh1をセット
+    (parameterize ((parent-exception-handler parent) ; 親をh1に設定
+                   (current-exception-handler        ; カレントを、new-handlerを使うものに設定
+                     (lambda (condition)
+                       ; body内で例外が発生(し、内側のハンドラに捕捉されなかっ)た場合ここに来る
+                       ; カレント=このlambda, 親=h1
+                       (parameterize ((current-exception-handler parent))
+                         ; ここでは カレント=h1なので、new-handler内で例外が発生したらh1が呼ばれる
+                         (new-handler condition))
+                       ; new-handlerが戻ったら、parameterizeのおかげで カレント=, 親= に戻る 
+                       )))
+        ; ここでは カレント=上のlambda, 親=h1
+        (body)))))
+    ; 終了後は、parameterizeのおかげで カレント=h1, 親=h0に戻る
+
+>>>
+
+(raise c)は、
+# current-ehを取得し、cを引数にして呼び出す
+# current-ehが返れば、parent-ehを取得し、&non-continuableを作り、それを引数にして呼び出す
+となっている。
+
+parent-ehは何のために必要か。raiseしたのにcurrent-ehが普通に返ってきた場合、current-ehの「外側の」例外ハンドラが呼ばれる。
+このときのために、parent-ehを保存することが必要。
+  (define (h1 e) "ignoring e")
+  (define (h2 e) (exit))
+  (w/eh h2
+
+    (w/eh h1 (raise "foo"))
+
+ちなみにparameterizeは(current-dynamic-environment)というハッシュテーブルにgensymをキー、パラメータを値としたエントリを追加するという実装。
+
+!! mosh
+ypsilonのコードを利用していたような。
+
+!! ikarus
+w/ehの定義はscheme/ikarus.exceptions.ss。'handlers'というparameterがあるらしい。
+
+<<<
+  (define (with-exception-handler handler body)
+    ; 引数チェック
+    (unless (procedure? handler)
+      (assertion-violation 'with-exception-handler
+        "handler is not a procedure" handler))
+    ; 引数チェック
+    (unless (procedure? body)
+      (assertion-violation 'with-exception-handler "not a procedure" body))
+    ; 本体
+    ; ここで handlers = (h2 h1 h0)だとすると、
+    (parameterize ([handlers (cons handler (handlers))])
+      ; ここでは handlers = (handler h2 h1 h0)
+      (body)))
+
+  (define (raise-continuable x)
+    ; ここで handlers = (h2 h1 h0)だとすると、
+    (let ([h* (handlers)])
+      (let ([h (car h*)] [h* (cdr h*)])
+        (parameterize ([handlers h*])
+          ; ここでは handlers = (h1 h0)
+          ; この状態で、(h2 x)を実行
+          (h x)))))
+
+  (define (raise x)
+    ; ここで handlers = (h2 h1 h0)だとすると、
+    (let ([h* (handlers)])
+      (let ([h (car h*)] [h* (cdr h*)])
+        (parameterize ([handlers h*])
+          ; ここでは handlers = (h1 h0)
+          (h x)  ; この状態で、(h2 x)を実行
+          ; もしも戻ってきたら、&non-continuable
+          (raise
+            (condition
+              (make-non-continuable-violation)
+              (make-message-condition "handler returned")))))))
+>>>

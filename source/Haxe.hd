@@ -1,0 +1,144 @@
+さまざまな言語にコンパイルできる静的型付け言語Haxe(ヘックス)に関するメモです。
+
+以下はJSにコンパイルすることを想定しています。
+
+! リンク
+公式
+* http://haxe.org
+* http://haxe.org/doc
+
+日本語のガイド(神記事)
+* http://www.denkiyagi.info/haxe-javascript-tutorial/index.html
+
+HaxeのコードをNode.js上で動かすやつ
+* http://haxenode.org/
+
+インストール
+* http://haxe.org/download 
+** Mac版のインストーラを実行した。/usr/以下にインストールされた
+
+Vimプラグイン
+* http://haxe.org/com/ide/vim
+* https://github.com/MarcWeber/vim-haxe なんかエラー出たのでsyntaxだけ使ってる
+
+テスト
+* http://www.denkiyagi.info/haxe-javascript-tutorial/unittest.html munitっていうのがあるって書いてる
+
+jQuery使いたいんだけど
+* http://blog.romatica.com/2012/01/09/haxe_jquery/
+* http://haxe.org/api/js/jquery これか？
+
+underscore.hx
+* https://github.com/Mparaiso/Underscore.hx/blob/master/underscore/Underscore.hx
+
+! 特徴
+* 静的型・型推論
+* いろんな言語にコンパイルできる
+* 雰囲気はJavaに似ているが、関数型っぽい書き方もできそう
+** 代数的データ型が使える?とか http://haxe.org/ref/enums
+
+
+! 言語仕様
+!! 名前空間
+* http://haxe.org/manual/modules
+
+Javaのように冒頭でpackage foo;のように宣言する方式らしい
+
+例：foo/Test.hx
+  package foo;
+  class Test1 {
+    ...
+
+Main.hx
+  import foo.Test;  // foo/Test.hxをインポートする
+  // Test1 で、foo.Test1にアクセスできる
+  // Test内で定義したクラスはぜんぶ見えるようになる。
+  // 見せたくないクラスはprivate class Test2 { のようにする
+
+しかし「import foo.Test;」っていう書き方はちょっとキモいなぁ。最後のTestはクラス名のように見えるけど、ファイル名なんだよね。
+クラスTestだけをimportしたい場合は「import foo.Test.Test;」みたいに書く。
+
+
+!! 無名オブジェクト(Anonymous object, Structとも)
+http://haxe.org/manual/struct
+
+JavaScriptのオブジェクトリテラル的な。
+  var point = { x : 1, y : -5 };
+これの型は何になるかというと：
+  { x : Int, y : Int } 
+になる。宣言が不要なCのstructみたいな感じか。
+
+で、typedefがあるのでこれを名前で呼ぶことができる。
+  typedef Point = { x : Int, y : Int }
+  var p1 : Point;
+
+!!! 構造的サブタイプ(Structual subtyping)
+部分集合になってるときに互換なものとして扱えるみたい。
+  typedef Point = { x : Int, y : Int }
+  typedef Point3D = { x : Int, y : Int, z : Int }
+  var p3d : Point3D = { x : 0, y : 0, z : 0 };
+  var pt : Point = p3d;
+
+あるいは、「x:Intというフィールドを持つオブジェクト」という型指定ができるということか。
+
+* [[JSXよりHaxeがイケてる3つの理由 - みずぴー日記|http://d.hatena.ne.jp/mzp/20120604/jsx]]
+* [[構造的部分型の比較 - まぁ、そんなもんでしょう。|http://d.hatena.ne.jp/osiire/20091105]]
+
+!! using
+既存クラスにメソッドを追加する (というか、追加されたように見せる) 機能。
+
+<<<
+class StringHelp {
+    public static function startsWith( s : String, sub : String ) { .... }
+    public static function isSpace( s : String, ?pos : Int ) { .... }
+}
+...
+using StringHelp;
+...
+      return s.startsWith("hello") && s.isSpace(6);
+>>>
+
+using StringHelpすることで、クラスStringHelpの各static関数について、その第一引数のクラス(ここではString)
+に対するメソッド呼び出しのような書き方(s.startsWith)で呼び出せるようになる。らしい。
+
+* http://haxe.org/manual/using
+
+! Tips
+!! 標準ライブラリのソース
+* /usr/lib/haxe/std/*.hx
+* githubミラー https://github.com/aduros-mirrors/haxe/tree/master/std
+
+!! 文字列のinterpolationがあるぞ！
+文字列への変換を手でやらなくてすむので便利。
+
+http://haxe.org/manual/string_interpolation
+  var name = "Haxe";
+  var x = 10;
+  trace(Std.format("$name is $x times better than X"));
+
+${}で式埋め込み、$$で$そのもの
+
+!! printfデバッグ
+  trace(1 + 1);  // console.logに出力される
+
+!! 乱数
+  Std.random(4); // 整数
+  Math.random(); // 小数
+
+!! Array<Int> と Array<Float> に互換性がないのはなんで？
+JSXで同じこと思ったんだけど、書いてあった：http://haxe.org/manual/variance
+そういえばScalaにもこんな話があったような…
+
+! コード例
+!! IDでタグを取得する
+<<<
+import js.Lib;                                                                           
+                                                                                         
+class Main {                                                                             
+  static function main() {                                                               
+    Lib.window.onload = function(e: js.Dom.Event){                                       
+      trace(Lib.document.getElementById("field"));                                       
+    };                                                                                   
+  }                                                                                      
+}     
+>>> 

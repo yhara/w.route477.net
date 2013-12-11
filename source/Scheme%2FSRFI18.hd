@@ -1,0 +1,200 @@
+Schemeとスレッドに関するSRFI (18, 21) に関するメモです。
+
+BiwaSchemeの実装に関係なさそうな部分は飛ばしています。
+
+* http://srfi.schemers.org/srfi-18/srfi-18.html Multithreading support
+* http://srfi.schemers.org/srfi-21/srfi-21.html Real-time multithreading support
+
+{{toc_here}}
+
+! srfi-18 Multithreading support
+
+以下のデータ型を導入する。
+*Thread
+*Mutex
+*Condition variable
+*Time
+
+また、例外についても定義する。スレッド対応版のraise, with-exception-handler, current-exception-handlerを定義する。
+
+!! 概念
+!!! Thread
+以下のような状態をとる。([[ソース|http://t.co/Mk8n9D81]])
+
+http://gyazo.com/6f472b221f9218dbd80e81fccdb55682.png
+
+!!! Mutex, Condition variable
+スレッド間の同期をとる(別スレッドの用意ができるまで待つ)ための機構。
+
+!!! Fairness
+スケジューラは次に実行する一つのスレッドを選ぶ。
+選び方は、単純に実行可能になったやつを選ぶとか、優先順をつけるとか(fairness)。
+
+srfi-18には優先順位の機能はなく、srfi-21で追加される。
+
+!!!  Memory coherency and lack of atomicity
+coherencyは「一貫性」。
+
+srfi-18では、変数やベクタの要素等への読み書きは、アトミックであることが保証されない。
+一貫性を保つのはアプリケーションの仕事(Mutex等を使う)。
+
+ただしportへの読み書きを並列して行うのは許される。
+appropriateな同期用プリミティブを使って
+あるポートへのアクセスをserializeするのは、処理系の責任だと書いてある。
+
+!!! Dynamic environments, continuations and dynamic-wind
+Dynamic environmentというのは、「現在の入出力ポート」とか、
+「現在の例外ハンドラ」とか、「この手続きを実行している間は〜」のように
+動的に決定される環境のこと。
+
+with-input-from-file等を使うと、「この手続きを実行している間は
+入力ポートをこのファイルに設定する」のように新しい動的環境が作られる。
+
+Scheme処理系によっては、parameterizeとかでこの動的環境を作れるものもある。
+
+* 
+
+各スレッドは、独自の動的環境をもつ。つまり、あるスレッドが新しい動的環境を作っても、
+それは別のスレッドには影響しない。
+
+継続をキャプチャする際は、この動的環境も継続オブジェクト内に保存しておく。
+継続が呼び出された際は、必要なbefore/afterフックが実行され、
+保存された動的環境をカレントスレッドの動的環境として復元する。
+
+各before/afterフックの実行用に復元される動的環境は、
+そのフックに対応するdynamic-windが実行されていたときの動的環境とする。
+
+上の定義によって、「フック内で継続のキャプチャや呼出しを行った場合はどうするか？」
+とか、「別スレッドでキャプチャした継続を実行した場合」の挙動が明確に規定される。
+
+例
+
+ fileX   (with-output-to-file "fileX" (lambda ()
+   |       (let1 k (call/cc (lambda (exit)
+     fileY           (with-output-to-file "fileY" (lambda ()
+       |               (dynamic-wind
+       |                 (lambda () (write 'before1))
+       |                 (lambda ()
+       |                   (let ((x (call/cc (lambda (cont) (exit cont)))))  <------+
+       |                     (write '(thunk1))                 |                    |
+       |                     x))                               |                    |
+       o                 (lambda () (write 'after1)))))))      |                    |
+   |                                                        <--+
+   |         (when k                                                                |
+   |           (dynamic-wind                                                        |
+   |             (lambda () (write 'before2))                                       |
+   |             (lambda ()                                                         |
+     fileZ         (with-output-to-file "fileZ" (lambda ()                          |
+       |             (write '(thunk2))                                              |
+       o             (k #f)))) -----------------------------------------------------+
+   o              (lambda () (write 'after2)))))))
+
+with-output-to-fileが、thunkの通常終了時にしかポートを閉じない実装だったとしたら、
+以下のようになる。
+  (before1,after1) is written to "fileY",
+  (before2) is written to "fileX",
+  (thunk2) is written to "fileZ",
+  (after2) is written to "fileX", and
+  (before1,thunk1,after1) is written to "fileY".
+
+*
+
+スレッドの切り替えの際には、before/afterフックは実行されない。
+before/afterフックが実行されるのは、そのスレッド自身が継続の実行を行うときだけである。
+
+!!! Time objects and timeouts
+Timeオブジェクトは、タイムアウトを絶対時間で指定するために使う。
+
+!!! Primitives and exceptions
+このSRFIで規定する関数がこのSRFIで規定する例外を投げたとき、
+例外ハンドラはそのSRFIの関数と同じ継続で実行される。
+(即ち、そのSRFI関数は末尾で例外ハンドラを呼び出すと思っていい。)
+
+なので、これを実現するためにわざわざcall/ccを使ったりする必要はない。
+
+!!! Primordial thread
+Primordialは「原初の」。
+
+プログラム開始時のスレッドをprimordial threadという。
+primordial threadの動的環境は規定しない。
+primordial threadが(正常・異常に関わらず)終了したとき、
+他の全てのスレッドも終了される。
+
+!! 提供される手続き
+!!! Thread
+スレッドを表すオブジェクト。
+
+各スレッドは、名前(thread-name)とスレッドローカルなストレージ(thread-specific)をもつ。
+  (current-thread)                                      ;procedure
+  (thread? obj)                                         ;procedure
+  (make-thread thunk [name])                            ;procedure
+  (thread-name thread)                                  ;procedure
+  (thread-specific thread)                              ;procedure
+  (thread-specific-set! thread obj)                     ;procedure
+  (thread-start! thread)                                ;procedure
+  (thread-yield!)                                       ;procedure
+  (thread-sleep! timeout)                               ;procedure
+  (thread-terminate! thread)                            ;procedure
+  (thread-join! thread [timeout [timeout-val]])         ;procedure
+!!! Mutex
+Mutexを表すオブジェクト。
+  (mutex? obj)                                          ;procedure
+  (make-mutex [name])                                   ;procedure
+  (mutex-name mutex)                                    ;procedure
+  (mutex-specific mutex)                                ;procedure
+  (mutex-specific-set! mutex obj)                       ;procedure
+  (mutex-state mutex)                                   ;procedure
+  (mutex-lock! mutex [timeout [thread]])                ;procedure
+  (mutex-unlock! mutex [condition-variable [timeout]])  ;procedure
+!!! Condition variable
+条件変数を表すオブジェクト。
+  (condition-variable? obj)                             ;procedure
+  (make-condition-variable [name])                      ;procedure
+  (condition-variable-name condition-variable)          ;procedure
+  (condition-variable-specific condition-variable)      ;procedure
+  (condition-variable-specific-set! condition-variable obj) ;procedure
+  (condition-variable-signal! condition-variable)       ;procedure
+  (condition-variable-broadcast! condition-variable)    ;procedure
+!!! Time
+Timeは処理系定義のポイントからの経過時間を表すオブジェクト。seconds(real number)と相互変換できる。
+  (current-time)                                        ;procedure
+  (time? obj)                                           ;procedure
+  (time->seconds time)                                  ;procedure
+  (seconds->time x)                                     ;procedure
+!!! Exception
+raiseは任意のSchemeオブジェクトを例外として投げる。
+join-timeout-exception, abandoned-mutex-exceptionなどはSRFI18が投げるエラー。
+  (current-exception-handler)                           ;procedure
+  (with-exception-handler handler thunk)                ;procedure
+  (raise obj)                                           ;procedure
+  
+  (join-timeout-exception? obj)                         ;procedure
+  (abandoned-mutex-exception? obj)                      ;procedure
+  (terminated-thread-exception? obj)                    ;procedure
+  (uncaught-exception? obj)                             ;procedure
+  (uncaught-exception-reason exc)                       ;procedure
+  
+
+! srfi-21 Real-time multithreading support
+"This SRFI is a real-time extension to SRFI 18"
+
+「*」印の関数が増えた。
+
+Thread
+  (current-thread)                                      ;procedure
+  (thread? obj)                                         ;procedure
+  (make-thread thunk [name])                            ;procedure
+  (thread-name thread)                                  ;procedure
+  (thread-specific thread)                              ;procedure
+  (thread-specific-set! thread obj)                     ;procedure
+  *(thread-base-priority thread)                         ;procedure
+  *(thread-base-priority-set! thread priority)           ;procedure
+  *(thread-priority-boost thread)                        ;procedure
+  *(thread-priority-boost-set! thread priority-boost)    ;procedure
+  *(thread-quantum thread)                               ;procedure
+  *(thread-quantum-set! thread quantum)                  ;procedure
+  (thread-start! thread)                                 ;procedure
+  (thread-yield!)                                        ;procedure
+  (thread-sleep! timeout)                                ;procedure
+  (thread-terminate! thread)                             ;procedure
+  (thread-join! thread [timeout [timeout-val]])         ;procedure

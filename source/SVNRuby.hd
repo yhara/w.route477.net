@@ -1,0 +1,198 @@
+Subversion付属のRubyバインディングについてのメモです。
+
+% ~/bin/[[rdefs.rb|http://i.loveruby.net/archive/d/rdefs.rb.txt]] svn/test/test_*
+
+!!class SvnClientTest
+svnコマンド的な機能だと思われ。
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_version
+* def test_add_not_recurse
+* def test_add_recurse
+* def test_add_force
+* def test_add_no_ignore
+* def test_mkdir
+* def test_mkdir_multiple
+* def test_mkdir_multiple2
+* def test_delete
+* def test_delete_alias
+* def test_import
+* def test_commit
+* def test_status
+* def test_checkout
+* def test_update
+* def test_revert
+* def test_log
+* def test_blame
+* def test_diff
+* def test_diff_peg
+* def test_merge
+* def test_merge_peg
+* def test_cleanup
+* def test_relocate
+* def test_resolved
+* def test_copy
+* def test_move
+* def test_move_force
+* def test_prop
+* def test_prop_list
+* def test_cat
+* def test_lock
+* def test_unlock
+* def test_info
+* def test_url_from_path
+* def test_uuid
+* def test_open_ra_session
+* def test_revprop
+* def test_export
+* def test_ls
+* def test_switch
+* def test_authentication
+* def test_simple_provider
+* def test_windows_simple_provider
+* def test_username_provider
+* def test_not_new
+
+!!class SvnCoreTest
+subversionのコア機能(udiff取るとか、自動マージとか)
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_binary_mime_type?
+* def test_time
+* def test_not_new_auth_provider_object
+* def test_version_to_x
+* def test_version_valid?
+* def test_version_equal
+* def test_version_compatible?
+* def test_auth_parameter
+* def test_pool_GC
+* def test_config
+* def test_config_bool
+* def test_config_each
+* def test_config_find_group
+* def test_config_get_server_setting
+* def test_config_auth_data
+* def test_diff_version
+* def test_diff_unified
+* def test_diff_merge
+* def test_create_commit_info
+* private
+* def used_pool
+* def gc
+
+!!class SvnDeltaTest
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_version
+* def test_delta
+* def test_push_target
+* def test_apply
+* def test_svndiff
+* def test_path_driver
+* def test_changed
+* def test_change_prop
+* def test_deep_copy
+* private
+* def traverse(editor_class, rev, pass_root=false)
+
+!!class SvnFsTest
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_version
+* def test_create
+* def test_hotcopy
+* def test_root
+* def test_transaction
+* def test_operation
+* def test_delta
+* def test_prop
+
+!!class SvnInfoTest
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_info
+* def test_dirs_changed
+* def test_changed
+* def test_diff
+* def test_diff_path
+* def test_sha256
+* def make_info(rev=nil)
+
+!!class SvnRaTest
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_version
+* def test_session
+* def test_prop
+* def test_callback
+
+!!class SvnReposTest
+subversionのリポジトリを扱う機能だと思われ(ログとか)。
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_version
+* def test_path
+* def test_create
+* def test_logs
+* def test_hotcopy
+* def test_transaction
+* def test_trace_node_locations
+* def test_report
+* def test_commit_editor
+* def test_prop
+* def test_load
+* def test_node_editor
+* def test_lock
+* def test_authz
+* def warning_func
+
+リポジトリにファイルを追加したり削除したりする機能だと思われ
+* class TestEditor < Svn::Delta::BaseEditor
+** attr_reader :sequence
+** def initialize
+** def set_target_revision(target_revision)
+** def open_root(base_revision)
+** def delete_entry(path, revision, parent_baton)
+** def add_directory(path, parent_baton, copyfrom_path, copyfrom_revision)
+** def open_directory(path, parent_baton, base_revision)
+** def change_dir_prop(dir_baton, name, value)
+** def close_directory(dir_baton)
+** def absent_directory(path, parent_baton)
+** def add_file(path, parent_baton, copyfrom_path, copyfrom_revision)
+** def open_file(path, parent_baton, base_revision)
+** def apply_textdelta(file_baton, base_checksum)
+** def change_file_prop(file_baton, name, value)
+** def close_file(file_baton, text_checksum)
+** def absent_file(path, parent_baton)
+** def close_edit(baton)
+** def abort_edit(baton)
+
+!!class SvnUtilTest
+* def test_to_ruby_const_name
+* def test_to_ruby_class_name
+
+!!class SvnWcTest
+ワーキングコピーを扱う機能だと思われ
+* include SvnTestUtil
+* def setup
+* def teardown
+* def test_version
+* def test_status
+* def test_wc
+* def test_adm_access
+* def test_traversal_info
+* def test_externals
+* def test_notify
+* def test_entry
+* def test_ancestry
+*** def callbacks.found_entry(path, entry)
+* def test_merge
+* def test_status
+* def test_locked

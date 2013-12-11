@@ -1,0 +1,212 @@
+CoffeeScriptに関するメモです。
+
+! 公式サイト
+http://jashkenas.github.com/coffee-script/
+
+{{toc_here}}
+
+! リテラル
+!! this
+* @foo →this.foo
+
+!! 無名関数
+1行で
+  foo = (x) -> x + 1
+
+複数行で
+  bar = (x, y = 1) ->
+    x + y
+
+矢印を=>にするとthisがbindされる
+  $('.shopping_cart').bind 'click', (event) =>
+      @customer.purchase @cart
+
+
+!! 配列リテラル
+改行をカンマのかわりに使える
+  aa = [
+    1, 0
+    0, 1
+  ]
+
+範囲
+  a = [0..10]
+
+スライス・スプライス
+  a = b[3..6]
+  a = b[3...7]
+  numbers[3..6] = [-3, -4, -5, -6]
+
+!! オブジェクトリテラル
+  bb =
+    foo:
+      bar: "baz"
+
+!! 文字列リテラル
+「#{}」による埋め込み
+  sentence = "#{ 22 / 7 } is a decent approximation of π"
+
+複数行
+  str = "foo
+    bar
+    baz"
+
+  str = '''
+        foo
+        '''
+
+!! 正規表現リテラル
+複数行・コメント
+  OPERATOR = /// ^ (
+    ?: [-=]>             # function
+     | [-+*/%<>&|^!?=]=  # compound assign / compare
+     | >>>=?             # zero-fill right shift
+     | ([-+:])\1         # doubles
+     | ([&|<>])\2=?      # logic / shift
+     | \?\.              # soak access
+     | \.{2,3}           # range or splat
+  ) ///
+
+
+! 構文
+!! if-then-else
+  foo = bar if baz
+
+  foo = if baz then 1 else 2
+
+!! switch-when-else
+breakはない(fall-throughはできない)。
+  switch day
+    when "Mon" then go work
+    when "Tue" then go relax
+    when "Thu" then go iceFishing
+    when "Fri", "Sat"
+      if day is bingoDay
+        go bingo
+        go dancing
+    when "Sun" then go church
+    else go work
+
+!! try-catch-finally
+全体が値を返すほかは、JavaScriptと同じ。
+  try
+    allHellBreaksLoose()
+    catsAndDogsLivingTogether()
+  catch error
+    print error
+  finally
+    cleanUp()
+
+!! ループとリスト内包表記
+  func x for x in ary
+
+  countdown = (i for i in [10..1])
+
+  yearsOld = max: 10, ida: 9, tim: 11
+  ages = for child, age of yearsOld
+    "#{child} is #{age}"
+
+後置while/until
+  buy()  while supply > demand
+  sell() until supply > demand
+
+whileで配列を生成する
+  num = 6
+  lyrics = while num -= 1
+    "#{num} little monkeys, jumping on the bed.
+      One fell out and bumped his head."
+
+for文ローカルな変数を使う
+  for filename in list
+    do (filename) ->
+      fs.readFile filename, (err, contents) ->
+        compile filename, contents.toString()
+ 
+!! 演算子
+重要
+* ＝＝、！＝は＝＝＝、！＝＝の意味
+
+便利そうなやつ
+* and(&&) or(||) not(!)
+* 連続比較 healthy = 200 > cholesterol > 60
+
+要らなさそうなやつ
+* is(＝＝＝) isnt(！＝＝)
+* on(true) off(false) yes(true) no(false)
+* or=
+
+!! 存在チェック
+変数debugがnullでもundefinedでもないとき(Rubyのnil?みたいな)
+  dump() if debug?
+
+変数debugがnullでもundefinedでもないとき代入(Rubyの||=みたいな)
+  debug ?= false
+
+変数debugがnullでもundefinedでもなければその値、さもなくばfalse
+  dump = debug ? false
+
+Railsのtryみたいなやつ(どれか失敗したらundefined)
+  zip = lottery.drawWinner?().address?.zipcode
+
+!! splat
+  func(ary...)
+
+!! 多重代入
+左辺に括弧がつくのに注意
+  [city, temp, forecast] = weatherReport "Berkeley, CA"
+
+JSONの分解
+  {poet: {name, address: [street, city]}} = futurists
+
+最初と最後を取り出す
+  [open, contents..., close] = tag.split("")
+
+!! 「クラスメソッド」の定義
+
+  String::dasherize = ->
+    this.replace /_/g, "-"
+
+! スコープ
+* 変数はデフォルトで関数ローカル
+* 外側のと名前が同じならそれを参照する
+
+! クラス
+継承とsuperをサポートしている
+  class Animal
+    constructor: (@name) ->
+
+    move: (meters) ->
+      alert @name + " moved #{meters}m."
+
+  class Snake extends Animal
+    move: ->
+      alert "Slithering..."
+      super 5
+
+  class Horse extends Animal
+    move: ->
+      alert "Galloping..."
+      super 45
+
+  sam = new Snake "Sammy the Python"
+  tom = new Horse "Tommy the Palomino"
+
+  sam.move()
+  tom.move()
+
+! その他の記法
+
+!! 埋め込みJS
+JSを埋め込む。これを利用して、少しずつcoffee化していくことができる
+  hi = `function() {
+    return [document.title, "Hello JavaScript"].join(": ");
+  }`
+
+まあjs2coffeeでうまくいけばそれでいいけど
+
+!! 除去されないコメント
+クレジットなどに使う。/* */に変換される
+  ###
+  CoffeeScript Compiler v1.1.2
+  Released under the MIT License
+  ###

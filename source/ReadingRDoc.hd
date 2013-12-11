@@ -1,0 +1,176 @@
+rdocのソースコードを読みます。
+
+{{toc_here}}
+
+! DEVELOPERS.rdoc
+* プラグインシステム
+** 新しいファイル形式に対応する
+** 新しい出力形式に対応する
+** マークアップの構文を追加する
+** マークアップのフォーマット自体を追加する
+** 新しいフォーマッターを書く
+
+! bin/rdoc
+rdocコマンド。ドキュメントを生成するツール
+
+おおよそ
+  require 'rdoc/rdoc'
+  r = RDoc::RDoc.new
+  r.document ARGV
+
+* rdoc.rb
+
+! bin/ri
+riコマンド。リファレンスをコマンドラインから参照するためのツール
+
+おおよそ
+  require 'rdoc/ri/driver'
+  RDoc::RI::Driver.run ARGV
+
+* ri.rb
+* ri/
+** driver.rb
+** formatter.rb
+** paths.rb
+** store.rb
+
+! lib
+* rdoc.rb RDocモジュールと定数の定義。あとはautoload
+* gauntlet_rdoc.rb 謎
+* rdoc/
+** code_objects.rb 互換性のため？
+
+!! パーサ
+* parser.rb
+* parser/
+** c.rb  *.cをパースする
+** rd.rb *.rdをパースする
+** ruby.rb *.rbをパースする
+** ruby_tools.rb 補助
+** simple.rb  単純なテキストファイル
+*** text.rb
+
+* rd.rb  RD記法のパーサ
+* rd/
+** block_parser.ry  
+** inline.rb
+** inline_parser.ry 
+* tom_doc.rb TomDoc記法のパーサ
+
+!! マークアップ
+markup.rb 記法の説明が書いてある
+
+markup/*.rb
+* parser.rb  A recursive-descent parser for RDoc markup.
+* pre_process.rb
+** :arg: :args: :category: :doc: :enddoc: :inculude: :main: :nodoc: 
+** :not(_-)new: :startdoc: :stopdoc: :title: :yield(s):
+
+アトリビュート
+* attr_changer.rb  An AttrChanger records a change in attributes. It contains a bitmap of the  attributes to turn on, and a bitmap of those to turn off.
+* attr_span.rb  An array of attributes which parallels the characters in a string.
+* attribute.rb  We manage a set of attributes. Each attribute has a symbol name and a bit value.
+* attribute_manager.rb  Manages changes of attributes in a block of text
+
+要素 (親クラスはなく、def accept(visit)をもつ)
+* blank_line.rb  An empty line.  This class is a singleton.
+* document.rb  A Document containing lists, headings, paragraphs, etc.
+* heading.rb  A heading with a level (1-6) and text
+* include.rb RD記法のため？
+* raw.rb  A section of text that is added to the output document as-is
+** indented_paragraph.rb < Raw  An Indented Paragraph of text
+** verbatim.rb < Raw A section of verbatim text
+* list.rb  A List of ListItems
+* list_item.rb An item within a List that contains paragraphs, headings, etc.
+* paragraph.rb A Paragraph of text
+* rule.rb  A horizontal rule with a weight
+
+? 
+* special.rb  Hold details of a special sequence
+
+フォーマッター
+* formatter.rb
+** to_rdoc.rb  Outputs RDoc markup as RDoc markup! (mostly)
+*** to_ansi.rb  Outputs RDoc markup with vibrant ANSI color!
+*** to_bs.rb  Outputs RDoc markup with hot backspace action!  You will probably need a  pager to use this output format.
+** to_html.rb  Outputs RDoc markup as HTML.
+*** to_html_crossref.rb  Subclass of the RDoc::Markup::ToHtml class that supports looking up method names, classes, etc to create links.
+*** to_html_snippet.rb  Outputs RDoc markup as paragraphs with inline markup only.
+** to_label.rb  Creates HTML-safe labels suitable for use in id attributes.
+** to_tt_only.rb  Extracts sections of text enclosed in plus, tt or code.  Used to discover undocumented parameters.
+** to_table_of_contents.rb  Extracts just the RDoc::Markup::Heading elements from a RDoc::Markup::Document to help build a table of contents
+
+
+obsolete
+* inline.rb
+
+テスト用
+* formatter_test_case.rb  rdocのテスト用
+* text_formatter_test_case.rb
+* to_test.rb
+
+!! CodeObject (Rubyプログラムの構成要素)
+code_object.rb
+
+* comment.rb
+
+* RDoc::Context context.rb
+** context/section.rb
+** RDoc::TopLevel top_level.rb
+** RDoc::ClassModule class_module.rb
+*** RDoc::AnonClass (never used so far) anon_class.rb
+*** RDoc::NormalClass normal_class.rb
+*** RDoc::NormalModule normal_module.rb
+*** RDoc::SingleClass single_class.rb
+* RDoc::MethodAttr method_attr.rb
+** RDoc::Attr attr.rb
+** RDoc::AnyMethod any_method.rb
+*** RDoc::GhostMethod ghost_method.rb
+*** RDoc::MetaMethod meta_method.rb
+* RDoc::Alias alias.rb
+* RDoc::Constant constant.rb
+* RDoc::Require require.rb
+* RDoc::Include include.rb
+
+!! ジェネレータ
+* generator.rb
+* generator/
+** darkfish.rb 現在デフォルトのテーマ
+** template/darkfish/*.rhtml
+** json_index.rb  The JsonIndex generator is designed to complement an HTML generator and produces a JSON search index.  This generator is derived from sdoc by
+** template/json_index/
+** ri.rb  Generates ri data files
+** markup.rb ユーティリティ  Handle common RDoc::Markup tasks for various CodeObjects
+
+
+!! 内部実装
+
+* text.rb  Methods for manipulating comment text
+* token_stream.rb  A TokenStream is a list of tokens, gathered during the parse of some entity
+
+!! データ
+* known_classes.rb    "rb_cArray"            => "Array",
+
+!! ユーティリティ
+* encoding.rb  a wrapper around File IO and Encoding
+* erbio.rb  A subclass of ERB that writes directly to an IO.
+
+* cross_reference.rb  RDoc::CrossReference is a reusable way to create cross references for names.
+** フォーマッタで使用
+
+* ruby_lex.rb   Ruby lexer adapted from irb.
+* ruby_token.rb  同上
+
+!! コマンド
+* options.rb  require 'optparse'
+* stats.rb  RDoc statistics collector which prints a summary and report of a project's documentation totals.
+* stats/
+** normal.rb  Stats printer that prints just the files being documented with a progress bar
+** quiet.rb  Stats printer that prints nothing
+** verbose.rb  Stats printer that prints everything documented, including the documented status
+
+!! 他ライブラリとの連携
+* rubygems_hook.rb
+* task.rb  Rake
+
+* test_case.rb  test/*

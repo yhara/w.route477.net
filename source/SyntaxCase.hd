@@ -1,0 +1,31 @@
+syntax-caseに関するメモ
+
+!! 特徴
+* 健全
+* マクロ展開時にSchemeのコードが書ける
+* 健全でないこともできちゃう
+
+!! テンプレ
+<<<
+(define-syntax or
+  (lambda (x)
+    (syntax-case x ()
+      ((_ e1 e2)
+        (syntax (let ((t e1)) (if t t e2)))))))
+>>>
+
+マクロなんで、S式を受け取ってS式を返すもんだと思えばいい。
+define-syntaxにS式を変換する関数(トランスフォーマ)を渡すことで
+マクロを定義する。
+{{fn "letrec-syntaxにトランスフォーマを渡すと、ある範囲だけで使えるマクロを定義することもできる。"}}
+
+といってもS式を手で解析するのはめんどいので、補助関数が用意されている。
+「syntax-case」がパターンマッチによるS式リーダ、「syntax」がS式ライタだ。
+「(syntax (foo bar))」は「#'(foo bar)」と略記しても良い。
+
+つづく
+
+!! 資料
+* http://www.r6rs.org/final/html/r6rs-lib/r6rs-lib-Z-H-13.html
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aStandard%20Libraries
+* ビューティフルコード 25章

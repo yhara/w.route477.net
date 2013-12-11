@@ -1,0 +1,128 @@
+特にC系(C, C++, Java)。僕がRubyを覚えたころはまったこととか。
+
+{{toc}}
+
+!! 全般
+Rubyにはデバッグ用に、「p」という名前のメソッドが定義されています。
+pは、引数に渡したオブジェクトを、「人間に読みやすい」ように出力してくれます。
+
+例：
+  a = [1,2,3]
+  h = {"John" => 12, "Mary" => 15}
+  s = "some string\n"
+  
+  p a,h,s
+  
+  # 結果：
+  # [1, 2, 3]
+  # {"John"=>12, "Mary"=>15}
+  # "some string\n"
+
+ある変数objに何が入っているのか知りたければ、とりあえずp objを実行してみると
+良いでしょう。C言語でいう「printfデバッグ」は、Rubyでは「pデバッグ」になると
+言ってもいいかも知れません。:-)
+
+!! ループ
+
+C言語ではループのためにfor文を使います。Rubyにもfor文があるので、つい
+  a = ["mon","tue","wed","thu","fri","sat","sun"]
+  for i in 0..(a.size)
+    puts a
+  end
+とか書きたくなりますが、Rubyには繰り返しを行うもっと便利な書き方がいろいろと存在します。
+
+Rubyで繰り返しを行うとき、最も良く使われるのはイテレータです。
+
+  a = ["foo", "bar", "baz"]
+  a.each do |item|
+    print item, "&"
+  end
+  
+  # 結果： foo&bar&baz&
+
+配列やハッシュなど、モジュールEnumerableをインクルードしたクラスには
+eachというメソッドが定義されていて、それを用いて繰り返しを「簡単に」記述することができます。
+あるデータのそれぞれについて何かの動作をしたい時にはeachを使います。
+
+しかし、時には対象となるデータが無く、単純に「10回繰り返したい」という場合もあります。
+そのような場合には、Fixnum#timesが便利です。
+
+  10.times do
+    puts "hello world"
+  end
+
+引数を取ることもできます。
+
+  10.times do |i|
+    puts i
+  end
+
+カウントダウンするときは、Fixnum#downtoが使えます。
+
+  10.downto(0) do |i|
+    print i, " "
+  end
+  
+  # 結果： 10 9 8 7 6 5 4 3 2 1 0
+
+同様に、Fixnum#uptoというのもあります。必要に応じて使い分けましょう。
+
+!!配列
+
+さて、ループの項で出てきた ["foo","bar,"baz"] を&区切りで出力する例ですが、
+Array#joinを使うとずっと簡単に書けます。
+
+  a = ["foo", "bar", "baz"]
+  print a.join("&")
+    
+  #結果： foo&bar&baz
+
+このように配列に対して何かを行う時には、便利なメソッドが既に定義されていることが
+あります。リファレンスマニュアルの[[Arrayの項|http://www.ruby-lang.org/ja/man/index.cgi?cmd=view;name=Array]]にはひととおり目を通しておくと良いかもしれません。
+
+Arrayのメソッドの中で、便利なものをいくつか紹介します。
+
+!!! Array#select
+ブロックを渡し、条件が真になったものを選んだ配列を返します。
+
+  a = ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"]
+  p a.select{|item| item.size==3}
+    
+  # 結果： ["the", "fox", "the", "dog"]
+
+!!! Array#map
+配列の各要素にブロックを適用した新しい配列を返します。
+
+  a = ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"]
+  p a.map{|item| item.upcase}
+      
+  # 結果： ["THE", "QUICK", "BROWN", "FOX", "JUMPS", "OVER", "THE", "LAZY", "DOG"]
+
+mapにはcollectという別名があります。
+
+----
+以下、under construction
+
+!!! Array#delete_if
+
+!!文字列
+Stringクラスのこと
+
+
+!!メソッド
+
+!!!可変長引数
+C言語のprintf関数のように、引数の個数が不定なメソッドを定義する方法。
+
+  def hoge(a,b,*rest)   #restはArrayのインスタンスになる
+    p a
+    p b
+    p rest
+  end
+  
+  hoge(1,2,3,4,5)
+  
+結果：
+  1
+  2
+  [3, 4, 5]

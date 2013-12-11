@@ -1,0 +1,81 @@
+Let's 火星探査
+
+{{toc_here}}
+
+! 1  Overview
+火星探査。
+
+! 2  Mars rover behavior
+TCPで通信する。TCPSocket#read, write。
+
+視界は楕円の範囲しか見えない。
+
+アクセル／ブレーキ／回転。
+
+! 3  Network protocol
+
+!!初期化時
+ I dx dy time-limit min-sensor max-sensor max-speed max-turn max-hard-turn ; 
+
+:I:初期化。
+:dx:マップサイズ。(メートル). A map with dx 100.000 extends from -50.000 to 50.000 on the x-axis. 
+:dy:マップサイズ。 A map with dy 100.000 extends from -50.000 to 50.000 on the y-axis. 
+:time-limit:制限時間（ミリ秒）。
+
+:min-sensor:センサの範囲
+:max-speed:最高速度
+:max-turn:回転速度（毎秒の度数)。
+:max-hard-turn:hard turn中の回転速度。(毎秒の度数）。
+
+!!動作中
+ T time-stamp vehicle-ctl vehicle-x vehicle-y vehicle-dir vehicle-speed objects ; 
+
+:T:動作中。
+:time-stamp:起動からのミリ秒数。
+:vehicle-ctl:ローバーの状態。aL とか。(a/b/- と L/l/-/r/R)
+:vehicle-x:ローバーのx座標。
+:vehicle-y:ローバーのy座標。
+:vehicle-dir:ローバーの方向。x軸正方向から反時計回りの角度。
+:vehicle-speed:ローバーの速度。（メートル毎秒）
+:objects:視界内の物体の情報。
+
+物体の情報:
+||岩||b object-x object-y object-r
+||クレーター|| c object-x object-y object-r
+||ゴール|| h object-x object-y object-r
+||火星人|| m enemy-x enemy-y enemy-dir enemy-speed 
+:object-x:x座標。
+:object-y:y座標。
+:object-r:半径。
+
+例
+<<<
+T 3450 aL -234.040 811.100 47.5 8.450
+b -220.000 750.000 12.000
+m -240.000 812.000 90.0 9.100 ;
+>>>
+
+!!その他
+:B time-stamp: 岩にぶつかった。
+:C time-stamp: クレーターに落ちて終了。
+:K time-stamp: 火星人にぶっ壊されて終了。
+:S time-stamp: ゴールして終了。
+
+C,K,SのあとにはEがつづく。
+
+:E t s: tは経過時間、sはスコア(=経過時間＋ペナルティ)
+
+終了後は最低1秒間の間がある。次のrunに備えよう。
+
+! 4  Contest organization and scoring
+1 trial = 5runs.
+
+盤面の情報がもらえるのは「trialの最初」。
+
+! 5  Submission instructions
+
+! 6  How to test your program
+
+! 7  Implementation hints
+
+! Document history

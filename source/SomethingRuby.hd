@@ -1,0 +1,254 @@
+Rubyに関するいろいろ
+
+{{toc_here}}
+
+----
+! モバイル
+* http://www.infoq.com/jp/news/2010/04/rhodes-update
+* http://phonegap.com/
+* appceralator 
+* http://journal.mycom.co.jp/news/2010/07/02/033/index.html
+
+!! ガラケー
+* [[MOONGIFT: &#187; Ruby製のモバイルサイトブラウザ「ssb」:オープンソースを毎日紹介|http://www.moongift.jp/2010/03/ssb/?utm_source=twitterfeed&utm_medium=twitter]]
+
+!! Android
+* [[Ruboto IRB : 過去最大の衝撃。これは凄い！！AndroidでRubyが動く！！Androidアプリ427 | オクトバ|http://octoba.net/archives/20100305-ruboto-irb-android-427.html]]
+
+!! iPhone
+----
+
+! 非同期
+* EventMachine
+* Reactor http://gihyo.jp/dev/serial/01/ruby/0032
+
+* resque?
+
+* [[Introducing Phat, an Asynchronous Rails app|http://www.mikeperham.com/2010/04/03/introducing-phat-an-asynchronous-rails-app/]]
+* http://www.mikeperham.com/2010/03/30/using-activerecord-with-eventmachine/
+
+* fastr http://chrismoos.com/2010/06/08/fastr-ruby-web-framework/
+
+* Pusher http://www.rubyinside.com/pusher-websocket-service-3246.html
+
+!! faye
+* http://faye.jcoglan.com/
+* http://github.com/jcoglan/faye
+
+ブラウザ間のpublish/subscribe (node.jsのラッパ？)
+
+!! cramp
+* http://m.onkey.org/2010/1/15/websockets-made-easy-with-cramp
+* http://github.com/lifo/cramp
+
+----
+! バックグラウンド
+backgroundrb
+
+delayed_job
+
+Navvy
+* http://github.com/jeffkreeftmeijer/navvy
+
+beanstalk
+* http://kr.github.com/beanstalkd/
+* http://adam.heroku.com/past/2010/4/24/beanstalk_a_simple_and_fast_queueing_backend/
+
+!! cron-replacements
+clockwork
+* http://adam.heroku.com/past/2010/6/30/replace_cron_with_clockwork/
+
+----
+! Test
+!! Cucumber
+
+pure ruby版：
+* http://github.com/cavalle/steak
+* coulda?
+
+!! fixture replacement
+* factory_girl
+* machinist
+* fabricator?
+
+!! JS
+* jasmine http://pivotal.github.com/jasmine/ (<- screw.unit?)
+** http://thinkrelevance.com/blog/2010/03/02/jasmine-for-javascript-testing-it-s-screw-unit.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+relevance-llc+%28Relevance%2C+Inc.%29
+** http://tech.feedforce.jp/jasmine.html
+* blueridge
+
+!! coverage
+* rcov
+* http://github.com/colszowka/simplecov
+* http://engineering.attinteractive.com/2010/08/code-coverage-in-ruby-1-9/
+
+----
+! サーバ管理
+* backup http://kray.jp/blog/dry_with_backup_gem/
+
+* http://github.com/dcrec1/signal
+
+!! デプロイ
+* cap
+
+!! 死活監視
+* god
+* monit
+
+!! インスタンス生成
+* chef
+* puppet
+
+!! サーバ
+* nginx + unicorn
+
+----
+! デバッグ
+hammertime (irbエラーコンソール)
+*http://www.rubyinside.com/hammertime-ruby-interactive-error-console-2942.html
+
+* http://www.rubyinside.com/drx-visually-inspect-ruby-objects-3233.html
+
+* http://github.com/michaeldv/awesome_print
+
+!!irb
+* http://github.com/cldwalker/bond (補完)
+
+
+
+----
+! Interpreters
+* CRuby/YARV
+** http://www.infoq.com/jp/news/2008/10/llvmruby-roundup-yarv2llvm
+* Rubinius
+* JRuby
+* MacRuby
+* IronRuby
+** http://www.rubyinside.com/ironruby-interview-q-a-2010-3156.html
+** http://www.rubyinside.com/ironruby-silverlight-ruby-in-browser-3192.html
+* MagLev
+* BlueRuby
+* RubyEnterpriseEdition
+
+!! rvm / pik
+
+----
+! Ruby-like言語
+* Reia (on Erlang)
+
+mirah (on JVM bytecode)
+* http://www.mirah.org/wiki/Resources
+* Dubious (Rails-like WAF)
+
+----
+! Rails
+* http://github.com/acatighera/statistics
+* http://github.com/apotonick/cells
+
+
+----
+! パッケージ化
+* Ocra
+* http://github.com/ryanbooker/rubyscript2exe
+** [[Rails 2.3.5のウェブアプリをWindowsのexeファイルにする - Unexplored Rails|http://d.hatena.ne.jp/irohiroki/20100301/rails_to_exe]]
+* Crateどうなったんだろう
+* RubyStation :-)
+
+----
+! NoSQL
+* http://gihyo.jp/dev/serial/01/cassandra/0001
+* http://www.mikeperham.com/2010/03/13/cassandra-internals-writing/
+
+!! MongoDB
+mongohub(デスクトップ)
+* http://mongohub.todayclose.com/screenshots
+
+!! Redis
+* http://robots.thoughtbot.com/post/443934722/redis-data-cheeseburgers
+
+----
+! C言語
+
+* ffi
+
+* rake-compile
+
+* gem-compile
+
+----
+! その他
+* [[MOONGIFT: &#187; ニコニコ生放送を録画する「namareco」:オープンソースを毎日紹介|http://www.moongift.jp/2010/03/namareco/?utm_source=twitterfeed&utm_medium=twitter]]
+
+* CodeRay http://asciicasts.com/episodes/207-syntax-highlighting
+
+* ruote http://ruote.rubyforge.org/
+
+* http://www.notify.io/
+
+* riak (分散DB?) http://github.com/basho/riak
+
+!! 全文検索
+
+!! IRC
+* http://github.com/RISCfuture/autumn
+* http://www.rubyinside.com/cinch-a-ruby-irc-bot-building-framework-3223.html
+* http://doc.injekt.net/cinch/
+
+!! Twitter
+* [[Twitter 新 API のドキュメント「Getting Started with @Anywhere」日本語訳 - WebOS Goodies|http://webos-goodies.jp/archives/getting_started_with_at_anywhere.html]]
+* sinitter http://www.rubyflow.com/items/1942
+
+!! HTTP
+* http://github.com/technoweenie/faraday
+* httparty
+
+----
+! 情報源
+
+!! news
+* RubyInside
+* RubyFlow
+* http://edgerails.info/
+
+!! podcasts
+* http://5by5.tv/rubyshow
+* http://ruby5.envylabs.com/
+
+Ruby以外：
+* http://5by5.tv/devshow 
+* http://www.se-radio.net/
+
+!! screencasts
+* http://railscasts.com/
+* http://asciicasts.com/ (RailsCastsのテキスト起こし)
+* http://teachmetocode.com/
+
+
+----
+! WAF
+!! Rails
+* https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/milestones/27004-rails-3
+* http://asciicasts.com/episodes/208-erb-blocks-in-rails-3
+* http://railscasts.com/episodes/211-validations-in-rails-3
+* http://www.engineyard.com/blog/2010/the-lowdown-on-routes-in-rails-3/
+* http://www.railsdispatch.com/posts/rails-3-makes-life-better
+* http://www.railsdispatch.com/posts/bundler
+
+* http://guides.rails.info/index.html
+* http://d.hatena.ne.jp/willnet/20100430/1272618929
+
+!! Sinatra
+* http://www.ustream.tv/recorded/5073735 Sinatraを現実世界で 
+
+* Web : http://www.sinatrarb.com/
+* Code : http://github.com/sinatra/sinatra/commits/master
+* ML : http://groups.google.com/group/sinatrarb/topics
+* Gem : http://rubygems.org/gems/sinatra 
+
+!! その他
+* orange : http://github.com/therabidbanana/orange
+* rango : 
+* pango ?
+* pancake
+
+* Isy http://isyruby.wordpress.com/2010/04/21/isy-components/

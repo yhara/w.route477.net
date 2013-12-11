@@ -1,0 +1,112 @@
+Ruby/SDLでボタンを設置するライブラリです。
+
+{{toc_here}}
+
+! 概要
+SDLはゲームを作るためのライブラリなので、tkやGtkのように「ボタンを置いて、クリックされたら○○する」のような機能はありません。
+
+でもちょっとしたゲームで、簡単にボタンが扱えたら嬉しいですよね。SDL::Buttonsはそのためのライブラリです。
+
+! ダウンロード
+
+* [[buttons.rb|:../files/buttons.rb]] (最終更新: 2008/10/4)
+
+! 使い方
+
+SDL::Buttonsを使ったスクリプトの例です。
+
+http://gyazo.com/ec979f5ff7c80540640918cf02540700.png
+
+上のアイコンを押すと「button1 is pushed.」下のアイコンを押すと「button2 is pushed.」と表示します。
+
+<<<
+require 'sdl'
+require 'buttons'
+
+SDL.init(SDL::INIT_VIDEO)
+screen = SDL::Screen.open(640, 480, 16, SDL::SWSURFACE)
+
+image = SDL::Surface.load_bmp("icon.bmp")
+
+button1 = SDL::Button.new(0, 0, image)
+button2 = SDL::Button.new(0, 100, image)
+
+while true
+  while event = SDL::Event.poll
+    case event
+    when SDL::Event::KeyDown, SDL::Event::Quit
+      exit
+    when SDL::Event::MouseButtonDown, SDL::Event::MouseButtonUp
+      SDL::Buttons.check(event)
+    end
+  end
+  screen.fill_rect(0, 0, 640, 480, 0)
+
+  if button1.pushed?
+    puts "button1 is pushed."
+  end
+  if button2.pushed?
+    puts "button2 is pushed."
+  end
+
+  SDL::Buttons.draw(screen)
+
+  screen.update_rect(0, 0, 0, 0)
+end
+>>>
+
+!! 解説
+
+まず 
+  button1 = SDL::Button.new(0, 0, image)
+のようにしてボタンを作成します。引数はボタンのx,y座標と、ボタンの画像(SDL::Surface)です。
+
+次に、メインループの中でマウスボタンが押されたイベントを検出したら、
+    when SDL::Event::MouseButtonDown, SDL::Event::MouseButtonUp
+      SDL::Buttons.check(event)
+のようにSDL::Buttonsのcheckというメソッドにイベントを渡して、ボタンの押された情報を更新します。
+
+こうしておくと、
+  if button1.pushed?
+    puts "button1 is pushed."
+  end
+のように、ボタンのpushed?というメソッドでボタンが押されたかどうかを判定できます。
+
+最後に、
+  SDL::Buttons.draw(screen)
+のようにSDL::Buttonsのdrawというメソッドを呼んで全てのボタンを描画しています。
+
+
+! リファレンス
+
+!! Buttonクラス
+Button.new(x, y, image)
+* 新しいボタンを作成します。
+
+Button#pushed?
+* ボタンがクリックされた瞬間にtrueを返します。
+* (厳密には、ボタンの上でマウスボタンを押し、ボタンの上でマウスボタンを放したときに「クリックした」と見なします。)
+
+Button#hide
+* ボタンを隠します。
+
+Button#show
+* 隠したボタンを復活させます。
+
+Button#hidden?
+* ボタンが隠されているときtrueを返します。
+
+!! Buttonsクラス
+
+Buttons.clear
+* 全てのボタンを削除します。
+
+Buttons.check(event)
+* マウスダウン、マウスアップのeventを渡します。
+
+Buttons.draw(screen)
+* screenにボタンを描画します。
+* hideで隠されているボタンは描画しません。
+
+!! その他
+隠し機能(?)もあったりしますが、それはソースコードを見てもらうということで。

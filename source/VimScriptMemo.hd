@@ -1,0 +1,240 @@
+Vim Script(vim6)に関する自分用のメモです。
+
+!参考資料
+:help eval もしくは http://www.kaoriya.net/vimdoc_j/ の eval.txtやusr_41.txt
+
+以下の記述はVim 6に対してのものです。Vim 7ではいろいろ機能が追加されている模様。
+
+{{toc_here}}
+
+!変数
+変数は２種類の型しかない。数値と文字列である。
+真偽値は数値で表現される（Cと同じく、0が偽でそれ以外が真）。
+
+!文字列
+文字列の連結には「.」を使う。
+  echo "my name is" . name
+文字列どうしの比較には「==?」もしくは「==#」(case sensitive) を使う。
+「==」を使った場合、大小文字を区別するかは'ignorecase'による。
+
+  "string" =~ "\\w*"
+  "string" !~ "\\w*"
+のように書くことで、正規表現にマッチするかどうかを調べられる。
+このとき、'magic'が設定され'cpoptions'が空であるものと見なされる（あとで書く）。
+
+ str[3]
+のように書くことで、文字列のnバイト目を取り出すことができる（長さ１の文字列が返る）。
+インデックスは0 origin。
+
+ 'this apple is \100'
+のように、文字列リテラルにシングルクオートを使うこともできる。シングルクオート
+の中では、「\n」などの円記号が効かない。
+
+!変数
+代入は
+ let p = 1
+のようにletを用いて行う。
+
+関数の引数を参照したいときは、
+  function s:QuoteString(str)
+    return "`" . a:str . "'"
+  endfunction
+のように「a:」を頭に付ける必要がある。
+同様に、グローバル変数を参照する際は「g:」を付ける。
+
+トップレベルの何も付いてない変数はグローバル変数と見なされる。
+スクリプトローカルな変数には「s:」を、
+カレントバッファにローカルな変数には「b:」を、
+ウィンドウローカルな変数には「w:」を付ける。
+Vimの定義済み変数には「v:」が付いている（v:versionとか）。
+
+!関数
+関数名は大文字で始めなければいけない。
+
+可変長引数あり。関数定義はネスト可能。
+同名の関数がすでに存在するとエラーになる（function! を使えばエラーにならない）。
+
+exe(execute)を使うといわゆるevalっぽいことも可能。
+
+!制御構文
+ let a = 1
+ 
+ if a == 1
+   echo "one"
+ elseif a == 2
+   echo "two"
+ else
+   echo "many"
+ endif
+ 
+ while p < 10
+   let p=p+1
+   echo p
+ endwhile
+
+break、continue、三項演算子(a?b:c)もあり。 echoはステータスラインに文字列を表示する。
+echonを使うと改行しない。
+
+!関数一覧
+!!リモート
+ remote_expr( {server}, {string} [, {idvar}]) String	send expression
+ remote_foreground( {server})	Number	bring Vim server to the foreground
+ remote_peek( {serverid} [, {retvar}]) Number	check for reply string
+ remote_read( {serverid})	String	read reply string
+ remote_send( {server}, {string} [, {idvar}]) String	send key sequence
+ server2client( {clientid}, {string}) Number	send reply string
+ serverlist()			String	get a list of available servers
+
+!!変数
+ exists( {expr})			Number	TRUE if {expr} exists
+ type( {name})			Number	type of variable {name}
+
+!!文字列操作
+ char2nr( {expr})		Number	ASCII value of first char in {expr}
+ escape( {string}, {chars})	String	escape {chars} in {string} with '\'
+ iconv( {expr}, {from}, {to})	String  convert encoding of {expr}
+ match( {expr}, {pat}[, {start}]) Number	position where {pat} matches in {expr}
+ matchend( {expr}, {pat}[, {start}]) Number	position where {pat} ends in {expr}
+ matchstr( {expr}, {pat}[, {start}]) String	match of {pat} in {expr}
+ nr2char( {expr})		String	single char with ASCII value {expr}
+ simplify( {filename})		String  simplify filename as much as possible
+ stridx( {haystack}, {needle})	Number	first index of {needle} in {haystack}
+ strlen( {expr})			Number	length of the String {expr}
+ strpart( {src}, {start}[, {len}]) String	{len} characters of {src} at {start}
+ strridx( {haystack}, {needle})	Number	last index of {needle} in {haystack}
+ strtrans( {expr})		String	translate string to make it printable
+ submatch( {nr})			String  specific match in ":substitute"
+ substitute( {expr}, {pat}, {sub}, {flags}) String	all {pat} in {expr} replaced with {sub}
+ tolower( {expr})		String	the String {expr} switched to lowercase
+ toupper( {expr})		String	the String {expr} switched to uppercase
+
+!!編集
+ mode()				String  current editing mode
+ search( {pattern} [, {flags}])	Number  search for {pattern}
+ searchpair( {start}, {middle}, {end} [, {flags} [, {skip}]]) Number  search for other end of start/end pair
+
+!!時刻
+ strftime( {format}[, {time}])	String	time in specified format
+ localtime()			Number	current time
+
+!!バッファ編集(get)
+ byte2line( {byte})		Number	line number at byte count {byte}
+ cindent( {lnum})		Number  C indent for line {lnum}
+ col( {expr})			Number	column nr of cursor or mark
+ cursor( {lnum}, {col})		Number  position cursor at {lnum}, {col}
+ foldclosed( {lnum})		Number  first line of fold at {lnum} if closed
+ foldclosedend( {lnum})		Number  last line of fold at {lnum} if closed
+ foldlevel( {lnum})		Number	fold level at {lnum}
+ foldtext( )			String  line displayed for closed fold
+ getbufvar( {expr}, {varname})		variable {varname} in buffer {expr}
+ getline( {lnum})		String	line {lnum} from current buffer
+ line( {expr})			Number	line nr of cursor, last line or mark
+ line2byte( {lnum})		Number	byte count of line {lnum}
+ lispindent( {lnum})		Number  Lisp indent for line {lnum}
+ nextnonblank( {lnum})		Number	line nr of non-blank line >= {lnum}
+ prevnonblank( {lnum})		Number	line nr of non-blank line <= {lnum}
+ virtcol( {expr})		Number	screen column of cursor or mark
+ visualmode( [expr])		String	last visual mode used
+
+!!バッファ編集(set)
+ append( {lnum}, {string})	Number  append {string} below line {lnum}
+ setline( {lnum}, {line})	Number	set line {lnum} to {line}
+ setbufvar( {expr}, {varname}, {val})	set {varname} in buffer {expr} to {val}
+
+!!バッファ管理
+ bufexists( {expr})		Number	TRUE if buffer {expr} exists
+ buflisted( {expr})		Number  TRUE if buffer {expr} is listed
+ bufloaded( {expr})		Number  TRUE if buffer {expr} is loaded
+ bufname( {expr})		String	Name of the buffer {expr}
+ bufnr( {expr})			Number	Number of the buffer {expr}
+ bufwinnr( {expr})		Number	window number of buffer {expr}
+
+!!コマンドライン
+ getcmdline()			String	return the current command-line
+ getcmdpos()			Number	return cursor position in command-line
+ setcmdpos( {pos})		Number	set cursor position in command-line
+
+!!ファイル
+ delete( {fname})		Number	delete file {fname}
+ filereadable( {file})		Number	TRUE if {file} is a readable file
+ filewritable( {file})		Number	TRUE if {file} is a writable file
+ fnamemodify( {fname}, {mods})	String	modify file name
+ getfsize( {fname})		Number	size in bytes of file
+ getftime( {fname})		Number	last modification time of file
+ rename( {from}, {to})		Number  rename (move) file from {from} to {to}
+ tempname()			String	name for a temporary file
+
+!!ディレクトリ
+ getcwd()			String	the current working directory
+ glob( {expr})			String	expand file wildcards in {expr}
+ globpath( {path}, {expr})	String	do glob({expr}) for all dirs in {path}
+ isdirectory( {directory})	Number	TRUE if {directory} is a directory
+ resolve( {filename})		String  get filename a shortcut points to
+
+!!レジスタ
+ getreg( [{regname}])		String  contents of register
+ getregtype( [{regname}])	String  type of register
+ setreg( {n}, {v}[, {opt}])	Number  set register to value and type
+
+!!ヒストリ
+ histadd( {history},{item})	String	add an item to a history
+ histdel( {history} [, {item}])	String	remove an item from a history
+ histget( {history} [, {index}])	String	get the item {index} from a history
+ histnr( {history})		Number	highest index of a history
+
+!!ユーザーインターフェイス
+ browse( {save}, {title}, {initdir}, {default}) String	put up a file requester
+ confirm( {msg} [, {choices} [, {default} [, {type}]]]) Number	number of choice picked by user
+ getchar( [expr])		Number  get one character from the user
+ getcharmod( )			Number  modifiers for the last typed character
+ input( {prompt} [, {text}])	String	get input from the user
+ inputdialog( {p} [, {t} [, {c}]]) String  like input() but in a GUI dialog
+ inputsecret( {prompt} [, {text}]) String  like input() but hiding the text
+
+!!システム
+ foreground( )			Number	bring the Vim window to the foreground
+ hostname()			String	name of the machine Vim is running on
+ system( {expr})			String	output of shell command {expr}
+
+ !!シンタックスハイライト
+ hlexists( {name})		Number	TRUE if highlight group {name} exists
+ hlID( {name})			Number	syntax ID of highlight group {name}
+
+
+!!ウィンドウ
+ getwinposx()			Number	X coord in pixels of GUI Vim window
+ getwinposy()			Number	Y coord in pixels of GUI Vim window
+ getwinvar( {nr}, {varname})		variable {varname} in window {nr}
+ winbufnr( {nr})			Number	buffer number of window {nr}
+ wincol()			Number	window column of the cursor
+ winheight( {nr})		Number	height of window {nr}
+ winline()			Number	window line of the cursor
+ winnr()				Number	number of current window
+ winrestcmd()			String  returns command to restore window sizes
+ winwidth( {nr})			Number	width of window {nr}
+ setwinvar( {nr}, {varname}, {val})	set {varname} in window {nr} to {val}
+
+
+!!ARGS
+ argc()				Number	number of files in the argument list
+ argidx()			Number  current index in the argument list
+ argv( {nr})			String	{nr} entry of the argument list
+ 
+---------
+ cscope_connection( [{num} , {dbpath} [, {prepend}]]) Number	checks existence of cscope connection
+ did_filetype()			Number	TRUE if FileType autocommand event used
+ eventhandler( )			Number  TRUE if inside an event handler
+ executable( {expr})		Number	1 if executable {expr} exists
+ expand( {expr})			String	expand special keywords in {expr}
+ has( {feature})			Number	TRUE if feature {feature} supported
+ hasmapto( {what} [, {mode}])	Number	TRUE if mapping to {what} exists
+ indent( {lnum})			Number  indent of line {lnum}
+ inputrestore()			Number  restore typeahead
+ inputsave()			Number  save and clear typeahead
+ libcall( {lib}, {func}, {arg})	String  call {func} in library {lib} with {arg}
+ libcallnr( {lib}, {func}, {arg})  Number  idem, but return a Number
+ maparg( {name}[, {mode}])	String	rhs of mapping {name} in mode {mode}
+ mapcheck( {name}[, {mode}])	String	check for mappings matching {name}
+ synID( {line}, {col}, {trans})	Number	syntax ID at {line} and {col}
+ synIDattr( {synID}, {what} [, {mode}]) String	attribute {what} of syntax ID {synID}
+ synIDtrans( {synID})		Number	translated syntax ID of {synID}

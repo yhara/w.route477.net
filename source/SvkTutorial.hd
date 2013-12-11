@@ -1,0 +1,162 @@
+「分散Subversion」ことSVKのチュートリアルです。
+
+SVKを使うと、Subversionのコミットを「ローカルに溜めておく」ことができるようになります。
+これでネットワークに繋がっていない場所でもSubversionを使った開発ができます。
+
+{{toc_here}}
+
+!作業の流れ
+#リポジトリのミラーを作る(svk mirror, svk sync)
+#作業用のブランチを作る(svk copy)
+#TortoiseSVN等でチェックアウト
+#外出先でも普段と変わらない開発ができます。
+#ネットワークが回復したら、ローカルの変更をリポジトリに反映(svk push)
+
+階層図
+ svn+ssh://yhara@kmc/some/where/project_x (本体)
+     ↑   
+ //mirror/project_x (ミラー)
+     ↑   
+ //project_x (作業用ブランチ)
+
+!(0)インストール
+[[SVK公式サイトはこちら|http://svk.bestpractical.com/view/HomePage]]。
+Windowsの人は[[バイナリ配布をどうぞ|http://svk.bestpractical.com/view/SVKWin32]]。
+
+インストールができたら、以下のコマンドを実行してSVKを初期化します。
+ svk depotmap --init 
+
+自分の$HOME以下に .svk というフォルダができたと思います。.svkにはlocalというフォルダがあり、
+SVKで管理するソースコードは全てここに置かれます。
+以下で出てくる //project_x のようなパスは、 $HOME/.svk/local/project_x/ に対応します。
+
+!!注
+※cygwinを使ってると、homeがどうのこうの言われるかも知れません。
+ echo %HOME%
+の出力が /cygdrive/c/.../ とかだったりするとアウトです。
+ set HOME="c:/home/hoge"
+のように適当なフォルダを指定してください。
+
+
+
+!(1)リポジトリのミラーを作る
+!!(A) プロジェクトの規模がそれほど大きくない場合
+ svk mirror //mirror/project_x svn+ssh://yhara@kmc/some/where/project_x
+別にmirrorでなくてもいいんですが、慣習的に //mirror/なんとか という名前にするみたいです。
+
+さて、この段階ではまだファイルはコピーされません。ソースを実際に取ってくるには
+ svk sync //mirror/project_x
+とします。
+
+!!(B) プロジェクトの規模が大きい場合
+
+リポジトリ内のファイル数が非常に多くて全部を取ってきたくない場合は、
+ svk mirror //mirror/project_x/trunk svn+ssh://yhara@kmc/some/where/project_x/trunk
+のようにすることで、trunkのみをミラーすることができます。
+(混乱を避けるため、ミラーも「/trunk」で終わる名前にしておくことをお薦めします。)
+
+また、syncはデフォルトではリポジトリの全てのコミットログを取得しますが、
+ svk sync //mirror/project_x -s HEAD
+とすることで、最新版以外のコミットログを省くことができます(もちろん、この場合ログは手元では読めなくなりますが)。
+
+!!注
+"ファイルがありません：Can't create tunnel"と言われるときは、SSHクライアントがインストールされていません。
+[[plink.exe(Intel版のほう)|http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html]]を用意して、 
+ set SVN_SSH="c:\\hoge\\moge\\plink.exe"
+のように環境変数を設定してもう一度試してみてください。
+
+!(2)作業用のブランチを作る
+さて、(1)でミラーを作りましたが、''これには決してコミットしてはいけません。'' なんでかは
+知らないけどそういうもんだそうです。
+
+で、どうするかというと、作業用にコピーを作ります。
+ svk copy //mirror/project_x //project_x
+このパス名もなんでもいいんですが、短い方が楽なんで直下に置きました。
+
+(※(1)でtrunkのみチェックアウトした場合は、
+ svk copy -p //mirror/project_x/trunk //project_x/trunk
+のように、作業用ブランチも「/trunk」で終わる名前にした方が混乱しなくて良いと思います。
+-p は親階層もまとめて作成するオプションです。)
+
+!(3)チェックアウトする
+そして、これをsvn or TortoiseSVNでチェックアウトします。リポジトリのアドレスは、
+ file:///c:/HOMEのアドレス/.svk/local/project_x
+になります。HOMEがわかんない人は
+ echo %HOME%
+で確かめてください。
+
+!!注
+svk co //project_x のように、svkのコマンドでチェックアウトすることもできますが、
+この場合.svnフォルダが作成されなくなるので、diffやコミットは svk di, svk ciを使う必要が
+あります。普段の作業にsvkを使うか、svn(TortoiseSVN)を使うかはどちらかに統一した方が良いでしょう。
+
+!(4)開発する
+あとは普段どおりにコードを書いたりコミットしたりするだけです。普通にsvn/TortoiseSVNが使えます。
+
+!(5)作業をリポジトリに反映する
+ネットワークが復活したら、ローカルで書いたコードをリポジトリに反映させましょう。
+ svk push --verbatim //project_x
+
+これで、作業用コピーからミラーとリポジトリへと一気にコードがコピーされます。
+
+ svn+ssh://yhara@kmc/some/where/project_x (本体)
+     ↑
+ //mirror/project_x (ミラー)
+     ↑
+ //project_x (作業用ブランチ)
+
+図にするとこんなかんじ。
+
+--verbatimっていうのは何かのおまじないです。付けないと余計なメッセージがログに残るらしいです。
+
+あとsvk pushで送信すると、ローカルのコミットが1コミットずつコピーされます。 
+svk push -l のように-lオプションを付けると、ローカルの全てのコミットが1つにまとめてコピーされます。
+
+!(6)他人の変更を取ってくる
+ファイルを最新版に更新したいときは、
+まず、svk syncでリポジトリからミラーに変更をダウンロードします。
+ svk sync //mirror/project_x
+次に、svk pullでミラーから作業用ブランチに変更を適用します。
+ svk pull //project_x
+
+図で書くとこんな感じです。
+ svn+ssh://yhara@kmc/some/where/project_x (本体)
+     ↓sync     ↑(smerge)   ↑
+ //mirror/project_x (ミラー) ↑push
+     ↓pull     ↑(smerge)   ↑ 
+ //project_x  (作業用ブランチ)
+
+※もしあなたがsvn/TortoiseSVNではなく、svk coでワーキングコピーを作ったのなら、
+svk pull[ENTER]で「本体→ミラー→作業用ブランチ→ワーキングコピー」と、
+全ての更新が一度に行えるようです。
+
+
+!!その他のコマンド
+上の図に出てくるsmergeはブランチ間のマージを行うコマンドで、例えば
+ svk smerge /project_x //mirror/project_x
+のようにすると、サーバには変更を送らずにミラーにだけ更新を反映させることが出来ます。
+
+ただし、svk smergeはsvk pushと違い「まとめてコミット」がデフォルトなので、1コミットずつコピーしたい場合は
+-Iオプション(--independent) を使ってください。
+
+その他、コマンドのヘルプが
+ svk help
+ svk help smerge
+等で見られます。
+
+!Tips
+!! 無視ファイルを指定する方法
+ディレクトリにsvn:ignoreという属性を付ければ良いらしい。
+
+例えばtemp/*.logを無視するなら、
+ svk propedit svn:ignore temp
+とするとエディタが起動するので、「*.log」とだけ書いて保存・終了します。
+
+この時点で、svk statusなどの出力から無視ファイルが除かれているはず。あとは
+ svk ci temp
+としてコミットしてください。
+
+!参考
+:公式サイト:http://svk.bestpractical.com/view/HomePage
+:Free SVK Book:http://svkbook.elixus.org/
+:svkでsvn trunkの追っかけ:http://pub.cozmixng.org/~the-rwiki/rw-cgi.rb?cmd=view;name=svk%A4%C7svn+trunk%A4%CE%C4%C9%A4%C3%A4%AB%A4%B1

@@ -1,0 +1,66 @@
+「新次元」のプログラミング言語、Befungeについて。
+!Befunge
+Befunge(ベファンゲ？ビファンジ？) は、世にも珍しい「２次元プログラミング言語」の一種である。
+それがどういうものかを説明するよりは、サンプルコードを見てもらった方が早いだろう。
+
+!Hello world
+                  v
+ >v"Hello world!"0<
+ ,:
+ ^_25*,@
+上のソース（これがソースなのである）が、BefungeにおけるHello worldである。もちろん（他の言語同様に）これとは異なる書き方も可能であるが、ここでは処理系付属のサンプルから引用した。
+
+で、これがどう実行されるかというと…
+#まず、「カーソル」は左上(0,0)のマスにあって、「右」を向いている。
+#空白は「何もしない」命令なので、カーソルは右に動き続け「v」に出会う。
+#「v」は移動方向を「下」に変更する命令なので、カーソルは次に「<」のマスに進む。
+#「<」は移動方向を「左」に変更する命令なので、カーソルは次に「0」のマスに進み、0をスタックに積む。
+
+…とまあ、こんな感じでカーソルが動いていき、「Hello world!」という文字列を逆からスタックに積んで、それを1文字ずつpopして（「:」）表示する（「,」）。よく見ると、左の方に「v」「_」「^」「>」でループ（文字通り！）ができていることがわかるだろう。ここで、「_」は条件分岐に相当するものであり、スタックをpopしそれが0なら右に、さもなくば左に進行方向を変える。これは「''横方向の''」if文であり、これとは別に「縦方向の」if文（「|」）も存在する。
+
+残りの「25*,@」は、改行コード（10 = 2*5）を作りそれを表示（「,」）しているだけである。「@」はプログラムの終了を意味する。
+
+!特徴
+その他の特徴について。
+
+!!自己書き換え
+有名なネタ言語であるBrainf**kと同様にスタックベースで動くBefungeであるが、実はスタックの他にもう一つの記憶領域を使用することができる。「g」「p」(get, put)という命令である座標(x,y)の値を操作することができる。ここで、アドレス指定が(x,y)であることから想像できるかも知れないが、この命令はプログラム自身の置かれている領域自体を操作する。これによって、実行中に自分自身を書き換えるようなBefungeプログラムを書くことができる。{{fn "あなたの脳がハングアップしなければ……だが"}}
+
+!!Funge
+[[Funge-98 Final Specification|http://quadium.net/funge/spec98.html]]によると、BefungeはFungeと呼ばれるプログラミング言語 (Unifunge, Befunge, Trifunge...) の一種に過ぎないことが分かる。名前から予想されるように、UnifungeはBefungeの一次元版であり、TrifungeはBefungeを三次元に拡張したものである。{{fn "Trifungeには「上下方向の」ifである「m」という命令が登場する('middle'の'm'らしい)。"}}さらに、それ以上の任意の次元についてFungeを考えることができるという（そのソースはどうやって記述するのか？などと考えてはいけない）。またBefunge-93においては右端にたどり着いたカーソルが左端から出てくる（上下も同様）ことから、Befungeのプログラムは平面ではなくトーラス上に置かれていると考えられる。
+
+!!バージョン
+Befungeには最初のバージョンであるBefunge-93の他に、機能強化版であるBefunge-96, Befunge-97, Funge-98が存在する。
+[[Funge-98 Final Specification|http://quadium.net/funge/spec98.html]]によると、Funge-98ではスタックを複数使えるようになっていたり
+(stack stack)、ファイルへの入出力ができたり、OSのコマンド実行ができたりするらしい。
+また、Concurrent Fungeと呼ばれる''マルチスレッド版''についての記述があったりもする（２つ以上のカーソルを生成でき、それらが1クロックに1命令ずつ進む）。
+
+残念ながら、Befunge-98の処理系の存在は今のところ確認できていない。
+
+!処理系
+http://quadium.net/funge/downloads/ からBefunge-93の処理系を入手することができる。
+
+また処理系の実装自体もそれほど難しくないので、あなたのお気に入りの言語で書いてみるのも良いだろう。
+
+==Rubyで書いた処理系を http://mono.kmc.gr.jp/~yhara/files/befunge.rb に置いておく。==
+サンプルが動いたり動かなかったりするみたいなので[[shinichiro_hさんのやつ|http://d.hatena.ne.jp/shinichiro_h/20070126#1169742839]]
+の方を強くお勧めする。
+
+!サンプルコード
+上のURLからサンプルコードもダウンロードできる(一覧は[[こちら|http://quadium.net/funge/downloads/bef93src/]])。
+
+特に面白いものをいくつか紹介しておく。
+* [[Befungeで書かれたBefungeの処理系|http://quadium.net/funge/downloads/bef93src/befbef.bf]]
+* [[22×10で書かれた 99 bottles of beer|http://quadium.net/funge/downloads/bef93src/beer10.bf]]
+* [[簡単なアドベンチャーゲーム|http://quadium.net/funge/downloads/bef93src/dladv.bf]]
+* [[ライフゲーム|http://quadium.net/funge/downloads/bef93src/life.bf]]
+* [[14 byte Quine(自分自身のソースコードを表示するプログラム)|http://quadium.net/funge/downloads/bef93src/selflis3.bf]]
+
+!リンク
+
+* http://eto.com/d/0207.html ここで最初にBefungeを知った。
+* [[公式サイト？|http://web.archive.org/web/19990128230913/http://www.cats-eye.com/funge/doc/]] 既に見れなくなっているようだ。
+* [[WikiPedia: Befunge|http://en.wikipedia.org/wiki/Befunge]]
+* [[Dictionary of Programming Language: Befunge|http://cgibin.erols.com/ziring/cgi-bin/cep/cep.pl?_key=Befunge]]
+* [[vsync's Funge Stuff|http://quadium.net/funge/]] Cで書かれた処理系、(大量の)サンプルプログラム、言語仕様など。
+* [[Befunge-93 Documentation|http://www015.upp.so-net.ne.jp/ina/lab/befunge93_document.html]] INA氏による言語仕様の日本語訳。

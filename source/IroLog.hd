@@ -1,0 +1,91 @@
+irologは，IRCのログを色付けして表示するCGIです．
+
+{{toc_here}}
+
+! 特徴
+
+ログを見やすく表示します
+* 発言者ごとに色分け
+* 入退出など発言以外のログを省ける
+
+複数チャンネルのログを一括表示できます
+* 各チャンネルの最新発言を一覧表示
+* 前回の表示以降のログのみを一覧表示 (開発中)
+
+!例
+
+これが、
+
+{{attach_view "irologts.png"}}
+
+こうなります。
+
+{{attach_view "irolog1s.png"}}
+
+
+チャンネル一覧の例：
+
+{{attach_view "irologall_.png"}}
+
+
+! 仕様
+[[madoka|http://www.madoka.org/]]および
+[[nadoka|http://www.atdot.net/nadoka/nadoka.ja.html]]の出力するログに対応しています．
+
+ログファイルは１日ごとに分割して保存されていることを仮定しています．
+
+! 必要なもの
+Rubyで書かれているのでRuby 1.8.xが必要です。
+
+また、CGIスクリプトなのでApacheなどのHTTPサーバが必要です。
+
+! ダウンロード
+http://mono.kmc.gr.jp/~yhara/files/irolog-1.1.0.tar.gz
+
+! 設定
+設定はconfig.rbを書き換えることで行います．
+ #
+ # config.rb
+ # 
+ 
+ class Irolog
+ 
+   module Config
+     TITLE = "irc-log."
+     TOP_URL =  "../"
+     CGINAME = "irclog.cgi"
+ 
+     CHANNELS = [
+       ["foo", "/home/someone/irc-log/foo%Y/foo-%m%d.log"],
+       ["bar", "/home/someone/irc-log/bar%Y/bar-%m%d.log"],
+     ]
+   end
+ 
+ end
+:TITLE:IRCログのページのタイトル
+:TOP_URL:「トップ」のリンク先
+:CGINAME:CGIのファイル名
+:CHANNELS:チャンネルの略称とログのパス名を並べた配列
+
+CHANNELSには[[Time#strftime|http://www.ruby-lang.org/ja/man/index.cgi?cmd=view;name=Time]]
+の書式でパス名を指定します．よく使いそうなものを下に挙げておきます．
+:%Y:西暦年(4桁)
+:%y:西暦年(下2桁)
+:%m:月(01-12)
+:%d:日(01-31)
+
+またパス名の代わりに，日付を表すTimeオブジェクトを引数に取り
+パス名を返すようなProcのインスタンスを指定することもできます．
+これによって，「古いログだけパスが違う」という場合にも対応できます．
+
+例
+ ["baz", Proc.new{|t|
+   if t.year < 2004
+     t.strftime("/home/someone/oldlog/baz%Y%m%d")
+   else
+     t.strftime("/hoem/someone/irc-log/baz%Y/baz-%m%d.log")
+ }]
+
+! History
+* 1.1.0 (2006/10/14) - 各チャンネルの最新発言を一覧できるモードを実装した
+* 1.0.0 (2006/04/05) - 最初のリリース。

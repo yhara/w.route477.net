@@ -1,0 +1,93 @@
+jQuery Mobileに関するメモです。
+
+! ドキュメント
+* http://jquerymobile.com/demos/1.1.0/
+* http://dev.screw-axis.com/doc/jquery_mobile/
+
+! コンポーネント
+
+Pages & dialogs
+* 1つのHTMLに複数のページを書ける(a href=#fooとかで遷移)
+** data-titleでタイトルタグを変えることも可能
+* ページ遷移アニメーション
+* モーダルダイアログ
+
+Toolbars
+* Header bar: 一番上に置くツールバー
+* Footer bar: 一番下に置くツールバー
+** もちろんツールバーにボタン置いたりもできる
+* Navbar: 等間隔に区切られた複数のボタンからなるツールバー
+* ツールバーは固定ポジションにもできる
+* ツールバーはページをまたいで設置しつづけることができる
+
+Buttons
+* リンク・ボタン(a data-role="button")とフォーム・ボタンがある
+** リンク・ボタンはdisableとかはできない
+* ミニサイズ版(data-mini="true"): 文字が小さくなる
+* インライン版(data-inline="true"): 横幅が100%ではなく、文字数に合わせた 幅になる
+* ボタンにはアイコンを付けることができる
+** ＜＞＾ｖ
+** ×＋ー
+** チェック・歯車・再読込・進む・戻る
+** グリッド・☆・警告・情報・ホーム・検索
+** もちろん任意の画像をアイコンとして使うこともできる
+* ボタンはグループ化できる
+** 横に並べる場合はdata-type="horizontal"
+
+Content formatting
+* グリッドカラム
+** 横2分割・3,4,5分割
+** ツールバーにグリッドカラムを適用することも可能
+* Collapsible
+** 「+」がついてて閉じたり開いたりできるコンテンツ
+* アコーディオン
+** 「+」でコンテンツを開けるが、同時に1つだけしかオープンにできない
+** 縦向きのタブバー的な
+
+Form elements
+* 1HTMLに複数ページを置く場合、idは全体でユニークにしないといけない
+* フォーム要素はdisableできる
+* data-mini="true"にすると小さいサイズのフォーム要素になる
+* デフォルトでは、各要素は自動でjQuery Mobileの拡張を受ける
+** 拡張させたくない場合はdata-role="none"をつける
+* 要素
+** テキストインプット - Telとかにしておくとキーボードが変わる
+** 検索インプット(input type="search") - 検索アイコンが付く
+** スライダー (input type="range")
+** トグルスイッチ(select) - ON/OFF
+** ラジオボタン (input type="radio")
+** チェックボックス (input type="checkbox")
+** セレクトボックス (select)
+
+List views
+* ul, ol data-role="listview"
+* 横幅いっぱいのものと、左右に少し空きがあるもの(data-inset="true")が選べる
+* いろいろなリスト
+** リンク(遷移先)付きリスト
+** 番号リスト
+** 「リードオンリー」リスト (クリックできないリスト)
+*** フォームを区切るときに便利
+* リスト項目内に置けるもの
+**  ボタン
+** Count bubble (例：(328))
+** サムネイル画像 (例：CDのジャケットとかそういう)
+** アイコン
+** もっと複雑なもの http://jquerymobile.com/demos/1.1.0/docs/lists/lists-formatting.html
+* リスト項目外に置けるもの
+** List dividers (インデックス、「A」「B」「C」...みたいなやつ)
+** 検索フィルタバー (候補をフィルタリングする)
+
+data-xx一覧：
+* http://jquerymobile.com/demos/1.1.0/docs/api/data-attributes.html
+
+! イベント
+* tap taphold swipe(left|right)
+* vmouse(over|down|move|up|cancel) vclick
+* orientationchange
+* scroll(start|stop)
+* pagebeforeload pageload pageloadfailed
+* pagebeforechange pagechange pagechangefailed
+* pagebefore(show|hide) page(show|hide)
+* pagebeforecreate pagecreate pageinit
+* pageremove
+* updatelayout

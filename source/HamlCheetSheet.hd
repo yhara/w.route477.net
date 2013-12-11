@@ -1,0 +1,157 @@
+Hamlのcheet sheetです。
+
+{{toc_here}}
+
+! 例
+ !!! XML
+ !!!
+ %html
+   %head
+     %meta{:"http-equiv"=>"Content-Type", :content=>"text/html", :charset=>"utf-8"}
+     %title Hello, Haml!
+   %body
+     #main
+       %h1 Hello Haml
+       %div this is a sample haml.
+
+! タグ (%)
+
+ %html
+
+!! id指定、class指定 (#, .)
+
+ %div#main
+
+ %p.title
+
+タグを省略するとdivになる。
+
+ #main
+   .title Hello
+   
+!! 属性 ({})
+
+ %script{:src => "/javascripts/foo.js"}
+
+ %input{:selected => true}
+
+括弧内にはRubyのコードが書ける。[[Haml::Helpers|http://haml.hamptoncatlin.com/docs/rdoc/classes/Haml/Helpers.html]]
+のメソッドを使うと：
+ %html{ html_attrs("ja") }
+ -> <html lang='ja' xml:lang='ja' xmlns='http://www.w3.org/1999/xhtml'></html>
+
+!! Rails対応 ([])
+
+ %div[@user, :greeting]
+
+!! 閉じタグなし (/)
+
+ %br/
+
+実際には meta, img, link, script, br, hr タグは自動で「閉じタグなし」になる。
+
+!! 改行の制御 (<, >)
+
+タグの内側の改行なし
+  %blockquote<
+  -> <blockquote></blockquote>
+タグの外側の改行なし
+  %img
+  %img>
+  %img
+  -> <img /><img /><img />
+
+! タグの中身
+
+!! テキスト
+
+ %h1 Hello, World
+
+!! HTMLコメント (/)
+  / this is comment 
+
+Hamlとしてのコメントは -#。
+  -# this line is entirely removed
+
+どちらもネスト可能。
+  /
+    this is
+    comment of HTML
+  -#
+    this is
+    comment of Haml 
+
+!! 記号のエスケープ (\)
+内容の行頭のみ。
+  \/ this is not comment
+
+!! 複数行文字列 (|)
+  %div this string is |
+    multi line |
+
+!! フィルタの実行 (:)
+  :markdown
+    this text is
+    processed by markdown.
+
+  :javascript
+    var msg = "this code is...";
+    alert("surrounded by <script></script>");
+
+他にもいろいろなフィルタが[[定義されている|http://haml.hamptoncatlin.com/docs/rdoc/classes/Haml.html]]。
+
+フィルタ対象の文字列内では、「#{}」による埋め込みが利用可能。
+
+! Rubyコード
+
+!! 値の埋め込み (=)
+
+erbの <%= %> に相当。
+ %strong= item.title
+
+タグは使わないことも可能。
+
+ = link_to '/'
+
+文字列内の改行を保存するには ~ を使う。
+
+ %textarea~ item.message
+
+!! HTMLエスケープ (&=, !=)
+「=」の場合、HTMLエスケープされるかどうかは:escape_htmlオプションに依存する。
+
+「&=」は必ずHTMLエスケープを行う。
+
+「!=」は必ずHTMLエスケープを行わない。
+
+!! インライン埋め込み (==)
+Rubyの「#{}」が使える。
+  == Hello, #{user.name}!
+
+!! コードの実行 (-)
+erbの <% %> に相当。埋め込みは行わない。
+  - foo = 1
+
+!! ブロック実行 (-)
+erbの <%= foo.each %> に相当。
+
+  - (42...47).each do |i|
+    %p= i
+
+! XML宣言
+xhtml Transitional
+ !!! XML
+ !!!
+
+xhtml strict
+ !!! XML
+ !!! Strict
+
+など。
+
+!リンク
+* [[公式サイト|http://haml.hamptoncatlin.com/]]
+* [[リファレンス|http://haml.hamptoncatlin.com/docs/rdoc/classes/Haml.html]]
+
+!コメント欄
+{{comment}}

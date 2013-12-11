@@ -1,0 +1,93 @@
+Javascriptで書かれたScheme処理系です。
+
+!BiwaScheme
+公式サイトは http://www.biwascheme.org/ です。以下の情報は古いかも知れません。
+
+!デモ
+* [[動作デモ|http://www.biwascheme.org/repos/repl.html]]
+** 上のテキストエリアにS式を入力するか、右のサンプルコードをクリックし、evalボタンを押してください。
+** 実行結果とコンパイルされた中間コードが表示されます。
+* [[JSSpecによるユニットテスト|:../biwascheme/test/spec.html]]
+** ユニットテストです。[[JSSpec|http://jania.pe.kr/aw/moin.cgi/JSSpec]]を利用しています。JSSpecは設置が非常に簡単(解凍してサンプルを書き換えるだけ)で、デフォルトでこのようなグラフィカルな実行環境がついてくるので、非常にお薦めです。
+* [[動作確認用テスト|:../biwascheme/test/browser_test.html]]
+** 開発用のテスト環境です。処理系の動作を1ステップごとに追うことができます。
+** 同じテストがコンソールからも行えるようになっています。
+*** SpiderMonkey: ./spidermonkey.sh
+*** CScript.exe: cscript console_test.js
+** 実行されるコード自体はconsole_test.jsに書きます。browser_test.htmlはこれを読み込んでいます。
+* [[Hello World|:../biwascheme/hello_world.html]]
+** scriptタグの中にS式を書くだけで実行されるようにしてみました :-)
+<<<
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <title>Hello World</title>
+</head>
+<body>
+  <div id="biwascheme-console"></div>
+
+  <script src="biwascheme.js">
+  (display "Hello, World!")
+  </script>
+</body>
+</html>
+>>>
+
+!ダウンロード
+
+* アーカイブ (リリース版)
+http://www.biwascheme.org/download.html
+
+
+!動作を確認している環境
+
+最新のブラウザならたいてい動くと思います。
+
+[[ユニットテスト|:../biwascheme/test/spec.html]]が100%だったら大丈夫です。
+
+!仕様
+あるもの：
+* 普通の構文(ifとかletとかlambdaとかset!とかcall/ccとか)
+* 普通でない構文(let1, when, unless)
+* 標準関数のだいたい
+** http://www.r6rs.org/final/html/r6rs/r6rs-Z-H-14.html#node_chap_11
+* ライブラリの一部分
+** http://www.r6rs.org/final/html/r6rs-lib/r6rs-lib-Z-H-1.html#node_toc_start
+
+ないもの：
+:構文:vectorのquasiquoteなど
+:言語機能:複素数、有理数、非正確数、エラー処理、dynamic-wind、define-syntaxなど
+:関数:procedure?、数値関連の関数(logとか) など
+
+!jsSchemeとの違い
+
+(2009/4/5追記：[[JSのlisp実装|http://d.hatena.ne.jp/brazil/20060308/1141795410]]の中では一番のライバルだったjsSchemeですが、現在はリンク切れで見られないようです…。)
+
+||!機能||!jsScheme||!BiwaScheme||
+||実行方式||インタプリタ/JIT||中間コード||
+||モデル||ヒープベース||スタックベース||
+||速度||△||○||
+||call/cc||○||○||
+||構文||◎||○(だいたい実装した)||
+||標準関数||◎(R5RS)||○(R6RS、普段使いそうなものはもうある…と思う…)||
+||マクロ||○(syntax-rules、ちょっとあやしい？)||○(define-macro)||
+
+あとjsSchemeはR5RSベースですが、BiwaSchemeはR6RS準拠を目指しています。
+目標時期は「R7RSが策定されるより前」とされています。{{fn "ちなみにR6RSの策定には9年かかりました"}}
+
+!その他
+!!メモ
+BiwaSchemeは[[Kent Dyvbigの「Three implementation models for scheme」|http://b.hatena.ne.jp/entry/http://www.cs.indiana.edu/~dyb/papers/3imp.pdf]]
+の4章を参考に作られています。
+
+4章を読んでいるときに書いたメモを公開します([[Reading3imp.pdf]])。これから
+3imp.pdfを読む人の参考になるかも知れないし、ならないかも知れません。
+*合わせて読みたい：[[ひげぽんさんの日記|http://d.hatena.ne.jp/higepon/searchdiary?word=Scheme+VM+%A4%F2%BD%F1%A4%AF&.submit=%B8%A1%BA%F7&type=detail]]
+
+!![[heapbase.js|:../biwascheme/heapbase.js]]
+BiwaSchemeを作る前に、3章ベースで作ってみたものです。環境をリストではなく辞書で作ってしまったので、3章最後の改良が実装できなくて放置。
+
+!!名前の由来
+Biwaは琵琶湖の「びわ」から取りました。就職で地元を離れることが分かっていたので、
+滋賀県で作る最後のプロダクトということで。

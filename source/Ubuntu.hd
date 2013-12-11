@@ -1,0 +1,88 @@
+メモです。
+
+! Ubuntuの設定
+
+* 画面を1280x800に
+* 電源でスリープをオフにする
+* gnomeをemacs-likeに 
+* カーソルの点滅を切る (キーボードの設定から)
+
+! VMWareの設定
+
+* VMWare Toolsのインストール
+* 共有フォルダの設定 ( ln -s /mnt/hgfs/shared /home/yhara/shared )
+
+
+! 開発
+
+* $ sudo apt-get install aptitude
+* $ sudo aptitude install screen zsh lv tree git-core subversion
+
+* $ chsh (-> /usr/bin/zsh) 再ログイン
+
+!! github
+
+* ssh-keygen
+* 鍵をgithubに登録
+
+* $ git clone git@github.com:yhara/dotfiles.git
+* $ cd dotfiles
+* $ git submodule init
+* $ git submodule update
+* $ vim
+* :BundleInstall
+
+!! vim
+
+* vimをコンパイル
+** http://d.hatena.ne.jp/hosikiti/20100910/1284079341 神記事！
+
+* $ sudo aptitude install paco
+* $ sudo paco -D make install
+
+* echo "alias vi=vim" >> ~/.zshrc_local
+
+!! ruby
+
+* [[rvm|http://beginrescueend.com/rvm/install/]]で1.9.2と1.8.7を入れる
+** .shでインストール
+** curlがないといわれたら入れる
+** ~/.bashrcを編集
+** rvm notesで表示されるパッケージを入れる
+** rvm install 1.9.2
+
+* ln -s ~/.rvm/gems/ruby-xxx/gems ~/gems (gemのソースをすぐ見れるように)
+
+! その他ソフトウェア
+
+* chromium-browser thunderbird thunderbird-locale-ja xchat-gnome gpass
+* adobereader-jpn
+
+!! Thunderbird
+
+* 署名
+* メッセージフィルタの移行(アドオンを使う)
+* 同期をオフに
+* HTMLメールをオフに
+
+!! GPass
+
+* パスワードファイルを移行
+
+!! 日本語入力
+
+ibus-mozc
+
+* 10.04の場合 http://linux.ikoinoba.net/index.php?UID=1273605455
+
+* ibusのキー設定: かな・英数でオンオフできるようにする
+* mozcのキー設定: 
+** https://gist.github.com/1024563
+** 英数を無効にする
+** C-i, C-oで文節を操作できるようにする
+
+* AZIK
+** https://gist.github.com/1024561
+** ベース: http://miraicorp.blog90.fc2.com/blog-entry-396.html
+** 「:」を「ー」ではなく全角コロンにした (結構使いたいときがあるので)
+** ATOK版AZIKの拡張(x = you, v = yuu)を採用

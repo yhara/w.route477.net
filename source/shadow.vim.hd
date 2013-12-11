@@ -1,0 +1,33 @@
+shadow.vimに関するメモです。
+
+* https://github.com/ujihisa/shadow.vim/
+* http://vim-users.jp/2011/01/hack192/
+
+! .coffee → .js
+foo.js.shd:
+  ## coffee -csb
+  # vim: set ft=coffee :
+
+* -c : compile
+* -s : stdio
+* -b : bare (do not wrap entire js with function(){})
+
+! .slim → .html 
+foo.html.shd:
+  ## slimrb -p
+  // vim: set ft=slim :
+  doctype html
+  html
+    body
+      h1 hello
+
+* -p : pretty
+
+! .sass → .css
+<<<
+## sass
+// vim: set ft=sass :
+
+body
+  color: red
+>>>

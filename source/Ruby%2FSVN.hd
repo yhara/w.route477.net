@@ -1,0 +1,107 @@
+Subversion付属のRubyバインディングについて。
+
+!この記事について
+Subversion付属のRubyバインディングの使い方に関する記事です。
+
+日本語の情報があまりにも少ないので書いてみました。
+
+!何ができるの？
+RubyからSubversionの機能を操れます。
+
+コミットやdiffなど、svnコマンドで可能なことはほぼ全てできます。
+
+!インストール
+パッケージマネージャとかで適当に。
+
+例えばDebianなら apt-get install libsvn-ruby とすればいい…んですが、
+Debian sargeのSubversionは1.1.4なのでlibsvn-rubyがありません(Rubyバインディングの
+サポートは1.2系以降)。
+
+そういう場合はSubversionのソースを取ってきて
+ $ ./configure
+ $ make
+ $ make swig-rb
+ $ make check-swig-rb (テストを実行)
+ $ make install-swig-rb
+としましょう(詳しくは subversion/bindings/swig/INSTALLを参照)。
+
+!Rubyバインディングの構成
+ (1)ユーザーアプリケーション(Rubyスクリプト)
+     ↑
+ (2)バインディングのRubyスクリプト部分(svn/core.rb, svn/repos.rb ..)
+ subversion-1.3.2/subversion/bindings/swig/ruby/svn/*.rb
+     ↑
+ (3)バインディングのC言語部分(svn/ext/*.so)
+ subversion-1.3.2/subversion/bindings/swig/ruby/*.c
+     ↑
+ (4)SubversionのC言語用API(libsvn_*)
+
+(3)のソースを見ると分かりますが、swigによって生成されるバインディングは
+C言語の関数名がほぼそのまま使われています。
+これに(2)の皮を被せることによって、オブジェクト指向的な、より「Rubyらしい」APIが
+実現されているようです。
+
+!C言語APIの構成
+(4)のC言語APIは、さらにlibsvn_client, libsvn_ra(Repository Access)等の細かいライブラリに
+分かれています。これらの関係については以下のURLが参考になります。
+* http://rryu.sakura.ne.jp/nisenise-fuhito/mt/comment.cgi?entry_id=889
+* http://subversion.bluegate.org/doc/ch08.html#svn.developer.layerlib.tbl-1
+
+!!!Svn::Client 
+ワーキングコピーがあって、コミットしたりdiff取ったり。
+!!!Svn::Ra
+リポジトリアクセス。file://やsvn://やsvn+ssh://など、リポジトリへのいろいろなアクセス
+方法を抽象化したもの。普通にリポジトリを扱うならこれを使うっぽい。
+!!!Svn::Repos
+リポジトリ(info/とかdb/とか置いてあるディレクトリ)を直接いじる。普通はSvn::Raで事足りるはず。
+!!!Svn::Fs
+Reposのさらに下層。
+!!!Svn::Wc
+ワーキングコピーを直接いじる。普通はSvn::Clientで事足りるはず。
+!!!Svn::Core
+?
+!!!Svn::Delta
+?
+!!!Svn::Error
+?
+!!!Svn::Info
+?
+!!!Svn::Util
+ユーティリティ。他のライブラリから呼ばれる。
+
+!メモ
+!! entries, props = Svn::Ra::Session#dir(path, rev=nil)
+あるリビジョン(nilのときはHEAD)のあるディレクトリのエントリ一覧を得る。
+(リポジトリ名はセッションを開くときに指定する)
+
+:entries:パス名からdirent(class Svn::Ext::Core::Svn_dirent_t のインスタンス)へのハッシュ。direntにはkind, size, has_props, created_rev, time, last_author が定義されている(last_author以外は代入も可能)。
+*kind : Svn::Core::NODE_FILE, NODE_DIR, NODE_NONE, NODE_UNKNOWNのいずれか。
+
+:props:そのディレクトリの属性。例：
+ {
+  "svn:entry:committed-date"=>Fri Jan 12 19:11:54 JST 2007, 
+  "svn:entry:uuid"=>"304e5048-eb23-0410-822a-f608d06653f9", 
+  "svn:entry:last-author"=>"yhara", 
+  "svn:entry:committed-rev"=>"56"
+ }
+
+!ドキュメント
+Rubyバインディングのリファレンスは今のところないような気がします(誰か見つけたら
+教えてください)。
+
+!!参考になりそうなもの
+
+* Rubyバインディングのテストコード (swig/ruby/test/test_*.rb)
+* Rubyバインディングの実装 (swig/ruby/svn/*.rb)
+
+!!C言語用APIのリファレンス 
+「C言語レベルでは何ができるのか？」が分かります。
+
+:トップ:http://svn.collab.net/svn-doxygen/index.html
+:構造体:http://svn.collab.net/svn-doxygen/annotated.html
+
+
+!!実際のアプリケーションのソース
+:Tracのソース(Python):http://trac.edgewall.org/browser/trunk/trac/versioncontrol
+:ViewVCのソース(Python):http://viewvc.tigris.org/source/browse/viewvc/trunk/
+:TortoiseSVNのソース(C++):http://tortoisesvn.tigris.org/source/browse/tortoisesvn/trunk/

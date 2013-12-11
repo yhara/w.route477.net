@@ -1,0 +1,218 @@
+R6RSに関するメモです。
+
+{{toc_here}}
+
+! 7 ライブラリ
+ある機能を提供するコードを名前空間に分ける機能を提供する。
+
+ライブラリ定義の標準形は以下のようになる。
+<<<
+(library <ライブラリ名>
+  (export <エクスポートするシンボル群>)
+  (import <ライブラリ内で使うライブラリや関数群>)
+
+  ;; ここに
+  ;; ライブラリ本体の
+  ;; コードを書く
+  )
+>>>
+…と書くとシンプルに見えるが、exportやimport(のコーナーケース)が非常にややこしい。
+
+* ライブラリ名には(net http server)のように複数のシンボルを使える(階層構造を作れる)。
+** さらに、(1 0 0)のようにしてこのライブラリのバージョンを定義することができる。
+* exportには単にシンボルを書く。
+** または、(rename (foo bar))のように書く。これによって、定義時の名前と公開される名前を別にできる。
+* importには(library (net http server)) のようなライブラリ指定を書く。
+** さらに、(library (net http server) (1 0 0))のように、必要なバージョンを指定することができる。
+*** さらに、バージョン番号の指定に不等号とかorが使える。
+** only/except/prefix/renameを使って、特定のシンボルのみを取り込んだり、名前が重複した場合の対応を指定できる。
+** さらに、forを使って、このimportがライブラリ定義の「どの段階」のためのものなのかを指定できる。
+
+forについて補足([[インポート・エクスポートレベル|http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aR6RS%3a7.2%20Import%20and%20export%20levels]])
+* (for (library ..) run)とすると(runは(meta 0)の省略形)、「ライブラリ定義の実行時」に読み込まれる。
+* (for (library ..) expand)とすると(expandは(meta 1)の省略形)、「ライブラリ定義のマクロ展開時」に読み込まれる。
+* (for (library ..) (meta 2))とすると、「ライブラリ定義のマクロを生成するマクロの展開時」に読み込まれる。
+* (for (library ..) (meta 3))以上についても同様 (==これはひどいｗ==)
+
+ライブラリの[[使用例|http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aR6RS%3a7.3%20Examples]]。
+
+!! 参考リンク
+* http://www.r6rs.org/final/html/r6rs/r6rs-Z-H-10.html#node_chap_7
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aR6RS%3a7%20Libraries
+
+! 8 トップレベルプログラム
+トップレベルプログラムは以下のような構造であると規定されている。
+<<<
+(import <import spec> ...)
+<definition>または<expression>
+<definition>または<expression>
+<definition>または<expression>
+...
+>>>
+これを見るとimport文が省略できないことに気づく。まあ、(import (rnrs))なしに実用的なプログラムが書けるのかどうか知らないが。
+
+ライブラリ定義を書く場所がないように見えるが、ライブラリはファイルに分けて、importで読み込むのだと思う。
+ある名前のライブラリが実際にファイルシステムのどのパスに対応するかは処理系定義である
+(実際、BiwaSchemeではネットワーク越しにダウンロードするわけだから、規定されてても困るが)。
+
+<library body>と違い、トップレベルには定義と式を好きな順序で書ける。もし最初の式の前に
+begin/let-syntax/letrec-syntaxがあった場合、beginの中の式たちは(beginが無かったかのように)トップレベルに展開される。
+これによって、「複数のdefine」を返すようなマクロを定義することができる。
+{{fn "もしbeginを展開する仕様がなかった場合、マクロは一つの式しか返せないので、複数のdefineに展開されるマクロが書けないのだと思う"}}
+
+評価方法としては、トップレベルプログラムは<library body>と同様に評価されることになっている。
+定義より前に式が来た場合は、その式は
+ (define 適当な変数 (begin 式 <unspecified>))
+のような無害な定義に変換されると考える。
+
+!! 参考リンク
+* http://www.r6rs.org/final/html/r6rs/r6rs-Z-H-11.html#node_chap_8
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aR6RS%3a8%20Top-level%20programs
+
+! [[11.2|http://www.r6rs.org/final/html/r6rs/r6rs-Z-H-14.html#node_sec_11.2]] 定義
+定義(Definition)とは：
+* 変数/関数定義(define)
+* キーワード定義(define-syntax)
+* defineまたはdefine-syntaxに展開されるマクロ呼出し
+* begin, let-syntaxまたはletrec-syntaxで包まれたdefine/define-sytnaxに展開されるマクロ呼出し
+
+定義が書けるのは：
+* <top-level body>のトップレベル部分
+** トップレベルプログラム＝<import form> <top-level body>
+* <library body>の冒頭
+** ライブラリ定義＝(library <library name> (export ...) (import ...) <library body>)
+* <body>の冒頭
+** bodyはlambda, let, let*, let-values, let*-values, letrecおよびletrec* が持つ。あとdefineもbodyを持つ
+
+逆に言うと、定義が書けないのは：
+* <body>の冒頭より後の部分
+* ライブラリ定義のexportとかimportとか
+
+! 11.3 Body
+
+!! <body>
+lambda、let、let-values、letrecなどの本体部分。これらは、
+  <definition> 
+  ... 
+  <expression1>
+  <expression2>
+  ...
+のような形式を取る。つまり定義は最初に来なくてはならない。また、定義は存在しなくてもいいが式は1つ以上ないといけない。
+
+式より先にbegin/let-syntax/letrec-syntaxを書いた場合、それらは<body>内に展開される(複数のdefineを含むマクロ対策)。
+
+<body>内の<definition>が作る変数束縛のスコープは<body>内である
+(だから、関数定義をネストすることでローカルな関数を定義できる)。
+
+!! <library body>
+ライブラリ定義の本体部分。<body>と同じだが、式も0個でもいい点が違う。
+
+!! <toplevel body>
+トップレベルプログラムの本体部分。定義・式ともに0個でも良く、またそれらを好きな順序で書いていい。
+
+!! 参考リンク
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aR6RS%3a11.3%20Bodies
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aR6RS%3a7.1%20Library%20form
+
+! 11.15 制御構造
+!! dynamic-wind
+(俺理解) dynamic-windは、call/ccによる「再入」と「脱出」にフックをかける機構である。
+
+Java等における「try-catch-finally」を思い出していただきたい。finallyは、「例外による脱出が発生しようがしまいが指定した後処理を必ず行う」ための機能だ。
+dynamic-windもそれに似ている。ただcall/ccの場合は、あるコードブロックから脱出するだけでなく「そこに飛び込む」場合があるので、「通常時および飛び込まれた際に指定した前処理を必ず行う」という機能も欲しくなる。これらを合わせたのがdynamic-windだ。
+
+!!! 使い方
+dynamic-windは以下のような見た目をしている。
+
+ (dynamic-wind
+   (lambda () 前処理)  ; before
+   (lambda () メインの処理)  ; thunk
+   (lambda () 後処理))  ; after
+
+通常は、before, thunk, afterを順番に実行する、ただそれだけ。特別な場合は以下。
+* thunkから脱出する場合 (つまり、事前にthunkの外でcall/ccでキャプチャした継続を、thunkの中で呼び出した場合)、afterを実行してから継続本体の実行に移る。
+* thunkに再入する場合 (つまり、thunkの中でキャプチャした継続を、thunkの外に出てから呼び出した場合)、beforeを実行してから継続本体の実行に移る。
+
+dynamic-windはネストできるので、afterやbeforeの実行は複数個あることもある。
+ (dynamic-wind
+   (lambda () 前処理)  ; before1
+   (lambda ()  ; thunk1
+     (dynamic-wind
+       (lambda () 前処理)  ; before2
+       (lambda () メインの処理)  ; thunk2
+       (lambda () 後処理)))  ; after2
+   (lambda () 後処理))  ; after1
+
+!!! どうやって実装しよう？
+最初に思ったのは、「もしかしてソースコード中の各点についてwinder(beforeとafterのことです)を覚えておく必要がある？」ということ。だけどこれは間違いだった。
+なぜなら、ある点のwinderはレキシカルには決まらないから。
+
+
+
+! 標準ライブラリ6 レコード型
+構造体とも。例外システムの基礎部分に使われている(?)。
+
+かなり高機能である。
+* レコード型の定義と同時に、make-fooやfoo?といった関数を自動生成する(関数名は指定することも可能)。
+* 継承ができる。
+* immutableフラグが真だと、そのフィールドは書き換えができない。(デフォルトはimmutable)
+* sealed(封をされた)フラグが真だと、継承の親になれない。
+* opaque(不透明)フラグが真だと、中身にアクセスできない(?)
+* nongenerativeフラグが真だと、同じレコード型定義文を複数回しても1つのレコード型しか定義されない(ライブラリの重複ロード対策か？)
+* 「protocol」という、デフォルトのコンストラクタを自前のコンストラクタに変換する関数を設定できる。
+
+ライブラリはsyntacticレイヤ(上位層)とproceduralレイヤ(下位層)、およびリフレクション用のinspectionレイヤ
+の3つに分割されている。最低限syntacticレイヤのAPIだけ実装すれば、構造体を作ったり使うことができるようになる。
+
+
+!! 参考リンク
+* http://www.r6rs.org/final/html/r6rs-lib/r6rs-lib-Z-H-7.html#node_chap_6
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aStandard%20Libraries%3a6%20Records
+
+
+! 標準ライブラリ7 例外とコンディション
+例外処理。Rubyでいうraiseとbegin-rescue。例外オブジェクトはR6RSでは(Common Lispに倣い？)「コンディション」と呼ばれる。
+
+* 例外の発生にはraiseかraise-continuableを使う。
+* 例外をキャッチするにはwith-exception-handlerかguardマクロを使う。
+* 「プログラムの実行をまだ続けられる例外」というものが存在する。
+** raise-continuableで例外を投げた場合、例外ハンドラの実行後に例外を投げた箇所から実行が再開される。
+** これによって、「実行を続けるかユーザに問い合わせる」ような処理が書けたりする(このへんもCommon Lisp由来かな)。
+* コンディションは「合成」することができる。合成コンディションは、いくつかの状況が同時に発生したことを表す。
+** exampleでは、&errorと&messageを合成する例が出てくる (&error自身はメッセージを持てない)。
+* 標準のコンディションとして以下が定義されている。(インデントは継承関係)
+<<<
+&condition 
+  &warning 
+  &serious 
+    &error 
+    &violation 
+      &assertion 
+      &non-continuable 
+      &implementation-restriction 
+      &lexical 
+      &syntax 
+      &undefined 
+  &message 
+  &irritants
+>>>
+
+!! 参考リンク
+* http://www.r6rs.org/final/html/r6rs-lib/r6rs-lib-Z-H-8.html#node_chap_7
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aStandard%20Libraries%3a7%20Exceptions%20and%20conditions
+* http://d.hatena.ne.jp/higepon/20080517/1211025129
+** http://d.hatena.ne.jp/higepon/20080810/1218378653
+** http://d.hatena.ne.jp/higepon/20080811/1218427325
+** http://d.hatena.ne.jp/higepon/20080811/1218438192
+
+! 標準ライブラリ13 ハッシュテーブル
+ハッシュテーブル。キーから値への一対一対応を保持する。いくつか意外な特徴があるので注意。
+
+* 任意のオブジェクトをキーにできる。
+* ハッシュテーブルの生成時に、キーの同一性の定義を与えなければいけない。そのためmake-eq-hashtable (eq?で比較)、make-eqv-hashtable (eqv?で比較)、make-hashtable (ユーザ定義の関数で比較、ハッシュ関数も与える) と、3種類のコンストラクタが用意されている。
+** equal?やstring=?等を使うハッシュテーブルを作るコンストラクタは用意されていないが、equal-hash, string-hash, string-ci-hash, symbol-hashという4種のハッシュ関数が組み込みで定義されているため、そのようなハッシュテーブルを作ることは簡単にできる。
+* ハッシュテーブルの生成時に、保存予定のキーの数を与えることができる。処理系によっては、この数を利用してメモリ確保を効率化することができると思われる。
+* hastable-copyによって複製を作るとき、mutableフラグを立てることができる。mutableフラグが立っているとどうなるかは仕様に書いてないが(おい！)、hashtable-set!がエラーになるのだと思われる。
+
+!! 参考リンク
+* http://practical-scheme.net/wiliki/wiliki.cgi?R6RS%3a%e7%bf%bb%e8%a8%b3%3aStandard%20Libraries%3a13%20Hashtables

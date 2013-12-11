@@ -1,0 +1,65 @@
+Ruby/SDLから使える、非常に小さいサイズのフォント集です。
+
+インターネット上で見つけたものをRuby/SDL用の形式に変換して置いています。
+
+ライセンスは元データと同じで。どれも自作ゲームに使うくらいは大丈夫だと思います。
+
+!サンプル画像
+[[9/8の日記|:../d/?date=20060908]]を参照してください。
+
+!使い方
+SDL::BMFont.open()で読みこんで、font.textout()で描画します。
+
+詳しくは[[Ruby/SDLリファレンス|http://www.kmc.gr.jp/~ohai/rubysdl_ref.html]]の
+ビットマップフォントの項を参照してください。
+ require 'sdl'
+ 
+ SDL.init( SDL::INIT_VIDEO ) 
+ screen = SDL.setVideoMode( 640, 480, 16, SDL::SWSURFACE )  
+ 
+ font = SDL::BMFont.open('2x4font.bmp',SDL::BMFont::TRANSPARENT)
+ loop do
+   while event = SDL::Event2.poll
+     case event
+     when SDL::Event2::Quit 
+       exit
+     when SDL::Event2::KeyDown
+       if event.sym == SDL::Key::ESCAPE
+         exit
+       end
+     end
+   end
+ 
+   screen.fillRect( 0, 0, 640, 480, [ 0, 0, 0 ] )
+   font.textout(screen,"Bitmap Font Test..",0,0)
+   screen.updateRect( 0, 0, 0, 0 )
+ end
+
+
+!ダウンロード
+
+!!5x5 (モノクロ)
+[[更新履歴兼雑記|http://d.hatena.ne.jp/shinichiro_h/20060814#1155567183]]より。
+ライセンスは修正BSDとかだそうです。
+
+ダウンロード：http://route477.net/files/5x5font.bmp
+
+!!4x4 (モノクロ)
+[[正直日記|http://www.liarsoft.org/diary/20060815.html#20060815p1]]より。
+ライセンスは[[OCPL0000|http://oops-music.com/info/view_news.html?nid=14594]]だそうです。
+
+ダウンロード：http://route477.net/files/4x4font.bmp
+
+!!2x4 (カラー)
+[[Note|http://d.hatena.ne.jp/ytqwerty/20060817#p1]]より。
+ライセンスは[[NYSL|http://d.hatena.ne.jp/keyword/NYSL]]だそうです。
+
+ダウンロード：http://route477.net/files/2x4font.bmp
+
+!!3x3 (カラーというかモノクロ3階調)
+同じく[[Note|http://d.hatena.ne.jp/ytqwerty/20060818#p1]]より。
+ライセンスは
+[[OCPL00000|http://oops-music.com/info/view_news.html?nid=14594]]と
+[[GBL|http://shinh.skr.jp/m/?date=20060817#p06]](10億円)のデュアルライセンスだそうです。
+
+ダウンロード：http://route477.net/files/3x3font.bmp

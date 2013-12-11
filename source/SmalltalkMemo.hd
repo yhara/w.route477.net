@@ -1,0 +1,36 @@
+Smalltalkに関するメモです。
+
+! インストールとか
+* [[Route 477 - GNU Smalltalkなら、コマンドラインでSmalltalkを試せる|:../d/?date=20091014#p02]]
+
+! 構文
+!! メッセージ
+  x := Array new: 20
+としたとき、
+  x at: 1
+は参照、
+  x at: 1 put: 99
+は更新。
+
+前者はat:というメソッド、後者は[[at:put:というメソッド|http://www.gnu.org/software/smalltalk/manual-base/html_node/Object_002dbuilt-ins.html#Object_002dbuilt-ins]]。
+
+!! 複文
+Rubyの「;」的なものは、「.」で区切る。
+   x add: 5. x add: 7. x add: 'foo'
+
+逆に、Rubyの「.」のようなメソッドチェーンは「;」。
+   x add: 5; add: 7; add: 'foo'
+
+!! [[printとか|http://www.gnu.org/software/smalltalk/manual-base/html_node/Object_002dprinting.html#Object_002dprinting]]
+||Ruby|| Smalltalk||
+||p || printNl ||
+||print || display ||
+||puts || displayNl||
+だいたいこうかな？
+
+! リンク
+* [[GNU Smalltalk|http://smalltalk.gnu.org/]]
+* [[チュートリアル|http://www.gnu.org/software/smalltalk/manual/html_node/Tutorial.html#Tutorial]]
+* [[組み込みライブラリ|http://www.gnu.org/software/smalltalk/manual-base/html_node/Base-classes.html#Base-classes]]
+* [[添付ライブラリ|http://www.gnu.org/software/smalltalk/manual-libs/html_node/index.html]]
+* [[構文定義|http://www.gnu.org/software/smalltalk/manual/html_node/The-syntax.html#The-syntax]]

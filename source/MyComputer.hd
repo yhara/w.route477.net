@@ -1,0 +1,66 @@
+うちのマシンについて。主に俺用メモ。
+
+{{toc_here}}
+
+!現役
+
+!! MacBook 白
+2.4GHz MacBook (MB403J/A)
+
+||CPU||2.4GHz Intel Core 2 Duo
+||二次キャッシュ|| 3MB(共有)
+||システムバス|| 800MHz
+||メモリ|| 4GB
+||HDD|| 160GB シリアルATA 5400rpm
+||エネルギー消費効率|| 0.000016
+||光学式ドライブ|| 8倍速SuperDrive（DVD±R DL/DVD±RW/CD-RW）
+||グラフィック|| Intel GMA X3100グラフィックスプロセッサ、144MBのDDR2 SDRAMメモリ搭載（メインメモリと共有）
+||FireWire|| FireWire 400ポート1基（最大400Mbps）
+||USB||  	USB 2.0ポート2基（最大480Mbps）
+||オーディオ|| 内蔵ステレオスピーカー、無指向性マイクロフォン内蔵、光デジタルオーディオ入力/オーディオライン入力、光デジタルオーディオ出力/ヘッドフォン出力
+||有線||  	10/100/1000BASE-T（ギガビット）Ethernetを標準装備
+||無線|| AirMac Extreme Wi-Fi（IEEE 802.11nドラフト規格準拠）4、Bluetooth 2.0+EDR（Enhanced Data Rate）モジュールを標準装備
+||付属品|| 60W MagSafe電源アダプタ、ACウォールプラグ、電源コード、リチウムポリマーバッテリー
+
+
+
+
+!! sycom BTOマシン
+RadiantVX400VL series
+
+:CPU      : Intel Celeron D 336 [2.80GHz/FSB533/L2 256KB]
+:CPU-FAN  : Intel純正FAN
+:MOTHER   : MSI PM8M3-V [VIA P4M800CE chipset]
+:MEMORY   : 1024MB DDR-SDRAM PC3200 CL3 *1枚【メジャーチップ・6層基盤】
+:FDD      : [白ベゼル] 2mode[1.44MB/720KB] 
+:HDD1    : S-ATA/Western Digital WD2500JS[250GB 7200rpm 8MB S-ATA2 流体軸受]
+:HDD2    : 外付けUSBドライブ
+:OptDrive1: DVD-RAM/±R/RW;[白ベゼル]TEAC DV-W516E-002+ソフト 
+:VGA      : RADEON 9600 128MB AGP OEM [128bit/FAN無/DVI端子付/TV-OUT] 
+:SOUND    : AC97 codec搭載
+:SPEAKER  : なし (大抵ヘッドホン、もしくはディスプレイのスピーカ)
+:SCSI     : なし 
+:LAN      : 10/100BASE T/TX 搭載
+:CASE     : Inwin IW-Z588 SLT350(Sycom) [M-ATX 350W/静音]
+:KEY      : HHK Lite2(だっけ) 黒色
+:MOUSE    : Microsoft IntelliMouse Optical [光学式]BOX
+:OS       : WindowsXP Home Edition(SP2) OEM 
+:MONITOR  : 三菱
+
+!! NEC LaVie G
+1回生〜
+
+:OS:WinXPとUbuntu 8.04のデュアルブート。
+
+!引退
+
+!! IBM Aptiva
+高校〜1回生
+
+!! PC9821 As
+中1〜高校
+
+!! PC9801 VM
+〜中1
+
+!! PC8801

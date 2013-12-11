@@ -1,0 +1,475 @@
+[[Senna|http://qwik.jp/senna/]]標準添付のRubyバインディングの''非公式''ドキュメントです。 内容の正しさは保障されません（＞＜;）気をつけて使って下さい。
+
+基本的にC APIのをRuby向けに書き換えただけです。
+ s/クラス/クラス/g
+ s/Senna::index/Senna::Index/g
+ s/Senna::records/Senna::Records/g
+ s/NULL/nil/g
+とかしています。
+
+よく分からない・未調査のところには脚注が付いています。
+
+内容は2006/10時点のものなので、古くなっている可能性があります。
+
+{{toc_here}}
+
+!Rubyバインディング
+
+Sennaの全ての機能はAPI関数を通して提供されます。
+
+APIは、basic API, advanced API, low-level API, toolkit APIの4種類から構成されます。 basic APIを使ってインデックスの作成・更新・検索の一通りの機能を使用できます。 advanced APIを用いることによって、検索精度の細かなチューニングを制御することが可能になります。 low-level APIを用いることによってSennaの内部のデータ構造にアクセスし、さらに複雑なデータの操作や検索処理が行えます。 toolkit APIはさまざまな便利な機能を提供します。
+
+!!basic API
+basic APIは、2つのクラスとその操作関数、およびsennaライブラリを初期化する関数とで構成されます。2つのクラスとは、インデックスファイルに対応するSenna::Indexと、検索結果に対応するSenna::Recordsです。
+
+!!!Senna初期化関数
+(C APIと違い) 初期化/終了関数は自動的に呼び出されるので、ユーザが明示的に呼び出す必要はありません。
+
+!!!Senna::Index クラス
+文字列から文書を高速に検索するための転置インデックス(索引)ファイルに対応するクラスです。文書IDと文書内容(文字列)のペアからなる文書を登録すると、文字列をキーとして、これを含む文書IDの集合を高速に取り出すことができます。 Senna::Indexのインスタンスはファイルシステム上の特定のファイルに対応しており、格納された文書は永続的に保存されます。ただし、Senna::Indexを用いて、文書IDに対応する文書内容を取り出すことはできません。
+
+文書IDには固定長のバイナリデータか、nulで終端する可変長の文字列が使用できます。
+
+複数の文書で文書IDが重複してはいけません。
+
+最大文書ID長は8191バイトです（可変長IDの場合、末端のnil文字も含んで8192バイトです）。
+
+値にはnulで終端する{{fn "Rubyの場合はどうするんでしょう。swigが勝手にnulを付けてくれる？途中にnulが入らないようにだけ気をつければ良い？"}}可変長の文字列を指定します。
+
+値には最大長の制限はありません。
+
+値に指定する文字列のエンコーディングは、SHIFT-JIS, EUC-japan, utf-8のいずれかを選択できます。
+
+値に指定する文字列の分かち書き方式は、形態素解析, N-gramのどちらかを選択できます。
+
+N-gramを選択した場合、英数文字列および記号文字列を文字要素に分割するか/しないかを選択できます。
+
+値に指定する文字列に対して、英文字の大文字/小文字、全角文字/半角文字の正規化処理を行うか/行わないかを選択できます。
+
+一つのSenna::Indexインスタンスを複数のスレッドで共有することができます。
+
+一つの転置インデックスファイルを複数のプロセスで同時にopenすることができます。
+
+排他制御なしに更新操作の実行と同時に参照操作を安全に実行することができます。 (ただしトランザクション隔離を実現しているわけではなく、未コミットのデータが参照される場合があります。)
+
+複数のプロセスないしスレッドが一つのインデックスに対して同時に更新操作を実行することはできません。
+
+ Senna::Index.create(path, key_size=0, flags=0, initial_n_segments=0, encoding=ENC_DEFAULT)
+pathで与えられた新しい転置インデックスファイルを作成し、対応するSenna::Indexインスタンスを返します。失敗した場合はnilを返します。
+
+key_sizeに文書ID長(バイト長)を与えます。 key_sizeに0が指定された場合は可変長(nul終端する文字列)が指定されたとみなされます。
+
+flagsには、以下のflagを組み合わせて指定します。
+
+:Senna::INDEX_NORMALIZE: 英文字の大文字/小文字、全角文字/半角文字を正規化してインデックスに登録する
+:Senna::INDEX_SPLIT_ALPHA: N-gramインデックスで正規化を指定した際、英文字列もN文字の要素に分割する(それ以外の場合は連続した英文字列を１単語とする)
+:Senna::INDEX_SPLIT_DIGIT: N-gramインデックスで正規化を指定した際、数字文字列もN文字の要素に分割する(それ以外の場合は連続した数字文字列を１単語とする)
+:Senna::INDEX_SPLIT_SYMBOL: N-gramインデックスで正規化を指定した際、記号文字列もN文字の要素に分割する(それ以外の場合は、連続した記号文字列を１単語とする)
+:Senna::INDEX_NGRAM: (形態素解析ではなく)n-gramを用いる
+:Senna::INDEX_DELIMITED: (形態素解析ではなく)空白区切りで単語を区切る。
+
+initial_n_segmentsは、初期バッファサイズを与えます。 initial_n_segments * 256Kbytes分の容量が初期インデックスとして確保されます。この数値が(実メモリサイズを越えない範囲で)大きいほど更新処理が高速になります。
+
+encodingには、Senna::ENC_DEFAULT, Senna::ENC_NONE, Senna::ENC_EUC_JP, Senna::ENC_UTF8, Senna::ENC_SJIS のいずれかを指定します。
+
+ Senna::Index.open(path)
+ Senna::Index *Senna::Index#open(const char *path);
+pathで与えられた既に作成済の転置インデックスファイルを開き、対応するSenna::Indexインスタンスを返します。失敗した場合はnilを返します。
+
+ Senna::Index#close
+selfに対応する転置インデックスファイルを閉じ、 Senna::Indexインスタンスを解放します。成功すれば Senna::RC_SUCCESS が、失敗すればエラーコードが返ります。
+
+ Senna::Index#remove
+ Senna.Senna::index_remove(path)
+selfに対応する/pathで与えられた転置インデックスファイルを削除します。成功すれば Senna::RC_SUCCESS が、失敗すればエラーコードが返ります。
+
+ Senna::Index#rename(new_name)
+ Senna.Senna::index_rename(old_name, new_name)
+selfに対応する/old_nameで与えられた転置インデックスファイルのファイル名を、 new_nameに変更します。成功すれば Senna::RC_SUCCESS が、失敗すればエラーコードが返ります。
+
+ Senna::Index#upd(id, oldvalue, newvalue)
+index内のkeyに対応する文書の値をoldvalueからnewvalueに更新します。
+
+新規文書である場合はoldvalueにnilを指定します。
+
+文書を削除する場合はnewvalueにnilを指定します。
+
+oldvalueには前回indexに登録した時の値を正しく指定する必要があります。
+
+ Senna::Index#sel(string)
+indexから値にstringを含む文書を取り出し、Senna::Recordsインスタンスとして返します。
+
+!!Senna::Records クラス
+検索結果として返されるレコードの集合をメモリ上に一時的に格納するためのクラスです。
+
+レコード集合の内の一つのレコードをカレントレコードとして参照しています。
+
+ Senna::Records#next
+可能であればカレントレコードを一つ進めます。成功した場合はカレントレコードのkeyを、失敗した場合はnilを返します。
+
+ Senna::Records#rewind
+カレントレコードをクリアします。Senna::Records#rewind実行後に Senna::Records#nextを実行すれば、最初のレコードから順番にレコードを読み出すことができます。
+
+ Senna::Records#curr_score
+カレントレコードのスコア(検索クエリーに対する適合度)を返します。
+
+ Senna::Records#curr_key
+カレントレコードのkeyを文字列として返します。カレントレコードが存在しない場合は0を返します{{fn "ほんと？"}}。
+
+Senna::Index#sel, Senna::Index#select, Senna::Records#rewind実行直後はカレントレコードは存在しません。Senna::Records#nextを実行する必要があります。
+
+ Senna::Records#nhits
+selfに含まれるレコードの数を返します。
+
+ Senna::Records#find(key)
+selfにkeyに対応するレコードが含まれているかどうかを調べます。該当するレコードが存在すれば、そのレコードのスコアを返します。
+
+Senna::Records#findを実行した以降にSenna::Records#nextを実行した場合、正しい結果が返されることは保証されません。 
+Senna::Records#rewindを実行してカーソルを初期化する必要があります。
+
+ Senna::Records#close
+recordsインスタンスを解放します。
+
+!!advanced API
+検索精度の精度の細かい制御を行うためには advanced API を使用します。 advanced APIではSenna::IndexクラスとSenna::Recordsクラスに加えて、インデックスに登録する文書情報を格納するSenna::Valuesクラスを使用します。
+
+!!!Senna::Values クラス
+Senna::Valuesクラスはインデックスに登録する文書の内容をメモリ上に一時的に格納するためのクラスです。 basic APIでは文書の値をフラットな単一の文字列として扱いますが、advanced APIでは、文章を階層的に扱うことができます。
+
+１つの文章は、複数のセクションから成り立ちます。セクションを用いることによって、いわゆる「段落検索」を行うことができます。
+
+１つのセクションは、複数のパラグラフから成り立ちます。パラグラフとは、重みを持つ文字列です。重みとは、文書内でその文字列が強調されている度合を示す整数値です。重みを用いることによって、重みの大きく設定された部分の文字列にマッチした文書の方がより適合度が高い、といった順位付けを行うことができます。
+
+ Senna::Values.open
+新たなSenna::Valuesインスタンスを生成します。
+
+ Senna::Values#close
+Senna::Valuesインスタンスを解放します。
+
+ Senna::Values#add(str, weight=1)
+selfに重み値weightを持つ文字列strを追加します。
+
+!!!Senna::Records クラス
+advance APIでは、Senna::Records に対するより複雑な操作関数が提供されます。
+
+ Senna::Records.open(record_unit=Senna::REC_DOCUMENT, subrec_unit=Senna::REC_NONE, max_n_subrecs=0)
+新しい空のrecordsインスタンスを生成します。basic APIでは検索結果は文書毎でしたが、advanced APIではrecord_unitを指定することによってレコードの単位を指定できます。また、レコード毎に、その下位の単位で有限個のサブレコードを格納することができます。サブレコードの単位は、subrec_unitで指定します。 record_unit, subrec_unitは以下のいずれかを指定します。
+
+:Senna::REC_DOCUMENT: 文書単位
+:Senna::REC_SECTION: セクション単位
+:Senna::REC_POSITION: 出現位置単位
+:Senna::REC_USERDEF: ユーザ定義値単位(group化するときのみ有効です)
+:Senna::REC_NONE: サブレコードを格納しないことを指示します
+
+max_n_subrecsは、レコード毎に格納するサブレコードの最大数を指定します。
+
+ Senna::Records#union(subj)
+selfとsubjの和集合であるRecordsを返します。selfとsubjは破壊されます。 selfとsubjは同一のシンボル表を文書IDとするインデックスの検索結果であり、 record_unitが同一でなければなりません。
+
+ Senna::Records#subtract(subj)
+selfとsubjの差集合であるrecordsを返します。selfとsubjは破壊されます。 selfとsubjは同一のシンボル表を文書IDとするインデックスの検索結果であり、 record_unitが同一でなければなりません。
+
+ Senna::Records#intersect(subj)
+selfとsubjの共通集合であるrecordsを返します。selfとsubjは破壊されます。 selfとsubjは同一のシンボル表を文書IDとするインデックスの検索結果であり、 record_unitが同一でなければなりません。
+
+ Senna::Records#difference(subj)
+selfとsubjから共通に含まれるレコードを取り除きます。共通に含まれていたレコードの数を返します。 selfとsubjは同一のシンボル表を文書IDとするインデックスの検索結果であり、 record_unitが同一でなければなりません。
+
+ Senna::Records#sort(limit, optarg=nil)
+records内のレコードをソートし、上位limit個の要素をSenna::Records#nextで順次取り出せるようにします。 optargを指定することにより、ソートの方法を操作できます。
+
+optargはSenna.get_sort_optarg(mode){|r1, r2| ...} から取得します。 modeには以下のいずれかを指定します。
+
+:Senna::SORT_DESCENDING:降順
+:Senna::SORT_ASCENDING:昇順
+
+ブロックには比較対象となる二つのレコードr1, r2が渡されます。r1, r2はSenna::Recordのインスタンスです。
+ブロックはr1がr2に対して 1)小さい、2)等しい、3)大きいとき、 1)ゼロ未満、2)ゼロ、3)ゼロより大きい整数 のいずれかを返さなければなりません。二つの要素が等しいとき、並べ替えたrecordsにおけるr1, r2の順序は未定義です。
+
+ブロックを指定しなかった場合は、各レコードのスコア値によってソートします。
+
+optargにnilが指定された場合は、modeにSORT_DESCENDINGが指定され、ブロックが指定されなかったものとみなします。
+
+ Senna::Records#group(limit, optarg=nil)
+selfのrecord_unitをより大きな粒度の大きな単位に変更します。新たなrecord_unitの値が同一である複数のレコードは一つにまとめられ、サブレコードとして格納されます。limitには新たなレコード毎のサブレコードの最大値を指定します。 optargを指定することにより、グループ化の方法を操作できます。
+
+optargはSenna.get_group_optarg(mode, key_size){|record| ...}から取得します。
+
+modeは、limit個以上ののサブレコードが存在する場合に保存対象とするサブレコードを選び出す順序を指定します。
+
+ブロックを指定することによって、文書単位・セクション単位・出現位置単位のいずれでもなく、ユーザの定義するグループ化キー単位でレコードをまとめることができます。
+ブロックの戻り値が0以外であれば、当該レコードは捨てられます。funcはレコードの内容に基づいてkey_sizeバイトのグループ化キーを算出し、バッファに格納しなければなりません。
+
+ Senna::Records#curr_rec(bufsize=0)
+カレントレコードをSenna::Recordのインスタンスとして返します。
+
+ Senna::Records#at(key, section, pos, bufsize=0)
+selfの中から、文書IDがkeyでセクション番号がsectionで出現位置がposであるレコードを検索し、そのレコードをSenna::Recordのインスタンスとして返します。
+
+Senna::Records#atを実行した以降にSenna::Records#nextを実行した場合、正しい結果が返されることは保証されません。
+Senna::Records#rewindを実行してカーソルを初期化する必要があります。
+
+!!!Senna::Recordクラス
+ Senna::Record#key
+キー
+ Senna::Record#keysize
+キー長
+ Senna::Record#section
+セクション番号
+ Senna::Record#pos
+位置
+ Senna::Record#score
+スコア
+ Senna::Record#n_subrecs
+サブレコード数
+ Senna::Record#subrec(index, bufsize=0)
+selfのindex番目のサブレコードをSenna::SubRecordのインスタンスとして取得します。
+
+!!!Senna::SubRecordクラス
+ Senna::Record#key
+キー
+ Senna::Record#keysize
+キー長
+ Senna::Record#section
+セクション番号
+ Senna::Record#pos
+位置
+ Senna::Record#score
+スコア
+
+!!!Senna::Index クラス
+advance APIでは、Senna::Index に対するより複雑な操作関数が提供されます。
+
+ Senna::Sym#index_create_with_keys(path, flags=0, initial_n_segments=0, encoding=0)
+Senna::Index *Senna::Index#create_with_keys(const char *path, Senna::sym *keys,
+		     int flags, int initial_n_segments, Senna::encoding encoding);
+Senna::Index#createと同様にpathで与えられた新しい転置インデックスファイルを作成し、対応するSenna::Indexインスタンスを返しますが、文書IDを管理するシンボル表keysに既存のSenna::symインスタンスを指定することができます。
+
+Senna::Index *Senna::Index#open_with_keys(const char *path, Senna::sym *keys);Senna::Index#openと同様にpathで与えられた既に作成済の転置インデックスファイルを開き、対応するSenna::Indexインスタンスを返しますが、文書IDを管理するシンボル表keysに既存のSenna::symインスタンスを指定することができます。
+
+Senna::rc Senna::Index#update(Senna::Index *index, const void *key, unsigned int section, Senna::Values *oldvalue, Senna::Values *newvalue);keyに該当する文書のsection番目のセクションの内容をoldvalueからnewvalueに更新します。 sectionは1以上の値を指定してください。
+
+ Senna::Index#select(string, records=nil, op=SEL_OR, optarg=nil)
+selfからstringにマッチする文書を検索し、演算子opに従ってrecordsに結果を反映します。演算子opは以下のいずれかを指定します。
+
+:Senna::SEL_OR: stringにマッチするレコードをrecordsに追加します。
+:Senna::SEL_AND: stringにマッチしないレコードをrecordsから削除します。
+:Senna::SEL_BUT: stringにマッチするレコードをrecordsから削除します。
+:Senna::SEL_ADJUST: stringにマッチするレコードがrecordsに元々含まれていた場合にそのスコア値を加算します。
+
+また、optargを指定することにより、レコードを検索する動作を制御できます。
+optargは Senna.get_select_optarg(mode, similarity_threshold_or_max_interval=0, weight_vector=nil){|records, docid, secno| ...} から取得します。
+
+modeには以下のいずれかを指定します。
+
+:Senna::SEL_EXACT:stringが語境界と一致して現れるレコードのみを検索します
+:Senna::SEL_PARTIAL:stringが語の列の一部と部分一致するレコードを検索します（ただし、英数字や記号文字列の場合や、Senna::INDEX_DELIMITEDを指定したインデックスの場合は、前方一致検索のみを行います。）
+:Senna::SEL_UNSPLIT:stringをわかち書きせずに語の一部に一致するレコードを検索します（ただし、英数字や記号文字列の場合や、Senna::INDEX_DELIMITEDを指定したインデックスの場合は、Senna::sel_partialと同じ動作を行います。）
+:Senna::SEL_NEAR:stringをわかち書きした各語がmax_intervalの範囲内に現れるレコードを検索します
+:Senna::SEL_SIMILAR:stringをわかち書きした語のうち、idf値が大きなsimilarity_threshold個の語のいずれかを含むレコードを検索します。
+
+optargにnilが指定された場合は、Senna::SEL_EXACTが指定されたとみなされます。
+
+文書が複数のセクションから構成される場合、特定のセクションだけを検索対象としたり、スコアを持ち上げたりするために、weight_vectorを用います。
+weight_vectorに整数の配列を指定すると、stringが現れたセクション(1ベース)に対応する配列の要素の値をスコア値に乗算します。値が0であった場合は、対応するセクションは検索対象から除外されます。
+
+文書によってセクション毎のweightが異なる場合には、ブロックを指定します。 stringにマッチするレコードが見つかる度に records, 文書ID, セクション番号を引数としてブロックが呼び出され、その戻り値をweightとしてスコア値を算出します。
+
+ 
+ Senna::Index#info
+indexの内部情報を取得し、@key_size, @flags, @initial_n_segments, @encoding, @nrecords_keys, @file_size_keys,
+@nrecords_lexicon, @file_size_lexicon, @inv_seg_size, @inv_chunk_size に値をセットします。
+
+これらの値を並べた配列を返します。
+
+
+!!Senna::Query クラス
+Senna::Queryは、さまざまな書式で指定された検索クエリを格納するクラスです。
+
+ Senna::Query.open(str, default_op=SEL_OR, max_exprs=32, encoding=ENC_DEFAULT)
+新たなSenna::Queryインスタンスを生成します。 strに書式付きクエリ文字列を指定します。
+
+default_opに、演算子の既定値(演算子を省略した場合にどの演算を行うか)を指定します。以下のいずれかの値を指定します。
+
+:Senna::SEL_OR:演算子の規定値を'or'とします（デフォルト）
+:Senna::SEL_AND:演算子の規定値を'and'とします（通常の検索エンジンでの検索クエリと同じ使用感です）
+:Senna::SEL_BUT:演算子の規定値を'-'とします
+:Senna::SEL_ADJUST:演算子の規定値を'>'とします
+
+max_exprsに、検索クエリに指定する式の最大値を指定します。
+
+encodingに、検索クエリの文字コードを、 Senna::enc_default, Senna::enc_none, Senna::enc_euc_jp, Senna::enc_utf8, Senna::enc_sjis のいずれかで指定します。
+
+ Senna::Query#rest
+Senna::Query.openの呼び出し後に、長すぎて受け付けられない部分の検索クエリを返します。
+
+ Senna::Query#close
+Senna::Queryインスタンスを破棄します。
+
+ Senna::Query#exec(index, records=nil, op=SEL_OR)
+指定したSenna::Indexに対して、Senna::Queryの条件で検索を行い、結果を指定のSenna::Recordsに反映します。
+
+演算子opは以下のいずれかを指定します。
+
+:Senna::SEL_OR:条件にマッチするレコードをrに追加します。
+:Senna::SEL_AND:条件にマッチしないレコードをrから削除します。
+:Senna::SEL_BUT:条件にマッチするレコードをrから削除します。
+:Senna::SEL_ADJUST:条件にマッチするレコードがrに元々含まれていた場合にそのスコア値を加算します。
+
+!!!Senna::Index
+ Senna::Index#del(key)
+指定したSenna::Indexのkeyに対応する文書に削除フラグを立て、検索対象から外します。通常はSenna::Index#updを用いて削除を行ってください。
+
+!!low-level API
+low-level APIを用いることによってSennaの内部のデータ構造にアクセスし、さらに複雑なデータの操作や検索処理が実現できます。 low-level APIでは、永続的なシンボル表を{{fn "原文でも切れている"}}
+
+!!!Senna::Set
+キーと値のペアからなるレコードの集合をメモリ上で高速に操作するためのクラスです。検索結果の集合や、語彙の集合を操作するのに使用します。(Senna::RecordsクラスはSenna::Setから派生したクラスです) Senna::Setはキーが重複した複数のレコードを格納することはできません。
+
+Senna::Set *Senna::Set_open(unsigned key_size, unsigned value_size, unsigned index_size);新たなSenna::Setインスタンスを生成します。 key_sizeにキー長、value_sizeに値の長さを指定します。 index_sizeには初期状態でのバッファのサイズを指定します。 key_sizeに0が指定された場合は可変長(nul終端する文字列)が指定されたとみなされます。 value_sizeに0が指定された場合は、値を格納する領域を確保しません。
+
+Senna::rc Senna::Set_close(Senna::Set *set);Senna::Setインスタンスを解放します。
+
+Senna::rc Senna::Set_info(Senna::Set *set, unsigned *key_size, unsigned *value_size, unsigned *n_entries);setインスタンスを生成した時に指定したkey_size, value_size、および格納されているレコードの数を取得します。第二、第三、第四引数にnilが指定された場合は、その引数は無視し、値を格納しません。
+
+Senna::Set_eh *Senna::Set_get(Senna::Set *set, const void *key, void **value);setに、keyに該当するレコードを登録し、レコードへのハンドルを返します。 valueにはレコードの値部分に該当するポインタを返されますので、これを介して値を参照/更新できます。
+
+Senna::Set_eh *Senna::Set_at(Senna::Set *set, const void *key, void **value);setから、keyに該当するレコードを検索し、レコードへのハンドルを返します。該当するキーが存在しない場合はnilを返します。 valueにはレコードの値部分に該当するポインタを返されますので、これを介して値を参照/更新できます。
+
+Senna::rc Senna::Set_del(Senna::Set *set, Senna::Set_eh *eh);ehに指定したレコードハンドルに該当するレコードをsetから削除します。
+
+Senna::Set_cursor *Senna::Set_cursor_open(Senna::Set *set);setに登録されているレコードを順番に取り出すためのカーソルを生成します。
+
+Senna::Set_eh *Senna::Set_cursor_next(Senna::Set_cursor *cursor, void **key, void **value);cursorに従ってsetから次のレコードを取り出し、レコードへのハンドルを返します。第二、第三引数にnil以外のポインタを渡すと、keyにはレコードのキー部分に該当するポインタがvalueにはレコードの値部分に該当するポインタが返されます。
+
+Senna::rc Senna::Set_cursor_close(Senna::Set_cursor *cursor);cursorインスタンスを解放します。
+
+Senna::rc Senna::Set_element_info(Senna::Set *set, const Senna::Set_eh *eh, void **key, void **value);setに含まれるレコードハンドルehに対応するレコードの、キーへのポインタをkeyに、値へのポインタをvalueにセットします。第三、第四引数にnilが指定された場合は、その引数は無視し、値を格納しません。
+
+Senna::Set *Senna::Set_union(Senna::Set *a, Senna::Set *b);2つのsetの和集合となるsetを返します。この関数呼出によってa, bは解放されます。キーが同一のレコードがa, bの両方に含まれていた場合は、aに含まれていたレコードの値が引き継がれます。
+
+Senna::Set *Senna::Set_subtract(Senna::Set *a, Senna::Set *b);2つのsetの差集合となるsetを返します。この関数呼出によってa, bは解放されます。
+
+Senna::Set *Senna::Set_intersect(Senna::Set *a, Senna::Set *b);2つのsetの両方に同一のキーが存在するレコードからなるsetを返します。この関数呼出によってa, bは解放されます。返り値のsetのレコードの値には、aに含まれていたレコードの値が引き継がれます。
+
+int Senna::Set_difference(Senna::Set *a, Senna::Set *b);set aとset bから共通に含まれるレコードを取り除きます。共通に含まれていたレコードの数を返します。
+
+Senna::Set_eh *Senna::Set_sort(Senna::Set *set, int limit, Senna::Set_sort_optarg *optarg);set内のレコードをソートし、上位limit個のレコードハンドルの配列を返します。 optargを指定することにより、ソートの方法を操作できます。Senna::sort_optargの構造を以下に示します。戻り値の配列は呼び出し側でfreeによって解放しなければなりません。
+
+struct _Senna::Set_sort_optarg {
+  Senna::sort_mode mode;
+  int (*compar)(Senna::Set *, Senna::Set_eh *, Senna::Set *, Senna::Set_eh *, void *);
+  void *compar_arg;
+  Senna::Set *compar_arg0;
+};コールバック関数comparは、第一、第三引数にcompar_arg0が（二つは同じものです）、第二、第四引数に比較対象となる二つのレコードハンドルが、第五引数にcompar_argが渡されます。比較関数は、第二の引数が第三の引数に対して、 1)小さい、2)等しい、3)大きいならば、 1)ゼロ未満、2)ゼロ、3)ゼロより大きい整数のいずれかを返さなければ なりません。二つの要素が等しいとき、並べ替えた結果における、二つの順序は未定義です。
+
+comparにnilが指定された場合には、レコードの値の先頭4byteをuint32とみなし、降順にソートします。この場合、compar_argには必ずnilを指定してください。
+
+compar_arg0にnilが指定された場合には、Senna::Set_sort()の第一引数に指定されたsetが代わりにcomparに渡されます。
+
+optargにnilが指定された場合には、modeにSenna::sort_descendingが、comparにnilが指定されたものとみなします。
+
+Senna::sym
+固定長のバイナリデータかnulで終端する可変長の文字列に一意な番号を割り当てるシンボル表ファイルに対応するクラスです。 Senna::symのインスタンスはファイルシステム上の特定のファイルに対応しており、格納された文書は永続的に保存されます。
+
+なおSenna::Indexインスタンスは2つのsym_symインスタンスを含んでいます。
+
+keys
+文書IDとレコードIDとを対応付ける
+lexicon
+文書の内容を分かち書きした語彙と語彙IDとを対応付ける
+Senna::sym * Senna::sym_create(const char *path, unsigned key_size, unsigned flags, Senna::encoding encoding);pathで与えられた新しいシンボル表ファイルを作成し、対応するSenna::symインスタンスを返します。失敗した場合はnilを返します。
+
+key_sizeにキー長(バイト長)を与えます。key_sizeに0が指定された場合は可変長(nul終端する文字列)が指定されたとみなされます。
+
+flagsに SEN_SYM_WITH_SIS を指定した場合は、登録されたキーに対する後方一致検索が可能になります。
+
+encodingには、Senna::enc_default, Senna::enc_none, Senna::enc_euc_jp, Senna::enc_utf8, Senna::enc_sjis のいずれかを指定します。
+
+Senna::sym * Senna::sym_open(const char *path);pathで与えられた既に作成済のシンボル表ファイルを開き、対応するSenna::symインスタンスを返します。失敗した場合はnilを返します。
+
+Senna::rc Senna::sym_info(Senna::sym *sym, int *key_size, unsigned *flags,
+                    Senna::encoding *encoding, unsigned *nrecords, unsigned *file_size);symインスタンスを生成した時に指定したkey_size, flags, encoding、および格納されているレコードの数とファイルサイズを取得します。第二、第三、第四、第五、第六引数にnilが指定された場合は、その引数は無視し、値を格納しません。
+
+Senna::rc Senna::sym_close(Senna::sym *sym);symに対応するシンボル表ファイルを閉じ、Senna::symインスタンスを解放します。成功すれば Senna::RC_SUCCESS が、失敗すればエラーコードが返ります。
+
+Senna::rc Senna::sym_remove(const char *path);pathで与えられたシンボル表ファイルを削除します。成功すれば Senna::RC_SUCCESS が、失敗すればエラーコードが返ります。
+
+Senna::id Senna::sym_get(Senna::sym *sym, const unsigned char *key);シンボル表symにkeyを登録し、対応するIDを返します。
+
+Senna::id Senna::sym_at(Senna::sym *sym, const unsigned char *key);シンボル表symからkeyに対応するIDを返します。未登録であった場合は SEN_SYM_NIL を返します。
+
+Senna::rc Senna::sym_del(Senna::sym *sym, const unsigned char *key);シンボル表symからkeyを削除します。
+
+unsigned int Senna::sym_size(Senna::sym *sym);シンボル表symに含まれるキーの数を返します。
+
+int Senna::sym_key(Senna::sym *sym, Senna::id id, unsigned char *keybuf, int bufsize);シンボル表symからIDに対応するキーを返します。対応するキーが見つかった場合はkey長を返します。見つからない場合は0を返します。対応するキーの検索に成功し、またkeybufが指定され、bufsizeの長さkey長以上であった場合は、 keybufに該当するkeyをコピーして返します。
+
+Senna::Set * Senna::sym_prefix_search(Senna::sym *sym, const unsigned char *key);keyに前方一致する全てのエントリを抽出し、それらのIDをキーとするSenna::Setインスタンスを返します。
+
+Senna::Set * Senna::sym_suffix_search(Senna::sym *sym, const unsigned char *key);keyに後方一致する全てのエントリを抽出し、それらのIDをキーとするSenna::Setインスタンスを返します。(sym作成時にSEN_SYM_WITH_SISを指定した場合のみ有効です)
+
+Senna::id Senna::sym_common_prefix_search(Senna::sym *sym, const unsigned char *key);keyとキー文字列が最も長く前方一致するエントリを検索し、そのIDを返します。
+
+int Senna::sym_pocket_get(Senna::sym *sym, Senna::id id);Senna::symの指定IDのエントリに格納された情報を取り出します。
+
+Senna::rc Senna::sym_pocket_set(Senna::sym *sym, Senna::id id, unsigned int value);Senna::symの指定IDのエントリにvalueを格納します。
+
+Senna::id Senna::sym_next(Senna::sym *sym, Senna::id id);Senna::symの指定IDの次のエントリのIDを返します。
+
+snippet API
+snippet(KWIC)を作成するためのAPI。
+
+Senna::snip *Senna::snip_open(Senna::encoding encoding, int flags, size_t width, unsigned int max_results,
+                        const char *defaultopentag, const char *defaultclosetag,
+                        Senna::snip_mapping *mapping);新たなSenna::snipインスタンスを生成します。
+
+encodingには、Senna::enc_default, Senna::enc_none, Senna::enc_euc_jp, Senna::enc_utf8, Senna::enc_sjis のいずれかを指定します。
+
+flagsには、SEN_SNIP_NORMALIZE(正規化して検索を行う)が指定できます。
+
+widthは、snippetの幅をバイト長で指定します。eucやsjisの場合にはその半分、utf-8の場合にはその1/3の長さの日本語が格納できるでしょう。
+
+max_resultsは、snippetの個数を指定します。
+
+defaultopentagは、snippet中の検索単語の前につける文字列を指定します。
+
+defaultclosetagは、snippet中の検索単語の後につける文字列を指定します。
+
+mappingは、(現在は)nilか-1を指定してください。-1を指定すると、HTMLのメタ文字列をエンコードしたsnippetを出力します。
+
+defaultopentag,defaultclosetagの指す内容は、Senna::snip_closeを呼ぶまで変更しないでください。
+
+Senna::rc Senna::snip_close(Senna::snip *snip);Senna::snipインスタンスを破棄します。
+
+Senna::rc Senna::snip_add_cond(Senna::snip *snip, const char *keyword,
+                         const char *opentag, const char *closetag);検索対象の単語と、その単語の前後に付与する文字列を指定します。
+
+snipには、Senna::snip_openで生成したSenna::snipインスタンスを指定します。
+
+keywordは、検索対象の単語を指定します。
+
+opentagは、snippet中の検索単語の前につける文字列を指定します。 nilを指定した場合には、Senna::snip_openで指定したdefaultopentagが使用されます。
+
+closetagは、snippet中の検索単語の後につける文字列を指定します。 nilを指定した場合には、Senna::snip_openで指定したdefaultclosetagが使用されます。
+
+opentag,closetagの指す内容は、Senna::snip_closeを呼ぶまで変更しないでください。
+
+Senna::rc Senna::snip_exec(Senna::snip *snip, const char *string, unsigned int *nresults,
+                     size_t *max_tagged_len);検索対象の単語を検索し、snippetを生成します。
+
+snipには、Senna::snip_openで生成したSenna::snipインスタンスを指定します。
+
+stringには、snippetを生成する対象の文字列を指定します。
+
+nresultsには、snippetを実際に生成できた個数が格納されます。
+
+max_tagged_lenには、生成されたsnippetのうち、一番長いsnippetのナル文字を含めた長さが格納されます。
+
+Senna::rc Senna::snip_get_result(Senna::snip *snip, const unsigned int index, char *result);Senna::snip_execで生成したsnippetを取り出します。
+
+indexは、snippetの0からはじまるインデックスを指定します。
+
+resultには、snippetの文字列が格納されます。
+
+Last modified: 2006-10-05

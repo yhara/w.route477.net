@@ -1,0 +1,133 @@
+分散型バージョン管理システム、Mercurial(hg)のチュートリアルです。とりあえず使ってみたい人向け。
+
+{{toc_here}}
+
+! (0) Mercurialとは？
+Mercurialは分散型のバージョン管理システムです。クロスプラットフォーム、軽量、バイナリをうまく扱えるなどの特徴があります。
+* [[Mercurial - Wikipedia|http://ja.wikipedia.org/wiki/Mercurial]]
+
+分散型VCSとしてはgitも有名ですが、Mercurialの方がコマンド体系がSubversionに近くて筆者は好きです。
+
+! (1) インストール
+:Windows:[[インストーラ|http://mercurial.berkwood.com/]]があるのでそれを使いましょう。
+:Linux, Mac OS X:aptitudeやports等でインストールできます。
+
+
+! (2) リポジトリを作る
+適当なディレクトリを作って、そこで hg init するだけ。簡単！
+<<<
+/Users/yhara/proj/myproject % hg init
+/Users/yhara/proj/myproject % ls -a
+.   ..  .hg
+>>>
+こんな感じで、.hg というディレクトリができます。
+
+! (3) コミットする
+svn等と同じで、add して commit(またはci) すればOK。
+<<<
+/Users/yhara/proj/myproject % hg add sample.txt 
+/Users/yhara/proj/myproject % hg st (statusの省略形)
+A sample.txt
+/Users/yhara/proj/myproject % hg ci -m "add sample file."
+>>>
+ciの-mオプションはコミットログを指定するためのものです。-mを付けなければ、適当なエディタが起動して
+コミットログの入力を求められます。
+
+他にも hg rm とか、hg mv などのコマンドがあります。詳しくは以下を参照。
+* [[Ruby/SDL -Pegasus' Wing SIDE_K- - Mercurial/HGコマンド一覧|http://mono.kmc.gr.jp/~mak/hiki/?Mercurial%2FHG%A5%B3%A5%DE%A5%F3%A5%C9%B0%EC%CD%F7]]
+
+! (4) 他のコンピュータとやりとりする
+さて、一台のマシンで使ってるだけでも便利なMercurialですが、やっぱり複数のマシンで変更を共有したりもしたいですよね。
+
+!! サーバ側にあるリポジトリをクライアント側に取ってくる
+そんな時には、まず hg clone でリポジトリを複製します(svn coに当たる)。
+ $ hg clone ssh://yhara@example.jp//home/yhara/myproject/ myproject
+ホスト名とパスの区切りがscpのような「:」ではなく、「/」を使うのに注意してください。絶対パスを使うときは「/」が2個並ぶことになります。
+
+リポジトリの指定は以下のようなものが使えます。
+ local/filesystem/path (または file://local/filesystem/path)
+ ssh://[user@]host[:port]/[path]
+ http://[user@]host[:port]/[path]
+ https://[user@]host[:port]/[path]
+
+これで、ローカルで開発できるようになりました。ファイルをコミットしてみます。
+ $ vi sample.txt
+ $ hg ci sample.txt
+
+Subversionだとこの時点でサーバに変更が送られますが、分散型であるMercurialでは、まだコミットはローカルに溜めてあるだけなので、
+明示的にサーバ側に送信してやらなければいけません (ちょっと面倒ですが、逆に言えば、ネットワーク環境が無くても
+コミットができるということでもあります。SVKなどと一緒ですね) 。
+
+変更をサーバに反映するには、まずクライアント側で hg push し、サーバ側で hg update します。
+　yhara@client: $ hg push
+
+  yhara@server: $ hg update
+
+逆に他人の変更点をサーバから取ってくるには、hg pull して hg updateすればOK。
+  $ hg pull
+  $ hg update
+
+!! クライアント側のリポジトリをサーバ側に複製する
+上の例ではサーバのリポジトリをクライアントにコピーしましたが、この逆を行うこともできます。
+
+まず、hg cloneで送り元と送り先を指定してリポジトリをコピーします。
+ yhara@client: $ hg clone . ssh://yhara@server//home/yhara/proj/test
+そして、サーバ側でhg updateすれば無事ファイルがやってきます。
+ yhara@server: $ hg udpate
+
+この後、クライアントでの変更をサーバに送るには、hg pushで送り先を明示してやればOK。
+ yhara@client: $ hg push ssh://yhara@server//home/yhara/proj/test
+
+毎回送り先を指定するのが面倒なら、.hg/hgrcというファイルを作って以下のように書けばいいみたいです。
+ [paths]
+ default = ssh://yhara@server//home/yhara/proj/test
+
+!(5) ブランチを使ってみる
+!!お手軽な方法
+ブランチを作りたくなったら、hg cloneでファイル全部を別のディレクトリにコピーする(笑)。
+マージするときはhg pushとかhg pull; hg updateを使えばOK。
+
+!!もうちょっとちゃんとした(?)方法
+hg branchesというコマンドで、現在のリポジトリにあるブランチを確認することができます。
+ /Users/yhara/proj/test % hg branches
+ default                        0:fee58a165f5b
+最初は「default」というブランチしかありません。
+
+ブランチを作るときはhg branchを使います。
+ % hg branch hoge
+これで、現在のワーキングコピーもhogeブランチになりました。
+ % hg branch
+ hoge
+あとは普通にhg addとかhg ciすれば、hogeブランチにコミットすることができます。
+
+コミットする先をdefaultに戻したいたいときは hg update default とします。
+
+ブランチが複数あるときも hg update で別のブランチに移動することができますが、
+「hogeブランチからmogeブランチ」などブランチ間を一気に移動するときは、安全のため -C オプションが
+必要になっています。hg status で未コミットの変更がないことを確認したら、
+hg update -C moge としてmogeブランチに移動できます。
+
+(ブランチについては以下の記事を参考にしました。)
+* http://d.hatena.ne.jp/dayflower/20080314/1205395287
+
+! Tips
+!! .hgignoreで不要ファイルを指定する
+バックアップファイルなどをhg statusで表示しないようにするには、.hgignoreというファイルに以下のような感じで書いておきます。グロブによるパターンマッチか正規表現が使えます。
+           syntax: glob
+           *.swp
+           *~
+
+           syntax: regexp
+           ^\.pc/
+
+プロジェクト毎に.hgignoreを置くのが面倒なら、~/.hgignoreに上のように書いておいて、~/.hgrcで以下のようにして~/.hgignoreを読み込ませるという方法もあります。
+ [ui]
+ username = ECHIZEN Kousuke <echizen@crimson.example.jp>
+ ignore = ~/.hgignore
+
+! 参考サイト
+* [[Ruby/SDL -Pegasus' Wing SIDE_K- - Mercurial/HGコマンド一覧|http://mono.kmc.gr.jp/~mak/hiki/?Mercurial%2FHG%A5%B3%A5%DE%A5%F3%A5%C9%B0%EC%CD%F7]]
+* [[ウノウラボ Unoh Labs: Mercurialでバージョン管理|http://labs.unoh.net/2008/05/mercurial.html]]
+
+* [[malagma|http://malagma.org/wiki/]]
+** gitにおけるgithubのようなサイトを目指しているそうです。

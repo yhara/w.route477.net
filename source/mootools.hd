@@ -1,0 +1,77 @@
+軽量・高速・だいたい何でも入ってる感じのJavascript用ライブラリ[[mootools|http://mootools.net/]]に関するメモです。
+
+クラス名をクリックすると[[リファレンス|http://docs.mootools.net/]]に、
+「デモ」をクリックするとその機能の[[デモ|http://demos.mootools.net/]]に飛びます。
+
+{{bq "主な特徴を挙げるとすれば、以下の通り：
+* 軽量・高速 
+* Safariを筆頭に、IE6,7、Firefox、Opera等でテスト済み 
+* $()関数、$$()関数等、prototype.jsとの互換性があり、移行が容易 
+* オブジェクト指向で、記述が直感的 
+* デモが豊富、ドキュメントも充実、できること・やりたいことがすぐ分かる！",
+"あんちもん2.Lab: Ajaxライブラリ MooTools の紹介", "http://www.antimon2.atnifty.com/2007/06/mootools.html"}}
+
+だそうです。
+
+以下1.11準拠
+
+{{toc_here}}
+
+![[コア (Core)|http://docs.mootools.net/Core/Core.js]]
+いろいろ。ライブラリの他の部分の基礎となる関数とか。
+
+!C++スタイルのクラス (Class)
+:[[Class|http://docs.mootools.net/Class/Class.js]]:C++スタイルのクラス定義。
+:[[Class.Extras|http://docs.mootools.net/Class/Class-Extras.js]] ([[デモ1|http://demos.mootools.net/Chain]]) ([[デモ2|http://demos.mootools.net/Chain.Periodical]]):ユーティリティークラス。「よくある定義」をサポート。
+
+!ネイティブクラスの拡張 (Native)
+:[[Array|http://docs.mootools.net/Native/Array.js]]:Arrayの拡張。copyとかeachとかmapとかremoveとか。
+:[[Function|http://docs.mootools.net/Native/Function.js]] ([[デモ|http://demos.mootools.net/Periodical]]):Functionの拡張。createとかbindとかdelayとかperiodicalとか。
+:[[Number|http://docs.mootools.net/Native/Number.js]]:Numberの拡張。toIntとかlimitとかtimesとか。
+:[[String|http://docs.mootools.net/Native/String.js]]:Stringの拡張。camlCaseとかhyphenateとかrgbToHexとかescapeRegExpとか。
+:[[Element|http://docs.mootools.net/Native/Element.js]]:Elementの拡張。$とか$$とかreplaceWithとかsetStyleとかgetChildrenとか。
+
+!DOM要素 (Element)
+:[[Element.Event|http://docs.mootools.net/Element/Element-Event.js]] ([[デモ1|http://demos.mootools.net/Element.Event]]) ([[デモ2|http://demos.mootools.net/Mousewheel]]) ([[デモ3|http://demos.mootools.net/MousewheelCustom]]):イベント
+:[[Element.Filters|http://docs.mootools.net/Element/Element-Filters.js]]:要素の集合から、特定のタグ/クラス/ID/属性を持つものだけを取り出す
+:[[Element.Selectors|http://docs.mootools.net/Element/Element-Selectors.js]]:CSSセレクタによる要素の選択
+:[[Element.Form|http://docs.mootools.net/Element/Element-Form.js]]:フォームの操作
+:[[Element.Dimensions|http://docs.mootools.net/Element/Element-Dimensions.js]]:要素のサイズやスクロールや位置の操作
+
+!ブラウザのウィンドウ (Window)
+:[[Window.DomReady|http://docs.mootools.net/Window/Window-DomReady.js]] ([[デモ|http://demos.mootools.net/DomReadyVS.Load]]):ページ全体の読み込みを待たずにJavascriptを起動する
+:[[Window.Size|http://docs.mootools.net/Window/Window-Size.js]]:ブラウザのウィンドウサイズを得る
+
+!エフェクト (Effects)
+:[[Fx.Base|http://docs.mootools.net/Effects/Fx-Base.js]]:エフェクトの基礎関数
+:[[Fx.CSS|http://docs.mootools.net/Effects/Fx-CSS.js]]:CSSを使ったエフェクトの基礎関数
+:[[Fx.Style|http://docs.mootools.net/Effects/Fx-Style.js]]:単一要素の一つのCSSプロパティをいじる
+:[[Fx.Styles|http://docs.mootools.net/Effects/Fx-Styles.js]] ([[デモ1|http://demos.mootools.net/Fx.Styles]]) ([[デモ2|http://demos.mootools.net/Fx.Morph]]):単一要素の複数のCSSプロパティをいじる
+:[[Fx.Elements|http://docs.mootools.net/Effects/Fx-Elements.js]] ([[デモ|http://demos.mootools.net/Fx.Elements]]):複数要素の複数のCSSプロパティをいじる
+:[[Fx.Scroll|http://docs.mootools.net/Effects/Fx-Scroll.js]] ([[デモ|http://demos.mootools.net/Fx.Scroll]]):要素の中身をスクロールさせる 
+:[[Fx.Slide|http://docs.mootools.net/Effects/Fx-Slide.js]] ([[デモ|http://demos.mootools.net/Fx.Slide]]):要素をスライドさせる
+:[[Fx.Transitions|http://docs.mootools.net/Effects/Fx-Transitions.js]] ([[デモ|http://demos.mootools.net/Fx.Transitions]]):数値の変化の仕方を指定する
+
+!ドラッグ＆ドロップ (Drag)
+:[[Drag.Base|http://docs.mootools.net/Drag/Drag-Base.js]] ([[デモ|http://demos.mootools.net/Resizable]]):ドラッグ
+:[[Drag.Move|http://docs.mootools.net/Drag/Drag-Move.js]] ([[デモ1|http://demos.mootools.net/Drag.Absolutely]]) ([[デモ2|http://demos.mootools.net/Drag.Cart]]) ([[デモ3|http://demos.mootools.net/DragDrop]]):＆ドロップ
+
+!サーバとの通信 (Remote)
+:[[XHR|http://docs.mootools.net/Remote/XHR.js]]:XMLHttpRequestをラップする基礎関数
+:[[Ajax|http://docs.mootools.net/Remote/Ajax.js]] ([[デモ1|http://demos.mootools.net/Ajax]]) ([[デモ2|http://demos.mootools.net/Ajax.Advanced]]) ([[デモ3|http://demos.mootools.net/Ajax.Form]]):Ajaxによる通信
+:[[Cookie|http://docs.mootools.net/Remote/Cookie.js]]:クッキーの作成・読み込み・消去
+:[[Json|http://docs.mootools.net/Remote/Json.js]]:Jsonのエンコード・デコード
+:[[Json.Remote|http://docs.mootools.net/Remote/Json.Remote.js]] ([[デモ|http://demos.mootools.net/Json.Remote]]):Jsonの送受信
+:[[Assets|http://docs.mootools.net/Remote/Assets.js]] ([[デモ1|http://demos.mootools.net/Asset.css]]) ([[デモ2|http://demos.mootools.net/Asset.images]]):動的に画像やCSSやJavascriptをロードする
+
+!その他 (Plugins)
+:[[Hash|http://docs.mootools.net/Plugins/Hash.js]]:連想配列。mergeとかextendとかkeysとかvaluesとか
+:[[Hash.Cookie|http://docs.mootools.net/Plugins/Hash.Cookie.js]] ([[デモ|http://demos.mootools.net/Hash.Cookie]]):Json形式でCookieを作成・読み込み・消去
+:[[Color|http://docs.mootools.net/Plugins/Color.js]]:色の生成(HSB <=> RGB変換とか)
+:[[Scroller|http://docs.mootools.net/Plugins/Scroller.js]] ([[デモ|http://demos.mootools.net/Scroller]]):マウスが一定の範囲に来たときにスクロールする
+:[[Slider|http://docs.mootools.net/Plugins/Slider.js]] ([[デモ|http://demos.mootools.net/Slider]]):スライダー
+:[[SmoothScroll|http://docs.mootools.net/Plugins/SmoothScroll.js]]:リンクをクリックしたときにスムーススクロールする
+:[[Sortables|http://docs.mootools.net/Plugins/Sortables.js]] ([[デモ|http://demos.mootools.net/Sortables]]):ユーザが並べ替え可能なリスト
+:[[Tips|http://docs.mootools.net/Plugins/Tips.js]] ([[デモ|http://demos.mootools.net/Tips]]):ツールチップ (マウスオーバーで解説が出るやつ)
+:[[Group|http://docs.mootools.net/Plugins/Group.js]] ([[デモ|http://demos.mootools.net/Group]]):The Group. 
+:[[Accordion|http://docs.mootools.net/Plugins/Accordion.js]] ([[デモ|http://demos.mootools.net/Accordion]]):アコーディオン(選択した要素だけが開くやつ)

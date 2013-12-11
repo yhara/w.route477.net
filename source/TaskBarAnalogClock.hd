@@ -1,0 +1,79 @@
+あなたのタスクバーにアナログ時計を。
+
+!概要
+Windowsの「タスクバーに任意のウェブページを表示できる」という仕様を利用して、
+タスクバーにアナログ時計を表示させます。
+
+{{attach_view("ss2.png")}}
+
+!使い方
+#タスクバー上で右クリックします。
+#「タスクバーを固定する」にチェックが入ってる人はチェックを外してください。（「タスクバーを固定する」って項目がない場合は別の場所をもう一回右クリックしてみてください。）
+#「ツールバー」>「新規ツールバー」を選択し、「フォルダ」のところに以下のいずれかのURLを入力します。
+** http://mono.kmc.gr.jp/~yhara/aclock/2-clock.html (小)
+** http://mono.kmc.gr.jp/~yhara/aclock/3-clock.html (大)
+#タスクバーに新しいなにかが表示されるので、「タスクバーアナログ時計」という文字列の上で右クリックして「タイトルの表示」のチェックを外します。
+#あとは適当な位置に時計を移動すれば完了です。
+
+!制限
+* タスクバーが１段の場合には未対応です。
+* XPの青いタスクバーにも未対応です。
+
+!解説
+!!構成について
+アナログ時計は以下の４つのファイルから構成されています。
+* 3-clock.html : 本体
+* 3-long.gif : 長針
+* 3-short.gif : 短針
+* 3-background.gif : 文字盤
+
+カスタマイズしたい人は、これらのファイルをダウンロードして([[aclock.tar.gz|http://mono.kmc.gr.jp/~yhara/aclock/aclock.tar.gz]])
+自分のウェブサイトにアップロードするなりして頑張ってください。
+
+!!javascriptについて
+javascript(DHTML)で画像を回転させる方法が無さそうだったので、
+事前に回転させた画像を用意しています。
+
+*長針 http://mono.kmc.gr.jp/~yhara/aclock/3-long.gif
+*短針 http://mono.kmc.gr.jp/~yhara/aclock/3-short.gif
+*背景 http://mono.kmc.gr.jp/~yhara/aclock/3-background.gif
+
+３つとも透過gifになっています。
+
+これらを全部重ねて、
+CSSのclipで一部分だけ表示させています。
+あとは１分ごとに画像の位置を移動させればOK。(詳細は[[ページ|http://mono.kmc.gr.jp/~yhara/aclock/3-clock.html]]のソースを参照)
+
+
+!!画像の作成について
+ペイントで描いてRuby/SDLで回転・結合させました。
+
+ require 'sdl'
+ SDL.init(SDL::INIT_VIDEO) 
+ 
+ def rot(name)
+   org = SDL::Surface.loadBMP("2-#{name}0.bmp")
+   big = SDL::Surface.new(SDL::SRCCOLORKEY, org.w*60, org.h, org)
+   org.lock
+   60.times do |i|
+     print i, " "
+     #rotated = img.transform_surface([255,255,255], i*6, 1, 1, SDL::TRANSFORM_AA)
+     rotated = org.rotate_surface(i*6, [255,255,255])
+     big.put(rotated, org.w*i, 0)
+   end
+   org.unlock
+   big.save_bmp("2-#{name}.bmp")
+ end
+ 
+ rot("short")
+ rot("long")
+回転前の画像はフルカラーでないと上手くいかなかったです。
+
+透過GIF化にはIrfanViewを使いました。
+
+!おまけ
+日付・曜日・時刻が表示されるバージョンも作ってみた。
+*http://mono.kmc.gr.jp/~yhara/aclock/2-clock2.html (2段用)
+*http://mono.kmc.gr.jp/~yhara/aclock/3-clock2.html (3段用)
+…けど、2段用はタスクバー横置き、3段用はタスクバー縦置きにしか対応していません。
+floatを駆使したら縦横両用にできたりしないかなぁ。position:absoluteと両立しない気もするが。

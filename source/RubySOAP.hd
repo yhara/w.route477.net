@@ -1,0 +1,80 @@
+RubyでSOAPを扱う際のメモです。
+
+! SOAPとは
+XMLでRPC(Remote Procedure Call)するためのプロトコル。{{fn "いわゆるXML-RPCとは別物。XML-RPCに機能を追加してSOAPができたという関係らしい http://ja.wikipedia.org/wiki/XML-RPC"}}
+
+! SOAPのためのライブラリ
+* Ruby 1.8: 標準添付のsoapか、gemのsoap4rを使う(バージョンが違う) {{fn "ソース：https://github.com/nahi/soap4r"}}
+* Ruby 1.9: gem install [[soap4r-ruby1.9|https://rubygems.org/gems/soap4r-ruby1.9]]
+
+http://rubygems.org/gems/soap4r
+
+公式サイトは死んでいる(2011-05現在)。[[WebArchive|http://replay.web.archive.org/20090614152540/http://dev.ctor.org/soap4r]]
+
+一応自動生成のrdocはある：http://rubydoc.info/gems/soap4r/1.5.8/frames
+
+クラス数がかなり多い。
+* SOAP::は本体。
+* WSDL::はWSDL (SOAPで提供するAPIのインターフェイスを定義するXMLファイル) のためのクラス。
+* XSD::はXSD (XMLのスキーマ) のためのクラス。
+
+! 参考資料
+頑張ってGoogleで調べましょう。
+* [[デベロッパーズコーナー：SOAP入門（1）-SOAPとは - XML Square|http://www.utj.co.jp/xml/dev/soap/soap1_1.html]]
+
+!! [[rubyでsoapサーバを作る - hippos-lab::net|http://homepage2.nifty.com/hippos/soap4r/top.html]]
+# WSDLの作成
+# wsdl2rubyでスケルトンを生成
+# 中身を実装
+という手順らしい。
+
+とりあえず順にやってみる。提供するAPIは
+  int add(int a, int b)
+にしようか。
+
+!!! types
+* APIで使う型を定義する。
+* 基本的なもの(真偽値・数値・時間・文字列・URLなど)はXSDに用意されている。 http://www.atmarkit.co.jp/fxml/rensai2/schema04/schema04.html
+* それ以外の自前のオブジェクトというか構造体を使いたい場合はxsd:complexTypeで型を定義する。
+
+!!! message
+* APIのリクエストとレスポンス(≒引数と返り値)を定義する。
+* リクエストは<メソッド名>Request、レスポンスは<メソッド名>Responseという名前にする
+* voidの場合は空タグを書く形になる。
+
+!!! porttype
+* APIのメソッド名と引数・返り値を定義する。
+* 引数・返り値の仕様は、上で定義したmessageを参照する。
+
+!!! binding
+"binding要素では、portTypeで定義したオペレーション物理モデルとしてどのように変換され使用されるかを定義します。"
+
+!!! service
+APIのアクセスポイント(URL)を書く。
+
+!!! コード生成
+  wsdl2ruby.rb --wsdl a.wsdl --type server --force
+
+4つのファイルができる。
+* CalcServer.rb : SOAPサーバ。WEBrickで動く。
+* CalcService.rb : ?
+* CalcServiceServant.rb : APIの本体。
+* CalcServiceMappingRegistry.rb : ?
+
+  wsdl2ruby.rb --wsdl a.wsdl --type client --force
+
+2つのファイルができる。
+
+* CalcClient.rb : クライアント本体。
+** CalcClientDriver.rb : サーバとの通信をラップする部分。
+
+とりあえずAPI側はCalcServerServant.rb、クライアント側はCalcServerClient.rbだけ編集すればOK。
+
+ソース：https://gist.github.com/968278
+
+!!! 実行
+ターミナル1
+  $ ruby -I. CalcServer.rb
+ターミナル2
+  $ ruby -I. CalcServerClient.rb
+  3

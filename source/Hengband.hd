@@ -1,0 +1,227 @@
+変愚蛮怒についていろいろ。
+
+! うちのコンテンツ
+
+* [[変愚蛮怒の各種族に向いている職業]]
+* [[*破壊*の杖が問題なく使用できるキャラメイク|:../files/staff_of_destruct.html]]
+** [[ソースコード|http://gist.github.com/217392]]
+* [[勝利者のいない組み合わせ(2009/01)|:../temp/heng_not_wins.html]]
+
+![[公式|http://hengband.sourceforge.jp/]]
+
+*[[人気のある種族、職業、性格|http://www.kmc.gr.jp/~habu/local/hengscore/scoredisp.cgi?mode=popularity]]
+
+! [[@DB|http://atdb.elisp.net/]]
+
+* [[クエスト|http://atdb.elisp.net/quest.php]] 
+** [[6|http://atdb.elisp.net/quest.php?type=6]]
+** [[12|http://atdb.elisp.net/quest.php?type=12]]
+** [[24|http://atdb.elisp.net/quest.php?type=24]] 
+** [[38|http://atdb.elisp.net/quest.php?type=38]] 
+** [[44|http://atdb.elisp.net/quest.php?type=44]] 『グラウルング』10.35%『ガルム』9.67%『ツァール』7.16%
+** [[50|http://atdb.elisp.net/quest.php?type=50]]『レルニアン・ヒドラ』7.69%『シュド=メル』7.41% 『ニョグタ』7.38%
+** [[56|http://atdb.elisp.net/quest.php?type=56]] 『ブランド』19.95% 『ケンシロウ』10.78%『ドルアーガ』10.19%
+** [[62|http://atdb.elisp.net/quest.php?type=62]] 『ブレイズ』14.59% 『フィオナ』13.75% 『ジュリアン』12.61%
+** [[76|http://atdb.elisp.net/quest.php?type=76]] 『パズズ』8.64% 『イタカ』8.3% 『メフィストフェレス』5.96%
+** [[88|http://atdb.elisp.net/quest.php?type=88]] 『破壊スル者』23.29% 『ケルベロス』21.94% 『ゴスモグ』20.08%
+
+![[変愚蛮怒の紹介|http://hengband.ninja-x.jp/syuyou.html]]
+* [[これだけあると嬉しい魔道具能力の値|http://hengband.ninja-x.jp/murakami/tatakai.html#madougu]]
+* [[クエスト|http://hengband.ninja-x.jp/murakami/quest.html]]
+
+![[スポイラー|http://www.kmc.gr.jp/~henkma/heng/]]
+キャラクター
+* [[種族|http://www.kmc.gr.jp/~henkma/heng/race/index.html]]
+
+* [[職業|http://www.kmc.gr.jp/~henkma/heng/class/index.html]]
+** 打撃系 ( [[戦士|http://www.kmc.gr.jp/~henkma/heng/class/warrior/index.html]] / [[修行僧|http://www.kmc.gr.jp/~henkma/heng/class/monk/index.html]] / [[剣術家|http://www.kmc.gr.jp/~henkma/heng/class/samurai/index.html]] / [[盗賊|http://www.kmc.gr.jp/~henkma/heng/class/rogue/index.html]] / [[狂戦士|http://www.kmc.gr.jp/~henkma/heng/class/berserker/index.html]] / [[忍者|http://www.kmc.gr.jp/~henkma/heng/class/ninja/index.html]] / [[レンジャー|http://www.kmc.gr.jp/~henkma/heng/class/ranger/index.html]] / [[混沌の戦士|http://www.kmc.gr.jp/~henkma/heng/class/chaos-warrior/index.html]] / [[鍛冶師|http://www.kmc.gr.jp/~henkma/heng/class/kaji/index.html]] / [[アーチャー|http://www.kmc.gr.jp/~henkma/heng/class/archer/index.html]] / [[練気術師|http://www.kmc.gr.jp/~henkma/heng/class/renki/index.html]] / [[騎兵|http://www.kmc.gr.jp/~henkma/heng/class/kihei/index.html]] / [[魔獣使い|http://www.kmc.gr.jp/~henkma/heng/class/beastmaster/index.html]] )
+** 魔法系 ( [[スペルマスター|http://www.kmc.gr.jp/~henkma/heng/class/sorcerer/index.html]] / [[ハイ=メイジ|http://www.kmc.gr.jp/~henkma/heng/class/high-mage/index.html]] / [[メイジ|http://www.kmc.gr.jp/~henkma/heng/class/mage/index.html]] / [[プリースト|http://www.kmc.gr.jp/~henkma/heng/class/priest/index.html]] / [[赤魔道師|http://www.kmc.gr.jp/~henkma/heng/class/red-mage/index.html]] / [[超能力者|http://www.kmc.gr.jp/~henkma/heng/class/mindcrafter/index.html]] / [[吟遊詩人|http://www.kmc.gr.jp/~henkma/heng/class/bard/index.html]] / [[鏡使い|http://www.kmc.gr.jp/~henkma/heng/class/mirror-master/index.html]] / [[魔道具術師|http://www.kmc.gr.jp/~henkma/heng/class/magic-eater/index.html]] / [[青魔道師|http://www.kmc.gr.jp/~henkma/heng/class/blue-mage/index.html]] / [[ものまね師|http://www.kmc.gr.jp/~henkma/heng/class/mane/index.html]] )
+** デュアル ([[パラディン|http://www.kmc.gr.jp/~henkma/heng/class/paladin/index.html]] / [[魔法戦士|http://www.kmc.gr.jp/~henkma/heng/class/warrior-mage/index.html]] / [[観光客|http://www.kmc.gr.jp/~henkma/heng/class/tourist/index.html]])
+
+* [[性格|http://www.kmc.gr.jp/~henkma/heng/chara/index.html]]
+
+フィールド
+* [[ダンジョン|http://www.kmc.gr.jp/~henkma/heng/dungeon/index.html]] / [[クエスト|http://www.kmc.gr.jp/~henkma/heng/quest/index.html]] / [[アリーナ|http://www.kmc.gr.jp/~henkma/heng/arena/index.html]]
+
+攻撃
+* [[魔法|http://www.kmc.gr.jp/~henkma/heng/magic/index.html]] ( [[生命|http://www.kmc.gr.jp/~henkma/heng/magic/life.html]] / [[仙術|http://www.kmc.gr.jp/~henkma/heng/magic/sorcery.html]] / [[自然|http://www.kmc.gr.jp/~henkma/heng/magic/nature.html]] / [[カオス|http://www.kmc.gr.jp/~henkma/heng/magic/chaos.html]] / [[暗黒|http://www.kmc.gr.jp/~henkma/heng/magic/death.html]] / [[トランプ|http://www.kmc.gr.jp/~henkma/heng/magic/trump.html]] / [[秘術|http://www.kmc.gr.jp/~henkma/heng/magic/arcane.html]] / [[匠|http://www.kmc.gr.jp/~henkma/heng/magic/enchantment.html]] / [[悪魔|http://www.kmc.gr.jp/~henkma/heng/magic/daemon.html]] / [[破邪|http://www.kmc.gr.jp/~henkma/heng/magic/crusade.html]] )
+* [[レイシャル|http://www.kmc.gr.jp/~henkma/heng/racial/index.html]] 
+
+防御
+* [[耐性|http://www.kmc.gr.jp/~henkma/heng/resist/index.html]] 
+** r火冷電酸毒 : 1/3, 1/9 (放射性廃棄物に対してのr毒は2/5, 4/25)
+** r獄閃暗乱轟沌劣破因 : 4&#12316;7/(7+d4)、つまり最悪で2/3程度
+** 因果混乱によるステータスシャッフル→r因 / 放射性廃棄物による種族変更→r毒 / カオスによる幻覚、突然変異→r沌
+* [[モンスターの攻撃魔法|http://www.kmc.gr.jp/~henkma/heng/mspells/index.html]]
+** 火冷電酸ブレス : 体力の1/3 (上限1600 / 533 / 177) 
+** 毒ブレス : 体力の1/3 (上限800 / 266 / 88)
+** 獄閃暗乱轟沌劣破ブレス : 体力の1/6 (上限400&#12316;600 / 252&#12316;400)
+
+アイテム
+* [[巻物|http://www.kmc.gr.jp/~henkma/heng/magic_item2/index.html#scroll]] / [[薬|http://www.kmc.gr.jp/~henkma/heng/magic_item2/index.html#potion]] / [[杖|http://www.kmc.gr.jp/~henkma/heng/magic_item/index.html#staff]] / [[魔法棒|http://www.kmc.gr.jp/~henkma/heng/magic_item/index.html#wand]] / [[ロッド|http://www.kmc.gr.jp/~henkma/heng/magic_item/index.html#rod]]
+* [[エゴ|http://www.kmc.gr.jp/~henkma/heng/ego/index.html]] ( [[武器|http://www.kmc.gr.jp/~henkma/heng/ego/ego-weapon.html]] / [[防具|http://www.kmc.gr.jp/~henkma/heng/ego/ego-armor.html]] / [[光源・指輪・アミュレット|http://www.kmc.gr.jp/~henkma/heng/ego/ego-xtra.html]] )
+
+豆知識
+* [[技能|http://www.kmc.gr.jp/~henkma/heng/skill/index.html]] ( [[マーシャルアーツ|http://www.kmc.gr.jp/~henkma/heng/skill/sude.html]] / [[二刀流|http://www.kmc.gr.jp/~henkma/heng/skill/nitouryu.html]] / [[乗馬|http://www.kmc.gr.jp/~henkma/heng/skill/jouba.html]] / [[打撃武器|http://www.kmc.gr.jp/~henkma/heng/skill/weapon.html]] / [[射撃武器|http://www.kmc.gr.jp/~henkma/heng/skill/shot.html]] / [[魔法|http://www.kmc.gr.jp/~henkma/heng/skill/magic.html]] )
+* [[徳|http://www.kmc.gr.jp/~henkma/heng/karma/index.html]] / [[攻撃回数計算|http://www.kmc.gr.jp/~henkma/heng/num_blows/index.html]] / [[その他|http://www.kmc.gr.jp/~henkma/heng/hek/index.html]]
+
+! 講座
+* [[スペマス|http://d.hatena.ne.jp/dis-c/searchdiary?word=%2A%5B%A5%B9%A5%DA%A5%DE%A5%B9%5D]]
+
+http://yahny.tm.land.to/wiki/index.php?%E5%A4%89%E6%84%9A%E8%9B%AE%E6%80%92
+! LOS
+
+以下は良いケース。
+<<<
+###  #####  #######
+@*.  @**..  @***...
+.#J  ..#*J  ...#**J
+###  #####  #######
+
+#.J   #.J#
+#*#   #.*# 
+#@#   #*## 
+      #*
+      #@ 
+          
+>>>
+
+! ダンジョン
+
+||!名前||!フロア||!ボスのドロップ||!備考
+||(鉄獄)||1-127F|| ||
+||イーク洞||1-13F||耐光耐暗の指輪||たいてい5F(ワーグクエ)まで / 吸血鬼は13Fまで
+||迷宮||10-18F||帰還のロッド||序盤に行く
+||オーク洞||10-23F||氷の指輪
+||森||15-32F||毒針||対はぐれメタル / アーチャーは骨集めに{{fn "ボスの「シェロブ」は蜘蛛をたくさん召還する"}}
+||城||20-65F||(ドロップ)
+||山||25-50F||新生の薬
+||カメレオン洞||30-45F||突然変異の薬
+||ガラスの城||40-?F|| || 
+||墓地||40-70F||★ソウルソード
+||反魔||40-50F|| || 
+||反抗||40-50F|| ||殴られない、魔法職のメッカ
+||火山||50-60F||魔力の嵐の杖
+||暗闇の洞窟||55-72F||(ドロップ)
+||水没遺跡||55-75F||憤怒の三叉槍
+||龍窟||60-72F|| ||
+||金鉱||75-80F|| ||
+||ルルイエ||80-96F||★劍竜の鎧
+||地獄||666-606F|| ||
+||天界||555-585F|| ||
+
+! クエスト
+
+変愚蛮怒のクエストのスポイラーです。
+
+情報は安定版のものです。
+
+
+//a_info.txt artifacts
+//d_info.txt dangions
+//e_info.txt ego
+//f_info.txt floor
+//k_info.txt object kind
+//m_info.txt magic
+//q_info.txt quest (include q*.txt)
+//r_info.txt monster race
+//s_info.txt weapon skill?
+//v_info.txt vault
+//w_info.txt world
+
+||!場所||!クエスト名||!レベル||!報酬||
+||!^^^^辺境の町(村長の家) || 盗賊の隠れ家 ||5||職業依存(*1)||
+||  ワーグを殱滅せよ ||5|| 金属製スモール・シールド (魔獣使い、騎兵、忍者はガントレット)||
+||  幽霊屋敷 ||48||邪悪存在退散の杖||
+||  湖の洞窟 ||50||耐毒の指輪||
+||  王家の墓 ||70||報酬なし(落ちているアイテム)||
+||!^^^辺境の町(宿屋) || 柳じじい ||22||耐混乱の指輪||
+||  ダークエルフの王 ||25||ガラドリエルの瑠璃瓶(永久光源(範囲3)、+1探索、発動でイルミネーション(10+d10ターン毎))||
+||  クローン地獄 ||45||シヴァの化身の軟革ブーツ||
+||  古い城 ||50||職業依存( [[スポイラー|http://www.kmc.gr.jp/~henkma/heng/class/index.html]]参照)||
+||!^^^^^^テルモラ || 下水道 ||15||フェアノールのランプ(永久光源)||
+||  ログルス使い ||25||トラップ解除のロッド||
+||  宝物庫 ||30||報酬なし(落ちているつらぬき丸 {+攻腕器耐r閃？;麻視明/邪オ死~オト巨})||
+||  塔 ||30||報酬なし(司書(鑑定)、武器匠、モンスター仙人のサービス価格が下がる)||
+||  モンサルヴァト城への侵攻(*2) ||40||反射のアミュレット||
+||  激戦場 ||50||生命の薬(飲むと体力が5000回復し、経験値と全ステータスを回復し、盲目・混乱・毒・幻覚・朦朧・切り傷・狂戦士化を癒す。)||
+||  エリックの要塞 ||70||増強の薬(飲むと全ステータスの最大値が上がる。)||
+||!^^モリバント(城) || 謎の障気 ||25||全感知のロッド(振ると自分の周辺のトラップ・ドア・階段・財宝・アイテム・モンスターを感知する。)||
+||  マイクロンフトの興亡 ||50||耐劣化の指輪||
+||  破滅のクエスト２ ||55||体力回復の杖(使うと体力が300回復し、朦朧・切り傷・狂戦士化を癒す。)||
+||!^モリバント(盗賊のギルド) || ミミックの財宝 ||25||透明物体感知の指輪||
+||  テングとデスソード ||25||麻痺知らずの指輪||
+||!^^アングウィル || オークのキャンプ ||15||エルフのクローク {+隠探} 火冷電酸で傷つかない||
+||  破滅のクエスト１ ||15||火炎の指輪||
+||  増殖地獄 ||65||バランスドラゴン・スケイルメイル(F:RES_CHAOS | RES_DISEN | RES_SOUND | RES_SHARDS | ACTIVATE | 火冷電酸で傷つかない)||
+||!^^ズル|| 仙術エネルギー特異点 ||65||[力の魔道書](仙術の4冊目)||
+||  カオスの特異点 ||65||[ハルマゲドン大全](カオスの4冊目)||
+||  自然魔術の特異点 ||65||[自然の脅威](自然の4冊目)||
+||!鉄獄||ランダムクエスト||-||6F, 12F, 24F, 38F, 44F, 50F, 56F, 62F, 76F, 88F||
+
+
+!!レベル順
+||!場所||!クエスト名||!レベル||!報酬||
+||辺境の町(村長の家) || 盗賊の隠れ家 ||5||職業依存(*1)||
+||辺境の町(村長の家) ||  ワーグを殱滅せよ ||5|| 金属製スモール・シールド (魔獣使い、騎兵、忍者はガントレット)||
+||テルモラ || 下水道 ||15||フェアノールのランプ(永久光源)||
+||アングウィル || オークのキャンプ ||15||エルフのクローク {+隠探} 火冷電酸で傷つかない||
+||アングウィル ||  破滅のクエスト１ ||15||火炎の指輪||
+||辺境の町(宿屋) || 柳じじい ||22||耐混乱の指輪||
+||辺境の町(宿屋) ||  ダークエルフの王 ||25||ガラドリエルの瑠璃瓶(永久光源(範囲3)、+1探索、発動でイルミネーション(10+d10ターン毎))||
+||テルモラ || ログルス使い ||25||トラップ解除のロッド||
+||モリバント(城) || 謎の障気 ||25||全感知のロッド(振ると自分の周辺のトラップ・ドア・階段・財宝・アイテム・モンスターを感知する。)||
+||モリバント(盗賊のギルド) || ミミックの財宝 ||25||透明物体感知の指輪||
+||モリバント(盗賊のギルド) ||  テングとデスソード ||25||麻痺知らずの指輪||
+||テルモラ || 宝物庫 ||30||報酬なし(落ちているつらぬき丸 {+攻腕器耐r閃？;麻視明/邪オ死~オト巨})||
+||テルモラ || 塔 ||30||報酬なし(司書(鑑定)、武器匠、モンスター仙人のサービス価格が下がる)||
+||テルモラ || モンサルヴァト城への侵攻(*2) ||40||反射のアミュレット||
+||辺境の町(宿屋) ||  クローン地獄 ||45||シヴァの化身の軟革ブーツ||
+||辺境の町(村長の家) ||  幽霊屋敷 ||48||邪悪存在退散の杖||
+||辺境の町(村長の家) ||  湖の洞窟 ||50||耐毒の指輪||
+||モリバント(城) ||  マイクロンフトの興亡 ||50||耐劣化の指輪||
+||テルモラ || 激戦場 ||50||生命の薬(飲むと体力が5000回復し、経験値と全ステータスを回復し、盲目・混乱・毒・幻覚・朦朧・切り傷・狂戦士化を癒す。)||
+||辺境の町(宿屋) ||  古い城 ||50||職業依存( [[スポイラー|http://www.kmc.gr.jp/~henkma/heng/class/index.html]]参照)||
+||モリバント(城) ||  破滅のクエスト２ ||55||体力回復の杖(使うと体力が300回復し、朦朧・切り傷・狂戦士化を癒す。)||
+||アングウィル ||  増殖地獄 ||65||バランスドラゴン・スケイルメイル(F:RES_CHAOS | RES_DISEN | RES_SOUND | RES_SHARDS | ACTIVATE | 火冷電酸で傷つかない)||
+||ズル|| 仙術エネルギー特異点 ||65||[力の魔道書](仙術の4冊目)||
+||ズル||  カオスの特異点 ||65||[ハルマゲドン大全](カオスの4冊目)||
+||ズル||  自然魔術の特異点 ||65||[自然の脅威](自然の4冊目)||
+||辺境の町(村長の家) ||  王家の墓 ||70||報酬なし(落ちているアイテム)||
+||テルモラ || エリックの要塞 ||70||増強の薬(飲むと全ステータスの最大値が上がる。)||
+||鉄獄||ランダムクエスト||-||6F, 12F, 24F, 38F, 44F, 50F, 56F, 62F, 76F, 88F||
+
+!! *1
+:魔獣使いか騎兵なら:ブロード・スピア
+:修行僧か練気術師なら:ガントレット
+:プリーストなら:ウォー・ハンマー
+:アーチャーなら:ショート・ボウ
+:鍛冶師なら:ブロード・アックス
+:メイジ、ハイ=メイジ、青魔導師、スペルマスター、鏡使いなら:警告の指輪
+:忍者なら:ダガー
+:それ以外なら:ロング・ソード
+
+!! *2
+:暗黒パラディンのみ
+
+! マクロとキー配置
+特定のキーに一連のコマンドを割り当てる操作。
+
+F1&#12316;F12が定番らしいけど、HHK Lite2だと押しにくいので使ったことがない。
+
+普通のキーでも結構空きはある。オプションで「aを使うに割り当てる」と、さらに空きが増える。q,r,zあたり。
+
+:s:弱感知に使ってる。モンスター感知とかトラップ感知とか。
+:S:くさびを打つコマンド(だっけ?)。使わないので強感知に使ってる。地形感知とか。
+:t:射撃だけど、大抵普通の矢しか打たないので、矢に@1と打って、「f1*t」とかしてる。強い矢を打ちたいときはaで。
+:V:強い方の射撃に使ったり。
+:G:呪文を覚えるコマンドだが、スペマスだと使わないのでテレパシー(トランプ2冊目感知のカード)に割り当てたり。
+:^G:食料生成とか。
+:1:鑑定。鑑定の杖に@1と銘を打つ。
+:2:ライトエリア。イルミネーションの杖に@2と銘を打つ。
+
+:元から未定義なもの:! ] ' X ^G ^O ^Z
+:めったに使わないもの:s(トラップかドアを探す) v(アイテムを投げる) S(くさびを打つ) V(バージョン表示) その他記号系、Ctrl系いくつか
+:職業によって使わないもの:p(ペット) t(弓を撃つ) G(呪文を覚える) P(呪文の説明を読む) 
+:場合によっていらなくなるもの:F(燃料補給、後半は不要) Q(自殺しないなら、引退時以外不要)
+:aを使うに割り当てると不要になるもの:q r t z E Z

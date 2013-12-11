@@ -1,0 +1,38 @@
+[[Sylera2|http://www.zawameki.net/sylera/]]用のjsプラグインです。
+
+僕は、メニューの「セキュリティ」と「ツール」の間に下のようなものを追加しています
+（設定はツール-カスタマイズ-メニューから）。
+  	スクリプト(&S){
+  		はてなブックマーク(&B)	= [item:hatena_bookmark.js:]
+  		WebArchive(&A)		= [item:archive.org.js:]
+  		にくちゃんねる過去ログ墓場(&N) = [item:makimoto.js]
+  		googleキャッシュ(&G)		= [item:google_cache.js:]
+  	}
+ビュータブ上の右クリックメニューに追加するのも良さげ。
+
+!!!archive.org.js
+消えてしまったページをWeb Archiveで確認する。
+  javascript:q=location.href;if(q)location.href='http://web.archive.org/archive_request_ng?collection=web&url='+escape(q)
+  
+!!!google_cache.js
+Googleのキャッシュを見る。        
+  javascript:q=location.href;if(q)location.href='http://www.google.com/search?hl=ja&lr=&ie=UTF-8&oe=utf-8&q=cache:'+escape(q)
+  
+!!!hatena_bookmark.js
+見ているページをはてなブックマークにブックマークする。    
+  javascript:window.location='http://b.hatena.ne.jp/add?mode=confirm&title='+escape(document.title)+'&url='+escape(location.href);
+
+!!!hatena_bookmark_comments.js
+見ているページのはてブのコメント欄を表示する。
+  javascript:window.location='http://b.hatena.ne.jp/entry/'+escape(location.href)+'#comments';
+  
+!!!makimoto.js
+dat落ちしたスレッドを「にくちゃんねる過去ログ墓場」で検索する。
+  javascript:if(location.href.match(/^http:\/\/(.*).2ch.net\/test\/read.cgi\/(.*)\/(\d\d\d\d)(\d+)/g)){location.href="http://makimo.to/2ch/"+RegExp.$1+"_"+RegExp.$2+"/"+RegExp.$3+"/"+RegExp.$3+RegExp.$4+".html";}else{window.alert("the url is not 2ch's")}
+
+!!!livedoor_reader_subscribe.js
+見ているページをLiveDoorReaderに登録する。(単にサンプルのまんま^^;)
+  javascript:location.href='http://reader.livedoor.com/subscribe/'+location.href
+
+!ダウンロード(全部)
+[[sylera_js.zip|http:../files/sylera_js.zip]]

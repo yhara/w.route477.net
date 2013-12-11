@@ -1,0 +1,294 @@
+Ruby Twitter Gemの簡易リファレンス(というかメモ)です。内容はバージョン2.1.0に準拠しています。
+
+{{toc_here}}
+
+! インストール
+ $ gem install twitter -v=2.1.0
+(環境によっては sudo gem 〜)
+
+! 概要
+* 公式サイト：https://github.com/jnunemaker/twitter
+* ドキュメント：http://rubydoc.info/gems/twitter/2.1.0/frames
+
+使い方はこんな感じ。
+<<<
+require 'rubygems'    # ←Ruby 1.9では不要
+require 'twitter'
+require 'pp'
+pp Twitter.user("shuzo_matsuoka")
+>>>
+
+:ちなみに:RailsでTwitterアプリを作る場合は、これじゃなくて、twitter-authというプラグインを使うのがお手軽です。
+* http://github.com/mbleigh/twitter-auth
+* http://kray.jp/blog/twitter_service_in_1hours/
+あとはOmniAuth + Twitterとか？
+
+! ログインが要らない操作
+public_timelineの取得
+ Twitter.public_timeline
+あるユーザの情報を取得
+ Twitter.user("yhara")
+あるユーザのフォロワーを取得
+ Twitter.follower_ids("yhara")
+あるユーザのフォローを取得
+ Twitter.friend_ids("yhara")
+あるユーザのタイムラインを取得 (※発言が非公開のときは要ログイン)
+ Twitter.user_timeline("yhara")
+あるリストのタイムラインを取得
+ Twitter.list_timeline("リストの作者名", "リスト名")
+
+などなど…
+
+! ログインが必要な操作
+プログラムからTwitterにログインするには、アプリ登録が必要です。
+
+!! ステップ1：アプリをTwitterに登録する
+# 公式サイトを用意する{{fn "無理なら、自分のTwitterページなど、最低限作者と連絡が取れるもの"}}
+# http://dev.twitter.com/apps/new を開く
+## アプリ名を入力
+## 概要を10文字以上入力
+## サイトのURLを入力
+# 登録後、「Consumer key」と「Consumer secret」をメモる (他人に見せないように) {{fn "他人に知られると、あなたのアプリ名で迷惑行為を行われる恐れがある。万一漏れてしまった場合は、この画面からkey/secretをリセットすることができる"}}
+# 必要であれば、Settingsタブから権限を変更する
+## デフォルトは「Read only」(投稿不可)
+## 「Read and Write」なら投稿も可能 (DMの読み書きは不可)
+## 「Read, Write and Access direct messages」ならDMへのアクセスも可能
+ここまでで、アプリの登録は終了です。お疲れさまでした。
+
+!! ステップ2：access tokenを取得する
+アプリが登録できたら、次はaccess tokenの取得です。access tokenは、「このアプリ専用のログインパスワード」みたいなものです。アプリごとにパスワードが違うので、セキュリティ的により安心というわけです{{fn "ユーザの判断でアプリ連携を削除できたり。"}}。
+
+Twitterクライアントを作る場合は、プログラムを書いてaccess tokenを取得するわけですけど、botとか作る場合はログインするのは自分だけですし、
+何回もやるのは面倒なので、https://github.com/jugyo/get-twitter-oauth-token みたいにコマンド一発でできるやつとか、簡略化してる人がいます。
+
+筆者も[[atoken4me|https://github.com/yhara/atoken4me]]というWebベースのを作って使っています。使い方は以下のような感じです。
+
+# http://atoken4me.heroku.com/ を開きます
+# ステップ1で手に入れたConsumer keyとConsumer secretを入力します
+# 表示されたURLを新しいウィンドウで開きます
+# 「承認しますか？」というおなじみの画面が出るので、OKするとPINナンバーがもらえます
+# 元の画面に戻って、PINナンバーを入力すると、access tokenが表示されます。
+
+!! ステップ3：atokenを使ってログインする
+<<<
+require 'twitter'
+require 'pp'
+
+# ログイン
+Twitter.configure do |config|
+  config.consumer_key = 'アプリのatoken'
+  config.consumer_secret = 'アプリのsecret'
+  config.oauth_token = 'ユーザのatoken'
+  config.oauth_token_secret = 'ユーザのsecret'
+end 
+
+#自分のタイムラインの取得
+pp Twitter.home_timeline
+#自分宛てのReplyの取得
+# pp Twitter.mentions
+#自分宛てのDMの取得
+# pp Twitter.direct_messages
+#発言する
+# Twitter.update("テストです。")
+>>>
+
+! メソッド一覧
+以下、間違ってるかも知れないのでうまく動かなかったら http://rdoc.info/gems/twitter/2.1.0/Twitter/Client を参照してください。
+
+!! 基本
+!!! ユーザ
+Twitter::Client::Usersモジュールで定義されているメソッド
+* Twitter.user(user, options={}) あるユーザを返す
+** userを省略すると「自分自身」を指定したことになります(以下、userを引数にとるメソッドはいずれも同じ)
+* Twitter.user?(user, options={}) ユーザが存在するかどうかを返す
+** user: 文字列または数値(ID)
+* Twitter.user_search(query, options={}) ユーザを検索
+** query: 文字列
+* Twitter.profile_image() 自分のプロファイル画像
+* Twitter.profile_image(screen_name, options={}) プロファイル画像
+* Twitter.users(*users, options={}) 複数のユーザを一括で取得
+
+* Twitter.contributors コントリビューター{{fn "1アカウントに複数ユーザで投稿できるビジネス向け機能"}}
+* Twitter.contributees
+* Twitter.recommendations おすすめユーザー
+!!! ツイート・リツイート
+Twitter::Client::Tweetsモジュールで定義されているメソッド
+* Twitter.status(id, options={}) あるツイートの情報を取得
+* Twitter.status_destroy(id, options={}) 発言を削除
+* Twitter.update(status, options={}) 発言する
+** status: 文字列
+* Twitter.update_with_media(status, media, options={}) 画像付きで発言する
+** status: 文字列
+** media: Fileクラスのオブジェクト(例：File.open("a.jpg"))
+* Twitter.retweet(id, options={}) RTする
+* Twitter.retweets(id, options={}) あるツイートへのリツイートを取得
+* Twitter.retweeters_of(id, options={}) あるツイートをRTした人たち
+* Twitter.oembed
+!!! タイムライン(ツイートやリツイートの一覧取得)
+Twitter::Client::Timelinesモジュールで定義されているメソッド
+* Twitter.home_timeline(options={}) 自分のタイムラインを取得
+* Twitter.user_timeline(user, options={}) あるユーザの最近のツイートを取得
+* Twitter.media_timeline(user, options={}) あるユーザの最近の画像つきツイートを取得 
+* Twitter.public_timeline(options={}) 全世界の最近のツイートを取得
+* Twitter.network_timeline ?
+
+* Twitter.mentions(options={}) メンション(@xxx)を取得
+* Twitter.retweeted_by(user, options={}) あるユーザの最近のリツイートを取得
+* Twitter.retweeted_to(user, options={}) あるユーザへの最近のリツイートを取得
+* Twitter.retweets_of_me(options={}) 最近リツイートされた自分の発言を取得
+!!! フォロー・フォロワー
+Twitter::Client::FriendsAndFollowersモジュールで定義されているメソッド
+* Twitter.follow(user, options={}) ユーザuserをフォローする
+* Twitter.unfollow(user, options={}) ユーザuserをリムーブする
+* Twitter.follower_ids(user, options={}) あるユーザをフォローしているユーザ一覧
+* Twitter.friend_ids(user, options={}) あるユーザのフォローしているユーザ一覧
+
+* Twitter.friendship(source, target, options={}) ユーザsourceとユーザtargetの間の関係(DMを送れるかなど)
+* Twitter.friendships(*users, options={})
+* Twitter.friendship?(user_a, user_b, options={}) ユーザAがユーザBをフォローしているか
+* Twitter.friendship_update(user, options={}) ユーザuserからのRTの表示設定等を切り替える
+* Twitter.no_retweet_ids(options={}) 自分がRTを表示しない設定にしているユーザの一覧
+
+鍵つきユーザのフォローリクエスト関連
+* Twitter.accept
+* Twitter.deny
+* Twitter.friendships_incoming
+* Twitter.friendships_outgoing
+!!! お気に入り(fav)
+Twitter::Client::Favoritesモジュールで定義されているメソッド
+* Twitter.favorites(user, options={}) あるユーザのfav一覧
+* Twitter.favorite(id, options={}) favる
+* Twitter.unfavorite(id, options={}) favを取り消す
+
+!! ダイレクトメッセージ(DM)
+ダイレクトメッセージは安全のため、アプリ登録のSettingsで
+Application Typeを「Read, Write and Access direct messages」にしないと
+アクセスできないようになっています。
+
+Twitter::Client::DirectMessagesモジュールで定義されているメソッド
+* Twitter.direct_messages(options={}) 受信したDM
+* Twitter.direct_messages_sent(options={}) 送信したDM
+* Twitter.direct_message_create(user, text, options={}) DMを送信
+* Twitter.direct_message_destroy(id, options={}) DMを削除
+* Twitter.direct_message(id, options={}) あるDMの情報
+
+
+!! 応用
+!!! リスト
+Twitter::Client::Listsモジュールで定義されているメソッド
+* Twitter.list
+* Twitter.list_add_member
+* Twitter.list_add_members
+* Twitter.list_create
+* Twitter.list_destroy
+* Twitter.list_member?
+* Twitter.list_members
+* Twitter.list_remove_member
+* Twitter.list_subscribe
+* Twitter.list_subscriber?
+* Twitter.list_subscribers
+* Twitter.list_timeline
+* Twitter.list_unsubscribe
+* Twitter.list_update
+* Twitter.lists
+* Twitter.lists_subscribed_to
+* Twitter.memberships
+* Twitter.subscriptions
+!!! ブロック
+Twitter::Client::Blockモジュールで定義されているメソッド
+* Twitter.block
+* Twitter.block?
+* Twitter.blocked_ids
+* Twitter.blocking
+* Twitter.unblock
+!!! アクティビティ
+Twitter::Client::Activityモジュールで定義されているメソッド
+* Twitter.activity_about_me
+* Twitter.activity_by_friends
+!!! アカウント
+Twitter::Client::Accountsモジュールで定義されているメソッド
+* Twitter.end_session
+* Twitter.rate_limit_status
+* Twitter.settings
+* Twitter.update_delivery_device
+* Twitter.update_profile
+* Twitter.update_profile_background_image
+* Twitter.update_profile_colors
+* Twitter.update_profile_image
+* Twitter.verify_credentials
+!!! 検索、検索メモ
+Twitter::Client::Searchモジュールで定義されているメソッド
+* Twitter.images
+* Twitter.phoenix_search
+* Twitter.search
+* Twitter.videos
+Twitter::Client::SavedSearchesモジュールで定義されているメソッド
+* Twitter.saved_search
+* Twitter.saved_search_create
+* Twitter.saved_search_destroy
+* Twitter.saved_searches
+!!! おすすめユーザ
+Twitter::Client::SuggestedUsersモジュールで定義されているメソッド
+* Twitter.suggest_users
+* Twitter.suggestions
+!!! トレンド
+Twitter::Client::Trendsモジュールで定義されているメソッド
+* Twitter.trends_daily
+* Twitter.trends_weekly
+Twitter::Client::LocalTrendsモジュールで定義されているメソッド
+* Twitter.local_trends
+* Twitter.trend_locations
+
+!! その他
+Twitter::Client::SpamReportingモジュールで定義されているメソッド
+* Twitter.report_spam
+Twitter::Client::PlacesAndGeoモジュールで定義されているメソッド
+* Twitter.place
+* Twitter.place_create
+* Twitter.places_nearby
+* Twitter.places_similar
+* Twitter.reverse_geocode
+Twitter::Client::Notificationモジュールで定義されているメソッド
+* Twitter.disable_notifications
+* Twitter.enable_notifications
+Twitter::Client::Requestモジュールで定義されているメソッド
+* Twitter.delete
+* Twitter.get
+* Twitter.post
+Twitter::Client::Authenticatableモジュールで定義されているメソッド
+* Twitter.credentials
+* Twitter.credentials?
+Twitter::Client::Urlsモジュールで定義されているメソッド
+* Twitter.resolve
+Twitter::Client::Legalモジュールで定義されているメソッド
+* Twitter.privacy
+* Twitter.tos
+Twitter::Client::Helpモジュールで定義されているメソッド
+* Twitter.configuration
+* Twitter.languages
+!! 備考
+!!! 「ユーザ」について
+Twitter gemのAPIには、ユーザを引数にとるものが多くあります。例えば：
+
+* Twitter.retweeted_by(user, options={}) あるユーザの最近のリツイートを取得
+
+(1) このとき、userにはユーザ名(文字列)かユーザID(数値)が指定できます。
+
+(2) 対象ユーザが鍵付きアカウントだった場合は、アプリ登録＋ログインしていないとエラーになります。
+
+(3) userを省略すると「自分自身」が指定されたものと見なされます(ログイン時)
+
+* Twitter.retweeted_by   #=> 自分が最近したリツイートを取得
+
+!!! オプションについて
+Twitter gemのAPIには、オプションを引数にとるものが多くあります。例えば：
+
+* Twitter.retweeted_by(user, options={}) あるユーザの最近のリツイートを取得
+
+(1) optionsは単に省略できます。省略すると{}が指定されたことになります。
+
+(2) optionsを与えることで、取得最大件数などが指定できます。
+
+* Twitter.retweeted_by(:count => 5)  # 最近のRTを5件取得
+
+(3) 指定できるオプションはメソッドごとに違うので、[[公式リファレンス|http://rubydoc.info/gems/twitter/2.1.0/frames]]を参照してください。

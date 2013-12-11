@@ -1,0 +1,29 @@
+なんかいっぱいあって混乱してきたので。(2006/10/20)
+
+znzさんから[[このページ|http://pub.cozmixng.org/~the-rwiki/rw-cgi.rb?cmd=view;name=ML+list]]に
+まとまってるという情報をいただきました。ありがとうございます。(2007/1/10)
+
+![[公式メーリングリスト|http://www.ruby-lang.org/ja/community/mailing-lists/]]
+
+:[[ruby-list(日本語)|http://blade.nagaokaut.ac.jp/ruby/ruby-list/index.shtml]]:メインのML。質問・相談からライブラリのアナウンスまで色々。(1日数件〜10数件程度)
+:[[ruby-dev(日本語)|http://blade.nagaokaut.ac.jp/ruby/ruby-dev/index.shtml]]:Ruby開発者のML。Ruby本体のバグや仕様変更などの議論がされている。(1日数件〜10数件程度)
+:[[ruby-talk(英語)|http://blade.nagaokaut.ac.jp/ruby/ruby-talk/index.shtml]]:英語のメインML。(1日100件近く)
+:[[ruby-core(英語)|http://blade.nagaokaut.ac.jp/ruby/ruby-core/index.shtml]]:英語でRuby本体の実装について話す。(1日数件〜10数件程度)
+:[[ruby-cvs|http://www.atdot.net/~ko1/w3ml/w3ml.cgi/ruby-cvs/]]:RubyのCVSレポジトリのcommit log
+
+![[日本Rubyの会|http://jp.rubyist.net/]]
+
+:[[ruby|http://www.fdiary.net/ml/ruby/]]:日本Rubyの会のML。イベントの打ち合わせなど。
+:[[learn-ruby-in-kansai|http://www.fdiary.net/ml/learn-ruby-in-kansai/]]:Ruby関西のML。[[Ruby勉強会@関西|http://jp.rubyist.net/?KansaiWorkshop]]等、イベントの打ち合わせなど。
+
+:[[ruby-reference-manual|http://www.fdiary.net/ml/ruby-reference-manual/]]:[[Rubyリファレンスマニュアル刷新計画|http://doc.loveruby.net/]]のためのML。
+
+:[[rails|http://www.fdiary.net/ml/rails/]]:[[Rails' Wiki|http://wiki.fdiary.net/rails/]]のML。
+:[[sns-ja|http://www.fdiary.net/ml/sns-ja/]]:Ruby関西の出欠確認用に、SNSっぽいシステムをRailsで作ろうというプロジェクト。
+
+!使われなくなった(っぽい)もの
+:[[ruby-ext(日本語)|http://blade.nagaokaut.ac.jp/ruby/ruby-ext/index.shtml]]:拡張ライブラリの実装について
+:[[ruby-math(日本語)|http://blade.nagaokaut.ac.jp/ruby/ruby-math/index.shtml]]:数学関連の話題について
+:[[ruby-eng|http://www.atdot.net/~ko1/w3ml/w3ml.cgi/ruby-eng/]]:ruby-dev-summaryのために使われていたML。
+:[[rails-west|http://www.fdiary.net/ml/rails-west/]]:Ruby関西MLに統合された。
+:[[ruby-no-kai|http://www.fdiary.net/ml/ruby-no-kai/]]:日本Rubyの会発足時(2004年)のML。

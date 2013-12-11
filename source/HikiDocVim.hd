@@ -1,0 +1,13 @@
+vimでHikiDoc文書を編集するためのスタイルです。色が付きます。
+
+非常に適当です。
+
+!ダウンロード
+* [[hd.vim|:../files/hd.vim]] (最終更新：5/2)
+
+!使い方
+#$VIMFILES/syntax/にコピー
+#set ft=hd
+#色つきになります。
+
+{{attach_view "hdvim.png"}}

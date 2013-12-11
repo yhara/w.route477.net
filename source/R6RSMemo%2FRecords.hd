@@ -1,0 +1,149 @@
+[[R6RSMemo]]
+
+* record has_many fields
+* record has_one(belongs_to?) record-type descripter
+* record constructor
+* record predicate
+* accessor, mutator
+
+* 単一継承 -> 木構造
+* base record type
+* 継承を禁止できる？
+* "nongenerative" : RubyのSymbolみたいに、一個ずつしかつくらない
+
+* syntactic/procedural/inspectionの3つのサブライブラリ
+* opaque(不透明)タイプ：中を見れない
+* この仕様内のレコード型は、opaqueにしてもしなくてもよい(!)
+
+
+! 6.1
+* field = mutable or immutable
+  * immutable record type : 全てのフィールドがimmutableなレコード型
+  * mutable record type : 一つでもmutableなフィールドを持つレコード型
+
+* o1とo2の型が違うなら、eqv? = #f
+* 型が同じで、別のコンストラクタ呼び出しによって作られたならば、eqv? = #f
+* 同じコンストラクタ呼び出しによって作られたならば、eqv? = #t
+* 型が同じでも、いずれかのフィールドがeqv?でなければ、eqv? = #f
+
+! 6.2 syntactic
+
+!! マクロ (define-record-type <name spec> <record clause>*)
+* <definition>が書けるところにどこでも書ける
+* 再帰的に参照できる
+
+<name spec>
+* <record name> または (<record name> <constructor name> <predicate name>)
+* constructor name : デフォルトは make-foo
+* predicate name : デフォルトはfoo?
+
+<record clause>
+* いろんな指定（重複してはいけない）
+
+* (fields <field name> (im?mutable <field name> <accessor name> <mutator name>?) ... )
+  * デフォルトはimmutable、frob-widget, frob-widget-set!のような
+* (parent <parent name>)
+* (protocol <expression>) 親がprotocolを指定しているときは省略不可
+** protocolは、cdを作るために使われる手続き。
+* (sealed #t) 封じられた：親になれない  
+* (opaque #t) 中が見えない
+* (nongenerative <uid>?) 
+  * uidは識別子。省略時は"マクロ展開時"にユニークなものが自動生成される
+  * uidが等しいレコード型定義は、レコード型を一つしか生成しない(かつ定義は等しくないといけない)
+  * 要するに重複require対策みたいなものか…
+* (parent-rtd <parent rtd> <parent cd>)
+  * parentと同時には指定できない
+  * rtd: record type descriptor : sealedであってはならない
+  * cd: constructor descriptor
+
+あるレコード型のtype / constructor / predicate / accessors / mutators はどれも重複してはならない
+
+定義されるコンストラクタについて
+* parentもprotocolもない場合：フィールド数分の引数を受け取り、レコードを返す。
+* parentもparent-rtdもないがprotocolがある場合：
+** protocolはコンストラクタを返さなければならない。
+** protocolは、define-record-typeの実行時に、関数pを引数として一度だけ呼ばれる。pはフィールド数分の引数を取りレコードを返す関数(つまりデフォルトのコンストラクタ)。
+** protocolの返すコンストラクタは、任意個の引数を受け取り、pを一度だけ呼んで、その返り値をレコードとして返す(べきである)。
+* parentとprotocolが両方ある場合：
+** 上とほぼ同じだが、親のフィールドも初期化しないといけないのでちょっと違う
+** procotolは関数nを引数として一度だけ呼ばれる。nは「親のフィールド数」分の引数をとりpを返す関数。
+* parentがあるがprotocolがない場合：
+** このときは、parentもprotocolが未定義でなくてはならない。
+** 生成されるコンストラクタは、親のフィールド数＋子のフィールド数分の引数を取る関数になる。
+* 上記以外で、parent-rtdがある場合：
+** parentがある場合に準ずる。
+
+(record-type-descriptor <record name>)
+* レコード名に対応するrtdを返す(これはrtdがopaqueでもエラーにならない)。
+(record-constructor-decriptor <record name>)
+* レコード名に対応するcdを返す
+
+! 6.3 procedural
+(make-record-type-descriptor name parent uid sealed? opaque? fields)
+* rtdを作る(=新しいレコード型を定義する)。
+* name : シンボル
+* parent : #fかrtd (もちろん、sealedでないやつ)。
+* uid : #fかシンボル。uidを指定するとnongenerativeになる。
+** make-r-t-dが同じuidで2回呼ばれた場合、引数・フィールド・フラグが一致していないと例外&assertion
+* sealed? : 真偽値
+* opaque? : 真偽値。
+** opaqueフラグが#tだと、レコードに対しrecord?が#fを返したり、record-rtdでrtdを取り出せなかったりする。
+** 親がopaqueならば、(引数によらず？？)不透明になる。
+* fields : フィールドを指定するためのベクタ。
+** 各要素は、'(mutable <name>)または'(immutable <name>)のようなリスト。
+** フィールド名はシンボル(重複してもよいらしい)
+** ベクタfieldsを後から破壊的に変更した場合、その影響は未定義(つまり変更すべきでない)
+* 同値性
+** generativeなrtdは、他のrtdとeqv?にならない(自分自身とのみeqv?になる)。
+** nongenerativeなrtdは、それらが同じuidのmake-r-t-d呼び出し結果である場合のみeqv?になる。
+
+(record-type-descriptor? obj)
+* objがrtdかどうかを返す
+
+(make-record-constructor-descriptor rtd parent-cd protocol)
+* rtdからcdを作る。
+* rtd : rtd
+* parent-cd : 手続きか#f
+** rtdが親を持たずprotocolが指定されているとき、parent-cdは#fでなくてはならない。
+*** このときは、protocolはpを引数に呼び出され、内部でpを一度だけ呼び出すコンストラクタを返す
+** rtdが親を持つ場合、parent-cdは#fかデフォルトコンストラクタを指定しなければならない(??)
+** rtdが親を持ちprotocolが指定されているとき、parent-cdは親のcdと一致するか、#fでなくてはならない。
+*** parent-cdが指定されているとき、protocolはnを引数に呼び出される。
+** rtdが親を持ちparent-cdが#fかparent-cdのprotocolが#fであるとき、protocolも#fでなくてはならない(デフォルトのコンストラクタが使われる)。
+* protocol : 手続き、または#f
+** protocolが#fならば、デフォルトのprotocol、デフォルトのコンストラクタが使われる。
+** デフォルトのコンストラクタ：フィールド数(親のも含む)と同じ個数の引数を取る関数。
+** デフォルトのプロトコル：親を持たない場合、(lambda (p) p)。親を持つ場合、
+** protocolが指定された場合、コンストラクタが呼ばれてprotocolが実行されるときに、制約が満たされているかチェックしなければならない(??)
+
+(record-constructor cd)
+* cdのprotocolを実行し、できたコンストラクタを返す。
+
+(record-predicate rtd)
+* オブジェクトがrtdの表すレコード型かどうかを検査する述語を返す。
+
+(record-accessor rtd k)
+* rtdの表すレコード型を引数にとり、k番目のフィールドの値を返す関数(アクセサ)を返す。
+
+(record-mutator rtd k)
+* rtdの表すレコード型を引数にとり、k番目のフィールドの値を設定する関数(ミューテータ)を返す。
+
+! 6.4 Inspection
+主にrtdに対し、リフレクションを行う。opaqueフラグが#tだと、レコードからrtdが取れない。
+
+(record? obj)
+* レコード型のオブジェクト(以下レコード)かつ不透明でなければ#t
+(record-rtd record)
+* レコードの型のrtdを返す (ただし不透明なら例外&assertion)
+(record-type-name rtd)
+* rtdのレコード型名を返す
+(record-type-parent rtd)
+* rtdの親(なければ#f)を返す
+(record-type-uid rtd)
+* rtdのuid(なければ#f)を返す。処理系によっては、nongenerativeでなくてもuidを持って良いよ
+(record-type-generative? rtd) (record-type-seled? rtd) (record-type-opaque? rtd)
+* そのまんま
+(record-type-filed-names rtd)
+* フィールド名の一覧をシンボルの配列(vector)で返す。親のは含まない。
+(record-field-mutable? rtd k)
+* k番目のフィールドがmutableかどうかを返す。

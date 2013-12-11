@@ -1,0 +1,47 @@
+Schemeのsyntax-rulesの使い方をまとめたい。
+
+http://www.unixuser.org/~euske/doc/r5rs-ja/
+
+以下の記述にはN個(Nは十分に大きい数)の間違いが含まれている可能性があります。
+
+!define-macroとdefine-syntax
+Gaucheではマクロを定義するのに、Lisp由来の[[define-macro|http://gauche.sourceforge.jp/doc/gauche-refj_40.html#SEC44]]と
+Scheme由来の[[define-syntax|http://gauche.sourceforge.jp/doc/gauche-refj_39.html#SEC43]]
+の両方が利用可能になっている。
+
+define-macroは単純に渡されたリストを変形して新しいリスト(プログラム)を
+返すもので、hygenicではない。
+
+define-syntaxはR5RSで定義されているもので、独自のパターン言語を使って
+マクロを定義する。
+
+!syntax-rules
+syntax-rulesという関数を使うと、パターン言語を使った構文が作れる。
+普通は、これをdefine-syntaxに渡して構文を定義したり、let-syntax/leterc-syntaxに渡して
+一定範囲内だけで使える構文を定義したりする。
+
+例1: when
+<<<
+(define-syntax when
+  (syntax-rules()
+    ((when test stmt1 stmt2 ...)
+     (if test
+       (begin stmt1
+         stmt2 ...)))))
+>>>
+
+例2: my-or
+<<<
+(define-syntax my-or
+  (syntax-rules()
+    ((my-or) #f)
+    ((my-or e) e)
+    ((my-or e1 e2 ...)
+     (let ((temp e1))
+       (if temp
+         temp
+         (my-or e2 ...))))))
+>>>
+
+! 参照：
+*[[Syntax checking rules|http://stackoverflow.com/questions/4370808/where-does-textmate-find-its-syntax-checking-rules]]

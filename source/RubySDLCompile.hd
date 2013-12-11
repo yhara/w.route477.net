@@ -1,0 +1,83 @@
+VisualC.NETを使って、Windows用にRuby/SDLのバイナリ(sdl.so)を自分でコンパイルしてみよう、という話。
+対象とするRubyはmswin32版です。
+
+(注)単にRuby/SDLが使いたい人は自分でコンパイルする必要はなく、
+[[Ruby/SDLのページ|http://www.kmc.gr.jp/~ohai/rubysdl_download.html]]から
+バイナリ（もしくはバイナリ＋Ruby本体のセット）をダウンロードしてくればOKです。
+
+自前でバイナリを作ることのメリットとしては、
+* 必要なDLLだけを使うようにできる(上のパッケージは使える全てのdllが入っているので、少しサイズが大きい)
+* Ruby/SDL本体をいじって遊べる(拡張ライブラリレベルで新しい機能を追加するとか)
+といったものが挙げられます。
+
+2007/3月時点の話なんで、細かいところが変わっているかもしれません。
+
+! 各種ライブラリ
+SDLを初めとしたライブラリについて、*.dll、*.lib、*.h の３種類のファイルが必要となります。
+
+dllはソースを取ってきてコンパイルする手もありますが、コンパイル済のものがセットになったパッケージ（"SDL-devel-1.2.9-VC6.zip"など）があるので、そっちをダウンロードするのが早いでしょう。
+
+*[[SDL本体|http://www.libsdl.org/download-1.2.php]] - SDL-devel-(バージョン)-VC6.zip (VC8かも)
+*[[SDL_mixer|http://www.libsdl.org/projects/SDL_mixer/]] - SDL_mixer-devel-(バージョン)-VC6.zip
+*[[SDL_ttf|http://www.libsdl.org/projects/SDL_ttf/]] - SDL_ttf-devel-(バージョン)-VC6.zip
+*[[SGE|http://www.etek.chalmers.se/~e8cal1/sge/index.html]] - Downloadのページの、binary distribution for Win32 (sge(バージョン)-w32.zip)
+
+上のサイトから、VC用の開発用バイナリパッケージをダウンロードしてきます（似たものが多いので、ファイル名に注意してください）。
+
+Ruby/SDLはこの他に、
+* SMPGEによるmpegの再生
+* SDLSKKによる行単位の日本語入力
+をサポートしていますが、今回は扱いません。
+
+! 準備
+まず，include、libという２つのフォルダを作成します。
+
+次に，ダウンロードした各パッケージを解凍すると、
+その中にincludeおよびlibという名前のフォルダがあるので、
+その中身を作成したフォルダに全てコピーします。
+（includeには*.hが、libには*.dll、*.libが入っています）
+
+! 準備(SGE)
+SGEは、パッケージにデフォルト、no_img、no_ttfの３種類のdllが含まれています。
+||||jpg/pngのロード||SFont(及びTTF)の表示||基本機能||必要なdll||
+||!デフォルト||○||○||○||SDL_image.dll, jpeg.dll, libpng.dll, freetype-6.dll||
+||!no_img||-||○||○||freetype-6.dll||
+||!no_ttf||-||-||○||-||
+容量を気にしない場合はデフォルトのを使えば良いでしょう。
+bmp以外の画像フォーマットを使わないのであれば、no_imgもしくはno_ttfでも構いません。
+Ruby/SDLはTTFの表示にSDL_ttfを使うので、no_ttfを選んでもTTFの表示は可能です。
+
+またSGEはアーカイブに.libが含まれていないので、VC付属のlib.exeでSGE.libを作成します。
+スタートメニューから「Visual Studio .NET 2003 コマンド プロンプト」を起動し、SGE.dllのあるフォルダで
+ lib.exe /VERBOSE /MACHINE:I386 /DEF:SGE.def /OUT:SGE.lib /NAME:SGE
+とするとSDL.libが生成されます（SGEのREADMEより）。
+
+それができたら，ファイルをコピーします．
+* SGE.libを libにコピー
+* ''SDL.dll以外の''*.dllをlibにコピー
+* src/*.hをincludeにコピー
+* 使ったdllと同じフォルダのsge_config.hをincludeにコピー
+
+! Makefileの生成
+「Visual Studio .NET 2003 コマンド プロンプト」を起動し、以下のように環境変数を設定します。
+  set INCLUDE=%INCLUDE%;"(includeフォルダのパス)"
+  set LIB=%LIB%;"(libフォルダのパス)"
+
+ここで、ruby extconf.rbとすると、利用可能なライブラリがスキャンされ、Makefileが生成されます。
+
+! コンパイル
+
+nmake[ENTER] とすると、コンパイルが行われ、sdl.soが生成されます。
+
+! インストール
+
+#nmake install 
+#lib/*.dllをruby.exeと同じフォルダに置く
+
+これで、Ruby/SDLが使えるようになりました。お疲れ様でした。
+
+! mingwを利用する (かきかけ，2008-02-06)
+*[[SDL本体|http://www.libsdl.org/download-1.2.php]] - SDL-devel-(バージョン)-mingw.zip
+*? [[SDL_mixer|http://www.libsdl.org/projects/SDL_mixer/]] - SDL_mixer-devel-(バージョン)-VC6.zip
+*? [[SDL_ttf|http://www.libsdl.org/projects/SDL_ttf/]] - SDL_ttf-devel-(バージョン)-VC6.zip
+*? [[SGE|http://www.etek.chalmers.se/~e8cal1/sge/index.html]] - Downloadのページの、binary distribution for Win32 (sge(バージョン)-w32.zip)

@@ -1,0 +1,425 @@
+sargeでもちゃんとPlaggerが使えることが判明。(Plagger 0.7.14)
+
+*方法1：http://debian.hansode.org/ からapt-get する。これでうまく入れば一番楽なんだけど…。あ、バージョンは最新でないことあり。
+*方法2：sargeの中にsid環境を作っちゃう([[参考|http://www.smallstyle.com/20060828.html#p01]])。が、chrootだと外の/homeが見えないとかちょっと面倒が。
+
+というわけで以下ではsargeにCPANシェルでインストールする方法を紹介します。
+!CPANの準備
+
+まず、cpan -vとやって、CPANシェルがインストールされていることを確認してください(ない場合はperlが入ってないかも)。
+
+CPAN経由のインストールだとデフォルトは/usr/以下にインストールされます。それが嫌な場合は、以下のページの方法を使うと自分の/home以下にPerlのライブラリをインストールすることができます。(BSDと書いてありますが、ほとんどは Debianでも一緒です。)
+
+* [[otsune's FreeBSD memo: ユーザー領域にCPANをインストールする方法|http://www.otsune.com/bsd/tips/usercpaninstall.html]]
+
+いずれにしろ、cpan -i Bundle::CPAN でCPANシェルを最新版に更新しておいた方が良いようです。cpan[ENTER]として起動したときに、
+
+ cpan[1]> 
+
+のようにプロンプトに数字が入っていたら最新版になっていると思います。
+!必須のライブラリ
+
+CPANシェルから test Plagger とかやると、必要なライブラリを確認できます。今回(Plagger 0.7.14)は以下のような感じになりました。
+
+  [Core Features]
+  - YAML                         ...loaded. (0.62)
+  - YAML::Loader                 ...loaded. (0)
+  - Test::More                   ...loaded. (0.64 >= 0.42)
+  - Test::Base                   ...loaded. (0.52 >= 0.52)
+  - Class::Accessor::Fast        ...missing.
+  - File::Find::Rule             ...missing.
+  - UNIVERSAL::require           ...missing. (would need 0.1)
+  - Template                     ...missing. (would need 2.13)
+  - Template::Provider::Encoding ...missing. (would need 0.04)
+  - YAML                         ...loaded. (0.62 >= 0.39)
+  - Text::Tags                   ...missing.
+  - DateTime                     ...missing. (would need 0.29)
+  - DateTime::Format::Mail       ...missing.
+  - DateTime::Format::W3CDTF     ...missing.
+  - DateTime::Format::Strptime   ...missing.
+  - Digest::MD5                  ...loaded. (2.33)
+  - LWP                          ...loaded. (5.803)
+  - HTML::Parser                 ...missing. (would need 3.51)
+  - URI::Fetch                   ...missing. (would need 0.071)
+  - Cache::Cache                 ...missing. (would need 1.04)
+  - Module::Pluggable::Fast      ...missing.
+  - HTML::ResolveLink            ...missing.
+  - Date::Parse                  ...missing.
+  - MIME::Types                  ...missing. (would need 1.16)
+  - Net::DNS                     ...missing.
+  - XML::Feed                    ...missing. (would need 0.12)
+  - XML::LibXML                  ...missing.
+  - XML::Atom                    ...missing. (would need 0.23)
+  - XML::RSS::LibXML             ...missing. (would need 0.23)
+  - Encode                       ...missing. (would need 2.1)
+  - Term::Encoding               ...missing.
+  - File::HomeDir                ...loaded. (0.58)
+  Test::Base  #リストに出てこないけどtestに必要
+
+missingになっているのがまだインストールされていないライブラリです。
+
+基本的にinstall Hoge::Moge という感じで一つ一つインストールしていくのですが、Perlのみで書かれたライブラリはたいてい問題なく入ると思います。
+(入らなかったらforce install Hoge::Mogeで^^;)
+一部がC言語で書かれているものは、ヘッダファイルが足りなくてコンパイルできない場合があります。そういう場合はapt-getでヘッダファイルを足してやりましょう。
+
+!!XML::なんとか
+
+以下をapt-get
+
+* libxml2-dev
+* libexpat1-dev
+
+!!Template
+
+* Stash::XS(C版)を入れる→y
+* by default→y
+* Optional Extras→n
+
+としたら普通に入りました。
+
+!!Cache::Cache
+
+なぜかErrorがうまく入らなかったので、aptでliberror-perlをインストールしました。
+
+!あったほうがよいライブラリ
+
+以下のライブラリは「必須」ではないけれど「入れておいた方が良い」ライブラリです。
+
+  [Better Encoding detection]
+  - Encode::Detect               ...missing.
+  [POD Testing]
+  - Test::Pod                    ...missing.
+  - Test::Pod::Coverage          ...missing.
+  [Cookie sharing with Firefox]
+  - HTTP::Cookies::Mozilla       ...missing.
+  [Liberal XML parsing]
+  - XML::Liberal                 ...missing. (would need 0.14)
+  - XML::RSS::Liberal            ...missing.
+  [XPath support in Subscription and Feed Upgrader]
+  - HTML::TreeBuilder::XPath     ...missing.
+  [Better html to text formatter]
+  - HTML::TreeBuilder            ...loaded. (3.13)
+  - HTML::FormatText             ...missing.
+
+!!Encode::Detect
+
+リストに出てこないのですが、以下のパッケージが必要です。
+
+* Module::Build
+* ExtUtils::ParseXS
+* ExtUtils::CBuilder
+* Test::More
+* Data::Dump (これはforceすれば不要^^;)
+
+!プラグインの動作に必要なライブラリ
+
+上でいれたライブラリの他に、各プラグインが追加でライブラリを必要とする場合があります。 Publish::GMailならメール送信用のライブラリとか。
+
+とりあえず使ってみたいプラグインについて、ライブラリを追加すれば良いと思います。 (全部入れるのは大変なので…^^;)
+!!Publish::GMail
+
+以下のライブラリが必要なのですが、その前に libio-socket-ssl-perl をapt-getしておく必要があります。
+
+* Net::SMTP::TLS
+* MIME::Lite
+* Mail::Address
+
+!!CustomFeed::SVNLog
+
+SVN::CoreとSVN::ClientはCPANに上がっていないようなので、代わりに libsvn-core-perl をapt-getしてください。
+
+!プラグインが必要とするライブラリ一覧
+
+test Plaggerで見れます。どれが何をするものなのかは、 [[plagger.orgのtrac|http://plagger.org/trac/browser/trunk/plagger/lib/Plagger/Plugin]]でソースを読むと分かります(各プラグインの一番下に説明が書いてある)。英語読みたくない場合はgoogle等で。
+
+  [Bundle::Planet]
+  [Filter::HTMLScrubber] HTMLタグを除去する
+  - HTML::Scrubber               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [y] n
+  [Publish::Feed] RSS/Atomを読み込む
+  - XML::Feed                    ...loaded. (0.12 >= 0.09)
+  - XML::Atom                    ...loaded. (0.23 >= 0.20)
+  [Publish::Gmail] 結果をメールで送信する
+  - Net::SMTP::TLS               ...missing.
+  - MIME::Lite                   ...missing.
+  - Mail::Address                ...missing.
+  ==> Auto-install the 3 optional module(s) from CPAN? [y] n
+  [Publish::Planet] プラネットほげほげを作る
+  - HTML::Scrubber               ...missing.
+  - File::Copy::Recursive        ...missing.
+  ==> Auto-install the 2 optional module(s) from CPAN? [y] n
+  [Rule::Deduped] 更新されたものだけを出力
+  - DB_File                      ...loaded. (1.808)
+  [Rule::Fresh] 更新されたものだけを出力(Dedupedがあれば要らない？)
+  - Time::Duration::Parse        ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [y] n
+  [Subscription::Bloglines] Bloglinesの未読を取ってくる
+  - WebService::Bloglines        ...missing. (would need 0.11)
+  ==> Auto-install the 1 optional module(s) from CPAN? [y] n
+  [Subscription::OPML] OPML(フィードのリスト)の読み込み
+  - XML::LibXML::SAX             ...loaded. (1.61)
+  [Aggregator::Xango] フィードの並列ダウンロード
+  - Cache::FastMmap              ...missing.
+  - POE::Component::Client::DNS  ...missing.
+  - POE::Component::Client::HTTP ...missing.
+  - Xango                        ...missing. (would need 1.04)
+  - POE                          ...loaded. (0.29)
+  ==> Auto-install the 4 optional module(s) from CPAN? [n] n
+  [Bundle::Defaults]
+  [CustomFeed::FlickrSearch] Flickerの写真を検索
+  - Flickr::API                  ...missing.
+  - DateTime::Format::Epoch      ...missing.
+  ==> Auto-install the 2 optional module(s) from CPAN? [n]
+  [CustomFeed::Mixi] Mixiのマイミク日記とかを読み込み
+  - WWW::Mixi                    ...missing. (would need 0.46)
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [CustomFeed::SVNLog] Subversionのコミットログを読み込み
+  - SVN::Core                    ...missing.
+  - SVN::Client                  ...missing.
+  ==> Auto-install the 2 optional module(s) from CPAN? [n]
+  [CustomFeed::Script] Perlで書かれていないプログラムを入力にできる
+  - YAML::Syck                   ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::2chNewsokuTitle]
+  [Filter::2chRSSContent]
+  [Filter::AtomLinkRelated] 参考：http://mywiki.jp/hazymoon/plagger%83h%83L%83%85%83%81%83%93%83g%98a%96%F3/Filter+-+AtomLinkRelated/
+  - List::Util                   ...loaded. (1.18)
+  [Filter::Babelfish] Babelfishで翻訳
+  - Locale::Language             ...loaded. (2.21)
+  - WWW::Babelfish               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::BlogPet]
+  [Filter::Delicious]
+  [Filter::DeliciousFeedTags]
+  [Filter::Emoticon]
+  - Text::Emoticon               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::EntryFullText]
+  - HTML::ResolveLink            ...loaded. (0.03)
+  [Filter::ExtractAuthorName]
+  - Email::Address               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::FeedFlareStripper]
+  [Filter::FindEnclosures]
+  - List::Util                   ...loaded. (1.18)
+  - HTML::TokeParser             ...loaded. (2.37)
+  [Filter::FloatingDateTime]
+  [Filter::ForceTimeZone]
+  [Filter::GuessLanguage]
+  - Lingua::ZH::HanDetect        ...missing.
+  - Locale::Language             ...loaded. (2.21)
+  - Text::Language::Guess        ...missing.
+  ==> Auto-install the 2 optional module(s) from CPAN? [n]
+  [Filter::GuessTimeZoneByDomain]
+  - DateTime::TimeZone           ...loaded. (0.52 >= 0.51)
+  - IP::Country                  ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::HatenaBookmarkTag]
+  [Filter::HatenaBookmarkUsersCount]
+  - XMLRPC::Lite                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::HatenaDiaryKeywordLink]
+  - XMLRPC::Lite                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::HatenaFormat]
+  - Text::Hatena                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::HatenaKeywordTag]
+  - Hatena::Keyword              ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::ImageInfo]
+  - Image::Info                  ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::Kansai]
+  [Filter::LivedoorClipUsersCount]
+  - XMLRPC::Lite                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::Markdown]
+  - Text::Markdown               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::POPFile]
+  - XMLRPC::Lite                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::Pipe]
+  - IPC::Run                     ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::Profanity]
+  - Regexp::Common::profanity_us ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::RSSLiberalDateTime]
+  - Date::Parse                  ...loaded. (2.27)
+  [Filter::ResolveRelativeLink]
+  - HTML::ResolveLink            ...loaded. (0.03 >= 0.02)
+  [Filter::Romanize]
+  - Text::Kakasi                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::SpamAssassin]
+  - Mail::SpamAssassin           ...missing.
+  - MIME::Lite                   ...missing.
+  ==> Auto-install the 2 optional module(s) from CPAN? [n]
+  [Filter::StripRSSAd]
+  [Filter::TTP]
+  - URI::Find                    ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::Thumbnail]
+  [Filter::URLBL]
+  - URI::Find                    ...missing.
+  - Net::DNS::Resolver           ...loaded. (513)
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Filter::UnicodeNormalize]
+  - Unicode::Normalize           ...loaded. (0.28)
+  [Filter::tDiaryComment]
+  [Namespace::ApplePhotocast]
+  [Namespace::HatenaFotolife]
+  [Namespace::MediaRSS]
+  [Notify::Audio]
+  [Notify::Beep]
+  - Audio::Beep                  ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Notify::Command]
+  [Notify::IRC]
+  - POE::Component::IRC          ...loaded. (2.9)
+  - POE::Component::IKC::Client  ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Notify::NetSend]
+  - Net::NetSend                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Notify::OpenBrowser]
+  [Notify::OpenBrowser::FirefoxRemote]
+  [Notify::UpdatePing]
+  - XMLRPC::Lite                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::2chdat]
+  - DateTime::Locale             ...loaded. (0.3101)
+  [Publish::CHTML]
+  [Publish::CSV]
+  - Text::CSV_PP                 ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::Delicious]
+  - Net::Delicious               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::Excel]
+  - Spreadsheet::WriteExcel      ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::IMAP]
+  - Mail::IMAPClient             ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::JSON]
+  - JSON::Syck                   ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::JavaScript]
+  - Template::Plugin::JavaScript ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::MT]
+  - Net::MovableType             ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::Maildir]
+  - MIME::Lite                   ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::PDF]
+  - PDF::FromHTML                ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::PalmDoc]
+  - Palm::PalmDoc                ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::SWF]
+  - SWF::Builder                 ...missing.
+  - Text::WrapI18N               ...loaded. (0.06)
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::Serializer]
+  - Data::Serializer             ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Publish::Takahashi]
+  [Publish::iCal]
+  - DateTime::Format::ICal       ...missing.
+  - Data::ICal                   ...missing.
+  ==> Auto-install the 2 optional module(s) from CPAN? [n]
+  [Rule::URLBL]
+  - Net::DNS::Resolver           ...loaded. (513)
+  [Search::Estraier]
+  - Search::Estraier             ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Search::Grep]
+  - File::Grep                   ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Search::KinoSearch]
+  - KinoSearch                   ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Subscription::Bookmarks::Mozilla]
+  [Subscription::DBI]
+  - DBIx::Class::Schema          ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Subscription::FOAF]
+  - XML::FOAF                    ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Subscription::HatenaRSS]
+  - WWW::Mechanize               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Subscription::LivedoorReader]
+  - WWW::Mechanize               ...missing.
+  - JSON::Syck                   ...missing. (would need 0.1)
+  ==> Auto-install the 2 optional module(s) from CPAN? [n]
+  [Subscription::Odeo]
+  [Subscription::PingServer]
+  [Subscription::PlanetINI]
+  - Config::INI::Simple          ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Subscription::XOXO]
+  [Subscription::XPath]
+  - HTML::TreeBuilder::XPath     ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Summary-Auto]
+  [Summary-English]
+  - Lingua::EN::Summarize        ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Summary-HatenaBookmark]
+  [Summary-Simple]
+  [Summary-TextOriginal]
+  - Text::Original               ...missing.
+  ==> Auto-install the 1 optional module(s) from CPAN? [n]
+  [Summary-TrackbackRDF]
+  [Widget::Simple]
+
+!本体
+
+さて、ここまで来ればあとは install Plagger とするだけです。追加でライブラリを入れるか聞かれますが、不要なプラグインに関してはn連打でOKです。
+
+!使ってみる
+
+  global:
+    plugin_path:
+       - /home/yhara/perl/lib/perl5/Plagger/Plugin/
+    assets_path: /home/yhara/.cpan/build/Plagger-0.7.14/assets
+    timezone: Asia/Tokyo
+    log:
+      level: info
+  plugins:
+  
+    - module: Subscription::Config
+      config:
+        feed:
+          - url: http://d.hatena.ne.jp/keyworddiary/Plagger?mode=rss
+   
+  #一度送信した記事を除く場合
+  #  - module: Filter::Rule
+  #    rule:
+  #        module: Deduped
+  #本文も取ってくる場合
+  #  - module: Filter::EntryFullText
+  
+    - module: Publish::Gmail
+      config:
+        mailto: yhara@example.com
+        mailroute:
+          via: smtp
+          host: localhost
+
+こんな感じでfeed2mail.yamlを保存して、plagger -c feed2mail.yaml とします。 (yamlはインデントに意味があるので、正確にコピペしてください。)
+
+Sending 〜 to yhara@example.com のように表示されたら成功です。まもなくあなた宛にメールが届くことでしょう :-)
+
+!謝辞
+
+sargeへのインストールに当たって、以下の記事を参考にしました。ありがとうございました。
+
+* [[活動日誌: Plagger をインストールしてみた|http://shakenbu.org/yanagi/d/20060909.html#p01]]

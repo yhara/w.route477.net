@@ -1,0 +1,34 @@
+TODO
+
+!ORMの役割
+
+* データベースの抽象化
+* アソシエーション
+* マイグレーション
+* バリデーション 
+
+!リンク
+
+* 参考
+** [[Rails勉強会＠東京第24回 - Data Source Architectural Patterns (PofEAA)|http://wota.jp/ac/?date=20071118#p01]]
+** [[PofEAA読書会振り返り - naoyaのはてなダイアリー|http://d.hatena.ne.jp/naoya/20051024/1130146687]]
+** [[OTN Japan - 今だからデータ・アクセスを真剣に考える！ 第2回|http://otndnld.oracle.co.jp/columns/arai-semi/data_access/2/]]
+** [[PofEAA's Wiki - PofEAA読書会第7回|http://capsctrl.que.jp/kdmsnr/wiki/PofEAA/?ReadingPofEAA007]]
+
+* ActiveRecord : http://ar.rubyonrails.org/
+* DataMapper : http://datamapper.org
+* Sequel : http://sequel.rubyforge.org/
+
+! メモ
+* Sequel = Table Data Gateway
+** あるテーブルを表現するオブジェクトを作り、それ経由でSQLを発行する
+** 検索の返り値はハッシュ
+** Sequel::ModelはSequelの上にActive Recordパターンを実装したもの
+* Row Data Gateway
+** 1行1インスタンス
+** Active Recordの、ドメインロジックがないやつ
+** ActiveRecordでメソッドなしのクラスを定義したものがこれにあたるか
+* ActiveRecord = Active Record
+** 1行1インスタンス、ドメインロジックを含む
+* DataMapper = Data Mapper
+** クラス構造がテーブル構造と対応しなくてもよい(より柔軟で、実装が難しい、作者乙)

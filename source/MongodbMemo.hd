@@ -1,0 +1,35 @@
+MongoDBに関するメモです。
+
+! 資料
+* https://github.com/ma2/the-little-mongodb-book/blob/master/ja/mongodb.ja.markdown
+
+!! 用語
+
+||RDB||MongoDB||
+||データベース||データベース||
+||テーブル||コレクション||
+||列||ドキュメント||
+||カラム||フィールド (*1)||
+||インデックス||インデックス||
+
+(*1) ただし、RDBのカラムがテーブルに定義されているのに対し、MongoDBのフィールドは各ドキュメントが持っている
+
+!! 検索
+
+!! 更新
+全部更新(置き換え)
+ db.unicorns.update({name: 'Roooooodles'}, {weight: 590})
+
+部分更新
+ db.unicorns.update({name: 'Roooooodles'}, {$set: {weight: 590}})
+
+値をインクリメントする
+ db.unicorns.update({name: 'Pilot'}, {$inc: {vampires: -2}})
+
+配列に値を追加する
+ db.unicorns.update({name: 'Aurora'}, {$push: {loves: 'sugar'}})
+
+more: http://www.mongodb.org/display/DOCS/Updating
+
+* upsert : update_or_create
+* multi : 複数アップデートする

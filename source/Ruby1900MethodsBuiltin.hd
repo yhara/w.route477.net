@@ -1,0 +1,481 @@
+Ruby1.8.6-p111とRuby1.9.0-0のメソッドを比較してみました。
+
+[[作成に使ったスクリプト|:../temp/18to19.tar.gz]] (結果は表記を少し編集しています)
+
+{{toc_here}}
+
+! class Array 
+public class methods
+* try_convert (+)
+public instance methods
+* choice (+)
+* combination (+)
+* cycle (+)
+* ''indexes  (-)''
+* ''indices  (-)''
+* permutation (+)
+* product (+)
+* shuffle (+)
+* shuffle! (+)
+* ''zip  (-)''
+! class BasicObject (+)
+public instance methods
+* ==
+* equal?
+* !
+* !=
+* __send__
+private instance methods
+* initialize
+* singleton_method_+
+* singleton_method_-
+* singleton_method_undefined
+* method_missing
+constants
+* BasicObject
+! class Bignum 
+public instance methods
+* even? (+)
+* fdiv (+)
+* odd? (+)
+! class Binding 
+public instance methods
+* eval (+)
+! class Continuation (-)
+public instance methods
+* []
+* call
+! class Dir 
+public class methods
+* exist? (+)
+* exists? (+)
+public instance methods
+* inspect (+)
+! class Encoding (+)
+public instance methods
+* to_s
+* inspect
+* name
+* based_encoding
+* dummy?
+* _dump
+public class methods
+* list
+* find
+* compatible?
+* _load
+* default_external
+* locale_charmap
+constants
+* ASCII_8BIT
+* EUC_JP
+* Shift_JIS
+* SHIFT_JIS
+* UTF_8
+* ISO_2022_JP
+* ASCII
+* BINARY
+* EucJP
+* EUCJP
+* SJIS
+! class Enumerable 
+public instance methods
+* count (+)
+* cycle (+)
+* drop (+)
+* drop_while (+)
+* each_cons (+)
+* each_slice (+)
+* find_index (+)
+* first (+)
+* group_by (+)
+* max_by (+)
+* min_by (+)
+* minmax (+)
+* minmax_by (+)
+* none? (+)
+* one? (+)
+* reduce (+)
+* take (+)
+* take_while (+)
+constants
+* Enumerator (+)
+! class Enumerable::Enumerator (+)
+public instance methods
+* each
+* with_index
+* next
+* rewind
+private instance methods
+* initialize
+* initialize_copy
+! class Errno 
+constants
+* NOERROR (+)
+! class Errno::NOERROR (+)
+public class methods
+* exception
+! class Exception 
+public instance methods
+* == (+)
+* ''to_str  (-)''
+! class Fiber (+)
+public instance methods
+* resume
+public class methods
+* yield
+! class FiberError (+)
+public class methods
+* exception
+! class File 
+public class methods
+* path (+)
+* try_convert (+)
+* world_readable? (+)
+* world_writable? (+)
+public instance methods
+* to_path (+)
+! class File::Constants 
+constants
+* BINARY (+)
+! class File::Stat 
+public instance methods
+* world_readable? (+)
+* world_writable? (+)
+! class FileTest 
+public class methods
+* world_readable? (+)
+* world_writable? (+)
+private instance methods
+* world_readable? (+)
+* world_writable? (+)
+! class Fixnum 
+public instance methods
+* even? (+)
+* fdiv (+)
+* odd? (+)
+* succ (+)
+! class GC 
+public class methods
+* stress (+)
+* stress= (+)
+! class Gem (+)
+public class methods
+* default_dir
+* dir
+* path
+* set_home
+* set_paths
+* ensure_gem_subdirectories
+* push_gem_version_on_load_path
+* calculate_integers_for_gem_version
+* push_all_highest_version_gems_on_load_path
+* method_missing
+constants
+* Enable
+* ConfigMap
+* QuickLoader
+! class Gem::QuickLoader (+)
+public instance methods
+* push_gem_version_on_load_path
+* calculate_integers_for_gem_version
+* push_all_highest_version_gems_on_load_path
+* const_missing
+* method_missing
+public class methods
+* load_full_rubygems_library
+constants
+* GemPaths
+* GemVersions
+! class Hash 
+public class methods
+* try_convert (+)
+public instance methods
+* assoc (+)
+* compare_by_identity (+)
+* compare_by_identity? (+)
+* eql? (+)
+* flatten (+)
+* hash (+)
+* ''indexes  (-)''
+* ''indices  (-)''
+* key (+)
+* rassoc (+)
+* ''sort  (-)''
+! class IO 
+public class methods
+* try_convert (+)
+public instance methods
+* bytes (+)
+* close_on_exec= (+)
+* close_on_exec? (+)
+* external_encoding (+)
+* getbyte (+)
+* internal_encoding (+)
+* lines (+)
+* readbyte (+)
+* set_encoding (+)
+! class Integer 
+public instance methods
+* even? (+)
+* odd? (+)
+* pred (+)
+! class Kernel 
+public class methods
+* __callee__ (+)
+* __method__ (+)
+* ''callcc  (-)''
+* ''chomp  (-)''
+* ''chomp!  (-)''
+* ''chop  (-)''
+* ''chop!  (-)''
+* ''getc  (-)''
+* ''gsub  (-)''
+* ''gsub!  (-)''
+* ''method_missing  (-)''
+* ''scan  (-)''
+* spawn (+)
+* ''split  (-)''
+* ''sub  (-)''
+* ''sub!  (-)''
+public instance methods
+* !~ (+)
+* ''==  (-)''
+* ''__send__  (-)''
+* define_singleton_method (+)
+* enum_for (+)
+* ''equal?  (-)''
+* gem (+)
+* ''id  (-)''
+* instance_exec (+)
+* public_method (+)
+* public_send (+)
+* tap (+)
+* ''to_a  (-)''
+* to_enum (+)
+* ''type  (-)''
+private instance methods
+* __callee__ (+)
+* __method__ (+)
+* ''callcc  (-)''
+* ''chomp  (-)''
+* ''chomp!  (-)''
+* ''chop  (-)''
+* ''chop!  (-)''
+* ''getc  (-)''
+* ''gsub  (-)''
+* ''gsub!  (-)''
+* ''method_missing  (-)''
+* ''scan  (-)''
+* ''singleton_method_+  (-)''
+* ''singleton_method_-  (removed)''
+* ''singleton_method_undefined  (-)''
+* spawn (+)
+* ''split  (-)''
+* ''sub  (-)''
+* ''sub!  (-)''
+! class KeyError (+)
+public class methods
+* exception
+! class MatchData 
+public instance methods
+* names (+)
+* regexp (+)
+! class Math 
+public class methods
+* log2 (+)
+private instance methods
+* log2 (+)
+! class Method 
+public instance methods
+* eql? (+)
+* hash (+)
+* name (+)
+* owner (+)
+* receiver (+)
+! class Module 
+public instance methods
+* class_exec (+)
+* class_variable_get (+)
+* class_variable_set (+)
+* module_exec (+)
+* public_instance_method (+)
+* remove_class_variable (+)
+private instance methods
+* ''class_variable_get  (-)''
+* ''class_variable_set  (-)''
+* ''remove_class_variable  (-)''
+! class Mutex (+)
+public instance methods
+* locked?
+* try_lock
+* lock
+* unlock
+* sleep
+* synchronize
+private instance methods
+* initialize
+! class NameError::message 
+public class methods
+* ''!  (-)''
+public instance methods
+* == (+)
+! class Numeric 
+public instance methods
+* fdiv (+)
+* scalar? (+)
+! class Object 
+private instance methods
+* ''initialize  (-)''
+constants
+* ''Continuation  (-)''
+* Encoding (+)
+* Fiber (+)
+* FiberError (+)
+* Gem (+)
+* KeyError (+)
+* ''MatchingData  (-)''
+* Mutex (+)
+* ''PLATFORM  (-)''
+* ''RELEASE_DATE  (-)''
+* RUBY_COPYRIGHT (+)
+* RUBY_DESCRIPTION (+)
+* RUBY_REVISION (+)
+* StopIteration (+)
+* ''VERSION  (-)''
+* VM (+)
+! class ObjectSpace 
+public class methods
+* count_objects (+)
+private instance methods
+* count_objects (+)
+! class Proc 
+public instance methods
+* eql? (+)
+* hash (+)
+* lambda? (+)
+* yield (+)
+! class Process 
+public class methods
+* daemon (+)
+* exec (+)
+* spawn (+)
+private instance methods
+* daemon (+)
+! class Range 
+public instance methods
+* cover? (+)
+* max (+)
+* min (+)
+! class Regexp 
+public class methods
+* try_convert (+)
+public instance methods
+* encoding (+)
+* fixed_encoding? (+)
+* ''kcode  (-)''
+* named_captures (+)
+* names (+)
+! class StopIteration (+)
+public class methods
+* exception
+! class String 
+public class methods
+* try_convert (+)
+public instance methods
+* ascii_only? (+)
+* bytes (+)
+* bytesize (+)
+* chr (+)
+* clear (+)
+* ''each  (-)''
+* each_char (+)
+* encode (+)
+* encode! (+)
+* encoding (+)
+* end_with? (+)
+* force_encoding (+)
+* lines (+)
+* ord (+)
+* partition (+)
+* rpartition (+)
+* start_with? (+)
+* valid_encoding? (+)
+! class Symbol 
+public instance methods
+* <=> (+)
+* == (+)
+* =~ (+)
+* [] (+)
+* capitalize (+)
+* casecmp (+)
+* downcase (+)
+* empty? (+)
+* encoding (+)
+* intern (+)
+* length (+)
+* match (+)
+* next (+)
+* size (+)
+* slice (+)
+* succ (+)
+* swapcase (+)
+* ''to_int  (-)''
+* to_proc (+)
+* upcase (+)
+! class Thread 
+public class methods
+* ''critical  (-)''
+* ''critical=  (-)''
+* exclusive (+)
+public instance methods
+* add_trace_func (+)
+* ''exit!  (-)''
+* ''kill!  (-)''
+* set_trace_func (+)
+* ''terminate!  (-)''
+constants
+* MUTEX_FOR_THREAD_EXCLUSIVE (+)
+! class Time 
+public class methods
+* ''times  (-)''
+public instance methods
+* friday? (+)
+* monday? (+)
+* nsec (+)
+* saturday? (+)
+* sunday? (+)
+* thursday? (+)
+* tuesday? (+)
+* tv_nsec (+)
+* wednesday? (+)
+! class UnboundMethod 
+public instance methods
+* eql? (+)
+* hash (+)
+* name (+)
+* owner (+)
+! class VM (+)
+constants
+* Env
+* USAGE_ANALYSIS_INSN
+* USAGE_ANALYSIS_REGS
+* USAGE_ANALYSIS_INSN_BIGRAM
+* OPTS
+* INSTRUCTION_NAMES
+* InstructionSequence
+! class VM::Env (+)
+! class VM::InstructionSequence (+)
+public instance methods
+* inspect
+* disasm
+* disassemble
+* to_a
+* eval
+public class methods
+* compile
+* compile_file
+* compile_option
+* compile_option=
+* disasm
+* disassemble

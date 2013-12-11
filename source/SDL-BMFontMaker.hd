@@ -1,0 +1,23 @@
+TTFフォントからSDLで使うビットマップフォントを生成するソフトです。
+
+!ダウンロード
+* [[fontmake-1.0.zip|:../files/fontmake-1.0.zip]]
+
+!スクリーンショット
+{{attach_view "fontmake.png"}}
+
+!使い方
+!!Windows
+「参照」ボタンを押してTTFフォントファイルを選び、
+文字のサイズを入力して「生成」ボタンを押すと
+ビットマップフォントが生成されます。
+
+ビットマップフォントは.ttfファイルと同じディレクトリに生成されます。
+例えば c:\temp\hoge.ttfを変換すると、c:\temp\hoge.bmpが生成されます。
+
+!!Unix
+ ruby fontmake.rb hoge.ttf 20
+など。
+
+!できたフォントを使う
+[[Ruby/SDL Users - 逆引きRuby/SDL|http://mono.kmc.gr.jp/proj/rubysdl/?GyakubikiRubySDL]]等を参照してください。

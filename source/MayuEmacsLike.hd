@@ -1,0 +1,25 @@
+[[窓使いの憂鬱|http://mayu.sourceforge.net/]]を使って、
+「無変換を押しながらF/B/P/N」でカーソル移動とかする設定。
+
+標準でもemacsedit.mayuという設定ファイルが付いてきますが、
+全体のキーバインドをEmacs風にするのではなく、
+特定のキー(例では無変換)を押したときだけEmacs風にします。
+
+.mayuに以下を追加する。
+ mod mod0 = 無変換
+ key *S-M0-A = *S-Home
+ key *S-M0-E = *S-End
+ key *S-M0-F = *S-→ 
+ key *S-M0-B = *S-←
+ key *S-M0-P = *S-↑
+ key *S-M0-N = *S-↓
+ key M0-R = F5
+ key M0-D = Delete
+ key M0-H = BackSpace
+ key M0-M = Enter
+ key M0-LeftSquareBracket = Esc
+
+注意：
+*mod0を既に使ってる場合はmod1/M1に変えるなど。
+*コピペするときはWikiWordのあとの「?」を消してください(^^;
+*おまけとして、C-rでリロードしてくれないブラウザのためにM0-RでF5を押すようにしています。

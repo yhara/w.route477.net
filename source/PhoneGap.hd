@@ -1,0 +1,28 @@
+PhoneGapに関するメモです。
+
+! リンク
+
+* http://docs.phonegap.com/en/2.0.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android
+* http://wiki.phonegap.com/w/page/30864168/phonegap-android-terminal-quickstart
+
+qiitaにメモったやつ
+* [[PhoneGapでHello Worldした #PhoneGap - Qiita|http://qiita.com/items/cc0fdf4174f884d1081f]]
+* [[PhoneGapプロジェクトをコマンドラインからコンパイルする #PhoneGap - Qiita|http://qiita.com/items/733b81a39adc4a464570]]
+
+! ダウンロード
+http://www.phonegap.com/download
+
+lib以下に各OS用のファイルが入っている
+
+! Android
+!! インストール
+* $ brew install android-sdk
+* $ android
+** 持ってるやつのバージョンに合わせたSDKをインストール
+
+* antのインストール
+** $ brew install ant
+
+* zipのlib/android/をコピー
+* $ android list target
+* 

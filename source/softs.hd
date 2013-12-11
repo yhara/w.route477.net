@@ -1,0 +1,24 @@
+! ソフトウェア
+
+!! 自作のソフトウェアについて
+
+:[[Down!!|:/~yhara/softs/down.html]]:Ruby/SDLで書かれた、シンプルで熱いアクションゲーム
+:[[タスクバーアナログ時計]]:あなたのタスクバーにアナログ時計を
+:[[IroLog]]:IRCのログをグラフィカルに表示する
+:[[RubyText]]:Windows用のRD/HikiDocコンバータ
+:[[SyleraPlugin]]:タブブラウザSyrela2用のプラグイン。
+
+!! 他人のソフトウェアについて
+
+:[[SVKを使ってみよう]]:「分散Subversion」ことSVKのチュートリアル。
+:[[PlaggerDebianSarge]]:Debian SargeにPlaggerを入れてみる
+:[[Vim覚え書き]]:Vimのコマンドの覚え書き。
+:[[VimScript覚え書き]]:Vim Scriptの覚え書き。
+:[[AAA! CAFEでtDiaryを動かす]]:aaacafeにtDiaryを設置したときの覚え書き。
+:[[まめFileについて]]:Windows用の多機能ファイラ、まめFileについて。
+:[[AZIKについて]]:ローマ字入力を支援するシステムAZIKについて。
+:[[Screenをはじめよう]]:「タブ式端末」GNU screenについて。
+:[[AmetMultiでRubyを使う]]:ATOK+Rubyでプログラマブル漢字変換。
+:[[おすすめソフトウェア/常駐編]]:Windows用の常駐ソフトについて。
+:[[MayuEmacsLike]]:窓使いの憂鬱でEmacs風移動
+:[[TiddlyWiki]]:ローカルに置ける「1ファイルwiki」

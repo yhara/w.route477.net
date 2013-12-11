@@ -1,0 +1,50 @@
+Schemeを知ってる人がCommon Lispを書くときにハマりがちな罠について。随時追記。
+
+{{toc_here}}
+
+! 処理系
+2chのCLスレのテンプレに詳しい。SBCLかClispが定番？
+
+! 関数と変数
+CLでは関数と変数は名前空間が別です。Schemeでは「fooという関数」は「fooという変数に関数が入っている」のと同じですが、
+CLでは「関数foo」と「変数foo」を同時に使うことができます。
+
+これに関連した罠がいくつか。
+
+!! 関数を渡したいときは「#'」を付ける
+Scheme:
+ (sort '(1 2 3) >)
+CL:
+ (sort '(1 2 3) #'>)
+
+!! 無名関数には「#'」を付ける
+そーいうもんだと覚えましょう。
+Scheme:
+ (sort '(1 2 3) (lambda (x y) (> x y)))
+CL:
+ (sort '(1 2 3) #'(lambda (x y) (> x y)))
+
+
+
+!! map -> mapcar
+Schemeでいうmapはmapcarです。CLのmapはまだ別の挙動なので注意。
+
+Scheme:
+ (map (lambda (x) (* x x)) '(1 2 3))
+CL:
+ (mapcar #'(lambda (x) (* x x)) '(1 2 3))
+
+! リンク集
+日本語サイト
+* [[M.Hiroi's Home Page / xyzzy Lisp Programming|http://www.geocities.jp/m_hiroi/xyzzy_lisp.html]]
+* [[Common Lisp クエックブック|http://ancient.s6.xrea.com/lisp/cookbook.html]]
+* [[Common Lisp|http://www.fireproject.jp/feature/common-lisp/]]
+
+英語リファレンス
+* [[CLHS: Chapter Index|http://www.lisp.org/HyperSpec/FrontMatter/Chapter-Index.html]]
+
+本
+* [[Amazon.co.jp： ANSI Common Lisp (スタンダードテキスト): ポール グレアム, Paul Graham, 久野 雅樹, 須賀 哲夫: 本|http://www.amazon.co.jp/ANSI-Common-Lisp-%E3%82%B9%E3%82%BF%E3%83%B3%E3%83%80%E3%83%BC%E3%83%89%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88-%E3%82%B0%E3%83%AC%E3%82%A2%E3%83%A0/dp/4894714337]]
+* [[Amazon.co.jp： 実践Common Lisp: Peter Seibel, 佐野匡俊, 水丸淳, 園城雅之, 金子祐介: 本|http://www.amazon.co.jp/%E5%AE%9F%E8%B7%B5Common-Lisp-Peter-Seibel/dp/4274067211]]
+** 非公式サポートページ [[実践 Common Lisp|http://pcl.lispuser.net/]]
+** 英語版は無料で読める。[[Practical Common Lisp|http://gigamonkeys.com/book/]]

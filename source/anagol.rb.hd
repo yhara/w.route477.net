@@ -1,0 +1,92 @@
+anarchy golf (http://golf.shinh.org/) のスクレイパです。
+
+! ダウンロード
+* [[ruby-anagol.tar.gz|:../files/ruby-anagol.tar.gz]]
+
+! サンプル
+:[[anagol table|:../files/anagol.html]]:各言語の参加状況を表にしています。(毎日朝6時更新)
+
+! リファレンス
+そんなものは うちにはないよ……。
+
+specファイルを見るとだいたいわかるかも。
+<<<
+context "AnarchyGolf" do
+  setup do
+    @anagol = AnarchyGolf.new
+  end
+
+  specify "should have languages" do
+    @anagol.should have_at_least(10).languages
+
+    rb = @anagol.languages.first
+    rb.name.should == "Ruby"
+    rb.short_name.should == "rb"
+  end
+
+  specify "should have problems" do
+    @anagol.should have_at_least(10).problems
+  end
+end
+
+context "Problem" do
+  setup do
+    @hello = AnarchyGolf.new.problems.first
+  end
+
+  specify "should have name" do
+    @hello.name.should == "hello world"
+  end
+
+  specify "should have url" do
+    @hello.url.should == "http://golf.shinh.org/p.rb?hello+world"
+  end
+
+  specify "should have description" do
+    @hello.description.should == 'say "Hello, world!"'
+  end
+
+  specify "should have options" do
+    @hello.deadline.should be_nil
+    @hello.revealed.should be_false
+  end
+
+  specify "should detect revealed" do
+    dlines = AnarchyGolf.new.problems.find{|prob| prob.name == "duplicate lines"}
+    dlines.revealed.should be_true
+  end
+
+  specify "should have samples" do
+    #@hello.should have_at_least(1).samples
+  end
+
+  specify "should have ranking" do
+    @hello.ranking.keys.should include("Ruby")
+    topscore = @hello.ranking["Ruby"].first
+    topscore.rank.should == 1
+    topscore.user.should == "eban"
+    topscore.size.should == 19
+    topscore.time.should == 0.1226
+    topscore.date.should == "07/01/30 16:37:51"
+    topscore.stat.should == "?B / ?B / ?B"
+  end
+
+  specify "should have language_ranking" do
+    @hello.should have_at_least(10).language_ranking
+
+    first = @hello.language_ranking.first
+    first.rank.should == 1
+    first.lang.should == "PHP"
+    first.user.should == "konbu"
+    first.size.should == 13
+    first.score.should == 10000
+  end
+
+  specify "should detect whether a certain language is posted" do
+    @hello.has_language?("Ruby").should be_true
+    @hello.has_language?("Perl").should be_true
+    @hello.has_language?("Python").should be_true
+  end
+
+end
+>>>

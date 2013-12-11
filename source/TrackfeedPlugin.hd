@@ -1,0 +1,14 @@
+[[trackfeed|http://trackfeed.com/]]のリンクを生成するプラグインです。
+
+tDiaryとhikiに対応しています{{fn "tDiaryはヘッダに直接書けばいいのであんまり意味がないですが"}}。
+
+!使い方
+SideMenuなどに
+ {{trackfeed "abcdef01243"}}
+のように書いてください。
+
+第三者がユーザIDを勝手に書き換えるのを防ぐため、trackfeedを設置したページ(上の例ならSideMenu)
+は凍結しておいた方が良いでしょう。
+
+!ダウンロード
+[[trackfeed.rb|:../files/trackfeed.rb]]

@@ -1,0 +1,26 @@
+Emacs上で動くIRCクライアント、Rieceの使いかたのメモです(書きかけ)。
+
+! とりあえず起動
+M-x rieceで。(駄目ならM-x load-library[Enter] riece してから)
+
+limechatとかと似たような画面なんでまぁわかるよね。
+
+! コマンド
+||チャンネルに参加||C-c j (join)||
+||チャンネルから離脱||C-c p (part)||
+||次のチャンネル||C-c > (または C-c j)||
+||前のチャンネル||C-c <||
+||n番目のチャンネル||C-c 0, C-c 1, C-c 2, ...||
+||10番目以降のチャンネル||C-c C-c 0 (10), C-c C-c 1 (11), C-c C-c 2 (12)...||
+||終了||C-c q (quit)||
+||再描画||C-c r (redraw?)||
+||トピックの変更||C-c t (topic)||
+||オペレータ権限をあげる||C-c o (operator)||
+||IRCコマンドを直接送る||C-c /||
+||自動スクロールを禁止/許可||C-c C-t f (freeze)||
+||自動スクロールを禁止/許可(自分が発言するまで)||C-c C-t o (own freeze)||
+||awayになる||C-c C-t a||
+
+http://www.nongnu.org/riece/riece-ja/Commands.html#Commands
+
+! 設定
