@@ -78,4 +78,4 @@ configure :build do
   # set :http_prefix, "/Content/images/"
 end
 
-activate :hikidoc
+activate :hikidoc, level: 2
