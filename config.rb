@@ -1,3 +1,4 @@
+require 'cgi'
 require 'slim'
 
 set :markdown_engine, :redcarpet
@@ -79,3 +80,9 @@ configure :build do
 end
 
 activate :hikidoc, level: 2
+
+helpers do
+  def title_of(path)
+    return CGI.unescape(File.basename(path, ".html")).encode("utf-8", "euc-jp")
+  end
+end
