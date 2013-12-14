@@ -4,7 +4,7 @@ html lang="ja"
     meta charset="utf-8"
     title Route 477
 
-    == stylesheet_link_tag "hiki_green"
+    == stylesheet_link_tag "hiki_green", "misc"
     == javascript_include_tag  "all"
 
   body class="#{page_classes}"
@@ -15,6 +15,10 @@ html lang="ja"
           a href='https://github.com/yhara/w.route477.net' GitHub
 
       h1.header = title_of(current_resource.path)
+
+      - if current_page.data.old
+        #old-warning
+          | このページの内容は古いですが、歴史的資料として残しています
 
       .day
         .body

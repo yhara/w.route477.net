@@ -1,3 +1,6 @@
+---
+old: true
+---
 ! [[AmetMulti|http://www.hirax.net/pukiwiki/pukiwiki.php?AmetPerl]]でRubyを使う
 [[AmetMulti|http://www.hirax.net/pukiwiki/pukiwiki.php?AmetPerl]]は
 [[平林さん|http://hirax.net]]の開発したソフトウェアで、ATOKによる変換時にPerl,Rubyその他を使って文字列を加工することができるようになります。
