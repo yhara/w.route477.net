@@ -43,6 +43,8 @@ html lang="ja"
 
         #sitemap
           - sitemap.resources.each do |x|
+            - next if File.basename(x.path) == "CNAME"
+            - next if x.data.old
             p
               = link_to title_of(x.path), x.path
 
