@@ -6,7 +6,7 @@ img.photo{
 	float:none;
 }
 pre{
-        font-family: monospace;
+        font-family: Monaco, Osaka-mono, "Osaka-等幅", "ＭＳ ゴシック", monospace;
 	white-space: -moz-pre-wrap; /* Mozilla */
 	overflow: auto;
 	white-space: -pre-wrap;     /* Opera 4-6 */
