@@ -1,10 +1,8 @@
 インストール一切不要！ メモ帳一本でゲームが作れる開発環境(Windows用)
 
-{{toc_here}}
-
 ! ダウンロード
 
-* [[rskit-1.2.0b.zip|:../files/rskit-1.2.0b.zip]] (4.45MB)
+* [[rskit-1.2.0b.zip|/files/rskit-1.2.0b.zip]] (4.45MB)
 
 ! サンプルを動かしてみよう
 
@@ -75,11 +73,3 @@ RSKitは以下のソフトウェアを利用しています。
 
 * 1.2.0b(2007/1/4)   - *.soが読み込めなかったのを修正
 * 1.2.0a(2006/12/25) - 最初のリリース 
-
-
-! 連絡先
-
- yhara / 京大マイコンクラブ
-  
- yhara(at)kmc.gr.jp
- http://mono.kmc.gr.jp/~yhara/
