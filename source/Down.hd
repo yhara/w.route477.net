@@ -39,6 +39,6 @@ See [[README|https://github.com/yhara/down]]
 
 !History
 * v0.53(2014/05/19): Moved to github
-* v0.52(2004/02/18): 「閉じる」ボタンを押しても起動してしまうバグを修正 
-* v0.51(2004/01/17): ソースを多少整理、web上にて初公開 
-* v0.50(2003/12/30): C65にて、EndEffectorのおまけとして収録される 
+* v0.52(2004/02/18): Fixed close button did not work
+* v0.51(2004/01/17): Published on the web
+* v0.50(2003/12/30): Bundled with EndEffector in C65
