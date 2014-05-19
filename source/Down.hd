@@ -1,49 +1,44 @@
-針を避けながら下へ下へと下りていくシンプルなアクションゲームです。 
+A simple action game written in Ruby/SDL.
 
-!スクリーンショット
+!Screenshot
+
 http:../softs/down.png
 
+!Download
 
-!ダウンロード
-:Windowsな人: [[down052.zip|http://mono.kmc.gr.jp/~yhara/softs/down052.zip]](バイナリ)
-:unixな人: [[down052.tar.gz|http://mono.kmc.gr.jp/~yhara/softs/down052.tar.gz]] (ソース)
+https://github.com/yhara/down/releases
 
+!Requirements
 
-!動作環境
-:Windows:Windows95,98,Me,NT,2000,XPで動くと思われます。 
-:Unix:Ruby/SDLがインストールされていればOKです。
-:Mac OS X:理論的にはMacOS Xでも動作するはず…です。(参考：[[SDL on Mac OS X|http://www2s.biglobe.ne.jp/~nunokawa/wiki.cgi?page=Ruby%2FSDL+on+Mac+OS+X]]) 
-:BeOS系:[[Zetaでも動いたそうです|http://kim.k-free.net/200402.html#07]]。 
+See [[README|https://github.com/yhara/down]]
 
-!遊び方
-カーソルキーの左右で左右に移動して、下へと下りていってください。針に刺さると画面右の体力ゲージが減っていきます。体力が０になるとゲームオーバーです。 
+!How to play
 
-以下のようなアイテムが出現することもあります。 
-||種類||効果 ||
-||星 || 一定時間無敵になり、針に刺さってもダメージを受けなくなる ||
-||パラシュート ||落下速度が遅くなる ||
-||重り || 落下速度が速くなる||
+!! Buttons
 
-パラシュートをとった状態で針に刺さると、パラシュートは割れてしまいます。また重りはとると落下が速くなってしまうので、なるべく避けた方が良いです。 …が、重りをとったまま無敵状態になると…？ 
+* ← : Move left
+* → : Move right
 
-１段落ちるごとに得点が１点加算されます。別に速く降りたからと言って得点が加算されるわけではないので、気を付けてゆっくり降りていってください。 
+!! Items
 
-!リンク
-Down!!はRuby/SDLを用いて製作されました。
-* [[オブジェクト指向スクリプト言語Ruby|http://www.ruby-lang.org/ja/]]
-* [[SDL(Simple DirectMedia Layer)|http://www.libsdl.org/]] : クロスプラットフォームなマルチメディアライブラリ
-* [[Ruby/SDL|http://www.kmc.gr.jp/~ohai/rubysdl.html]] ： RubyでSDLを使うためのライブラリ
+||!name||!effect ||
+||Star || Invincible ||
+||Parachute || Slow down ||
+||Weight || Speed up||
 
-また、RubyスクリプトをWindowsの実行形式ファイル(.exe)に変換するのにExerbを使用しています。
-* [[Exerb Project|http://exerb.sourceforge.jp/]]
+!! Scores
 
-起動時のダイアログにvrubyを使用しています。またフォームの作成にFormDesignerを使用しています。
-* [[VisualuRuby計画(仮称)|http://www.osk.3web.ne.jp/~nyasu/software/vrproject.html]]
-* [[FormDesigner (雪見酒さんのページ)|http://homepage3.nifty.com/Yukimi_Sake/]]
++1 point for each step.
 
-それぞれの作者の方々に感謝します。 
+!Acknowledgement
 
-! 更新履歴
-*v0.52(2004/02/18): 「閉じる」ボタンを押しても起動してしまうバグを修正 
-*v0.51(2004/01/17): ソースを多少整理、web上にて初公開 
-*v0.50(2003/12/30): C65にて、EndEffectorのおまけとして収録される 
+* Ruby/SDL : http://ohai.github.io/rubysdl/
+* Exerb : http://exerb.sourceforge.jp/
+* vruby(VisualuRuby) : http://www.osk.3web.ne.jp/~nyasu/software/vrproject.html
+* FormDesigner : http://homepage3.nifty.com/Yukimi_Sake/
+
+!History
+* v0.53(2014/05/19): Moved to github
+* v0.52(2004/02/18): 「閉じる」ボタンを押しても起動してしまうバグを修正 
+* v0.51(2004/01/17): ソースを多少整理、web上にて初公開 
+* v0.50(2003/12/30): C65にて、EndEffectorのおまけとして収録される 
