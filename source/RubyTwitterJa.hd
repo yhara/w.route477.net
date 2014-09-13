@@ -63,7 +63,7 @@ Twitterクライアントを作る場合は、プログラムを書いてaccess 
 
 筆者も[[atoken4me|https://github.com/yhara/atoken4me]]というWebベースのを作って使っています。使い方は以下のような感じです。
 
-# http://atoken4me.heroku.com/ を開きます
+# http://atoken4me.herokuapp.com/ を開きます
 # ステップ1で手に入れたConsumer keyとConsumer secretを入力します
 # 表示されたURLを新しいウィンドウで開きます
 # 「承認しますか？」というおなじみの画面が出るので、OKするとPINナンバーがもらえます
