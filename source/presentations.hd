@@ -1,79 +1,93 @@
 これまでにした発表とかの一覧です。
 
+! 2014
+
+||2014/9/21|| 近況報告 [[資料|/d/?date=20140921#p01]] || [[RubyHiroba2014|http://rubyhiroba.org/2014/]] || 20分 ||
+||2014/5/3|| 片付けの話 [[資料|/files/kyotoasterisk/]] || [[Kyoto.なんか|http://hakobe932.hatenablog.com/entries/2014/05/07]] || 15分
+
+! 2013
+
+||2013/6/2|| Ruby on Browser [[資料|/files/ruby_hiroba2013/]] || [[RubyHiroba2013|http://rubyhiroba.org/2013/]] || 5分
+
+! 2012
+
+||2012/10/24 || BiwaSchemeの紹介 [[資料|/files/ilc2012/]] || [[ILC2012 Kyoto|http://www.international-lisp-conference.org/2012/index.html]] LT || 5分
+||2012/9/16 || 自給自足プログラミング [[資料|/files/sprk2012/]] || [[札幌Ruby会議2012|http://sapporo.rubykaigi.org/2012/ja/]] || 30分 
+
 ! 2011
 
-||11/11||Ruby's past, present, and future (version UY) [[資料|https://speakerdeck.com/u/yhara/p/rubys-past-present-and-future-rubyconf-uy]] [[odp|http://route477.net/files/RubyConfUY2011yhara.odp]] || RubyConf Uruguay 2011|| 35分
-||11/08||Ruby's past, present, and future (version AR) [[資料|https://speakerdeck.com/u/yhara/p/rubys-past-present-and-future-rubyconf-ar]] [[odp|http://route477.net/files/RubyConfAR2011yhara-2.0.odp]] || RubyConf Argentina 2011|| 40分
-||08/09||「Rubyで作る奇妙なプログラミング言語」絶版記念講演 ([[資料|http://route477.net/files/niigata/]]) || 新潟大学 || 90分
-||07/16|| Rubyマスターへの道 ([[資料|http://route477.net/files/rk11/]]) || RubyKaigi2011 || 30分
-||07/03|| enumerable-lazy ([[資料|http://route477.net/files/matrk03/]]) || 松江Ruby会議03 || 10分 
+||2011/11/11||Ruby's past, present, and future (version UY) [[資料|https://speakerdeck.com/u/yhara/p/rubys-past-present-and-future-rubyconf-uy]] [[odp|http://route477.net/files/RubyConfUY2011yhara.odp]] || RubyConf Uruguay 2011|| 35分
+||2011/11/08||Ruby's past, present, and future (version AR) [[資料|https://speakerdeck.com/u/yhara/p/rubys-past-present-and-future-rubyconf-ar]] [[odp|http://route477.net/files/RubyConfAR2011yhara-2.0.odp]] || RubyConf Argentina 2011|| 40分
+||2011/08/09||「Rubyで作る奇妙なプログラミング言語」絶版記念講演 ([[資料|http://route477.net/files/niigata/]]) || 新潟大学 || 90分
+||2011/07/16|| Rubyマスターへの道 ([[資料|http://route477.net/files/rk11/]]) || RubyKaigi2011 || 30分
+||2011/07/03|| enumerable-lazy ([[資料|http://route477.net/files/matrk03/]]) || 松江Ruby会議03 || 10分 
 
 ! 2010
 
-||06/??|| Ruby標準化の紹介||KMC OB会||30分?
-||??/??||RubyStationの近況(と未来)||松江RubyKaigi02||5分?
-||??/??||Some study on Rubygame/Future of Ruby Game Packaging||RubyKaigi2010 ゲーム会議||?分
+||2010/06/??|| Ruby標準化の紹介||KMC OB会||30分?
+||2010/??/??||RubyStationの近況(と未来)||松江RubyKaigi02||5分?
+||2010/??/??||Some study on Rubygame/Future of Ruby Game Packaging||RubyKaigi2010 ゲーム会議||?分
 
 ! 2009
 
-||02/02|| RubyStation(仮) || 松江RubyKaigi-01 || 10分弱?
-||02/13|| 「Rubyで作る奇妙なプログラミング言語」の紹介 || OSSサロン#37 || 30分?
-||02/28|| よりよいLispプログラムを目指して(冬) || Shibuya.lisp TT#2 || 5分
-||07/11|| Ruby製アプリケーションを配布するn個の方法 (preview) || Matsue.rb || 43分
-||07/19|| Ruby製アプリケーションを配布するn個の方法 || RubyKaigi2009 || 40分 (35分+質疑)
-||11/07|| _why Ruby? / RubyStation || 関西Ruby会議02 LT || 5分弱 
+||2009/02/02|| RubyStation(仮) || 松江RubyKaigi-01 || 10分弱?
+||2009/02/13|| 「Rubyで作る奇妙なプログラミング言語」の紹介 || OSSサロン#37 || 30分?
+||2009/02/28|| よりよいLispプログラムを目指して(冬) || Shibuya.lisp TT#2 || 5分
+||2009/07/11|| Ruby製アプリケーションを配布するn個の方法 (preview) || Matsue.rb || 43分
+||2009/07/19|| Ruby製アプリケーションを配布するn個の方法 || RubyKaigi2009 || 40分 (35分+質疑)
+||2009/11/07|| _why Ruby? / RubyStation || 関西Ruby会議02 LT || 5分弱 
 
 ! 2008
 
-||02/??|| タプル空間によるブラウザ間通信を備えたScheme処理系の開発 || 修論発表 || 20分
-||02/10|| Ruby1.9のFiberはゲームにも使えるのか || SDL-off 08新春 || 20分くらい？
-||03/09|| SchemeでAjax & Comet || gauche.night#2 || 5分
-||03/18|| タプル空間によるブラウザ間通信を備えたScheme 処理系の開発 || [[IPSJ PRO#68|http://www.graco.c.u-tokyo.ac.jp/~masuhara/ipsj-pro/2007-5/program.html]] || 45分
-||03/20|| BiwaSchemeで遊ぼう (ハンズオン) || KMC春合宿 || 45分
-||05/01|| 良いSchemeのコードを見分ける方法 || プログラミングGauche＆SICP読書会 #1 || 8分くらい？
-||06/21|| KMCの近年 || KMC 0x20周年記念 || 15分?
-||06/22|| ハッカーのためのリポジトリシェルReposh || RejectKaigi2008 || 5分弱
-||08/30|| Unbabel || LL Future || 5分
-||??/??|| Bookmakの紹介 || Kanasan.JS || 15分くらい?
-||12/20|| Rubyで作る奇妙なプログラミング言語の世界 || ジュンク堂書店大阪本店 トークセッション || 60分弱
+||2008/02/??|| タプル空間によるブラウザ間通信を備えたScheme処理系の開発 || 修論発表 || 20分
+||2008/02/10|| Ruby1.9のFiberはゲームにも使えるのか || SDL-off 08新春 || 20分くらい？
+||2008/03/09|| SchemeでAjax & Comet || gauche.night#2 || 5分
+||2008/03/18|| タプル空間によるブラウザ間通信を備えたScheme 処理系の開発 || [[IPSJ PRO#68|http://www.graco.c.u-tokyo.ac.jp/~masuhara/ipsj-pro/2007-5/program.html]] || 45分
+||2008/03/20|| BiwaSchemeで遊ぼう (ハンズオン) || KMC春合宿 || 45分
+||2008/05/01|| 良いSchemeのコードを見分ける方法 || プログラミングGauche＆SICP読書会 #1 || 8分くらい？
+||2008/06/21|| KMCの近年 || KMC 0x20周年記念 || 15分?
+||2008/06/22|| ハッカーのためのリポジトリシェルReposh || RejectKaigi2008 || 5分弱
+||2008/08/30|| Unbabel || LL Future || 5分
+||2008/??/??|| Bookmakの紹介 || Kanasan.JS || 15分くらい?
+||2008/12/20|| Rubyで作る奇妙なプログラミング言語の世界 || ジュンク堂書店大阪本店 トークセッション || 60分弱
 
 ! 2007
 
-||02/17||Plagger meets Ruby|| Ruby勉強会＠関西-14 || 30分?
-||03/17|| 音のプログラミング (==なし崩し的==ハンズオン) || KMC春合宿 || 45分
-||04/16|| 最近のプログラミング言語 || KMC例会 || 20分弱？
-||06/10|| Ruby/SDLとその周辺 || RubyKaigi2007 || 15分
-||06/20||30分でわかるcallccの使い方 || Ruby勉強会＠関西-16 || 20分
-||06/28|| Ruby on Railsのデモ || KMC例会 || 20分くらい？
-||09/23|| プログラミング言語Zu || 言語開発合宿 || 10分
-||11/05|| Javascriptでゲームを書こう || KMC例会 || 30分弱?
-||11/11|| MechanizeとHpricot || 関西オープンソース2007 || 15分
-||12/02|| BiwaSchemeで"Zu"の…いやなんでもない || LiveCoding#5 || 15分?
-||??/??|| RubyScraping || Ruby勉強会＠関西-n || ?分
+||2007/02/17||Plagger meets Ruby|| Ruby勉強会＠関西-14 || 30分?
+||2007/03/17|| 音のプログラミング (==なし崩し的==ハンズオン) || KMC春合宿 || 45分
+||2007/04/16|| 最近のプログラミング言語 || KMC例会 || 20分弱？
+||2007/06/10|| Ruby/SDLとその周辺 || RubyKaigi2007 || 15分
+||2007/06/20||30分でわかるcallccの使い方 || Ruby勉強会＠関西-16 || 20分
+||2007/06/28|| Ruby on Railsのデモ || KMC例会 || 20分くらい？
+||2007/09/23|| プログラミング言語Zu || 言語開発合宿 || 10分
+||2007/11/05|| Javascriptでゲームを書こう || KMC例会 || 30分弱?
+||2007/11/11|| MechanizeとHpricot || 関西オープンソース2007 || 15分
+||2007/12/02|| BiwaSchemeで"Zu"の…いやなんでもない || LiveCoding#5 || 15分?
+||2007/??/??|| RubyScraping || Ruby勉強会＠関西-n || ?分
 
 
 ! 2006
 
-||01/19 || 部内のwebサーバの構成 || KMC例会 || 20分くらい？
-||02/?? || Webアプリケーションのためのブラウザ内Scheme処理系 || 卒論発表 || 5分
-||03/17 || javascriptの話 || KMC春合宿 || 45分
-||06/19 || Lispはなぜ凄いのか (マクロの話) || KMC例会 || 20分くらい？
-||10/16 || Plagger ([[資料|http://kmc.g.hatena.ne.jp/keyword/Plagger]]) || KMC例会 || 30分弱？
+||2006/01/19 || 部内のwebサーバの構成 || KMC例会 || 20分くらい？
+||2006/02/?? || Webアプリケーションのためのブラウザ内Scheme処理系 || 卒論発表 || 5分
+||2006/03/17 || javascriptの話 || KMC春合宿 || 45分
+||2006/06/19 || Lispはなぜ凄いのか (マクロの話) || KMC例会 || 20分くらい？
+||2006/10/16 || Plagger ([[資料|http://kmc.g.hatena.ne.jp/keyword/Plagger]]) || KMC例会 || 30分弱？
 
 ! 2005
 
-||03/20 || 素晴らしきネタ言語の世界 || KMC春合宿 || 45分
-||04/14 || OSの話(Linuxとか) || KMC例会 || ?
-||06/16 || プログラミング言語の歴史？ || KMC例会 || ?
-||11/14 || ? || KMC例会 || ?
+||2005/03/20 || 素晴らしきネタ言語の世界 || KMC春合宿 || 45分
+||2005/04/14 || OSの話(Linuxとか) || KMC例会 || ?
+||2005/06/16 || プログラミング言語の歴史？ || KMC例会 || ?
+||2005/11/14 || ? || KMC例会 || ?
 
 
 ! 2004
 
-||03/19 || ネットワーク概論I (HTTPとかCGIとか) || KMC春合宿 || 90分
-||05/24 || ソーシャルネットワーキング (mixi) || KMC例会 || ?
-||07/05 || Free Softwareとライセンス || KMC例会 || ?
+||2004/03/19 || ネットワーク概論I (HTTPとかCGIとか) || KMC春合宿 || 90分
+||2004/05/24 || ソーシャルネットワーキング (mixi) || KMC例会 || ?
+||2004/07/05 || Free Softwareとライセンス || KMC例会 || ?
 
 ! 2003
 
-||03/08|| Rubyでゲームをつくろう || KMC春合宿 || 45分
+||2003/03/08|| Rubyでゲームをつくろう || KMC春合宿 || 45分
