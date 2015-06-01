@@ -85,4 +85,14 @@ helpers do
   def title_of(path)
     return CGI.unescape(File.basename(path, ".html")).encode("utf-8", "euc-jp")
   end
+
+  def link_to_page(title)
+    # double escape is needed (eg. "Scheme/SRFI18")
+    url = "/w/#{CGI.escape CGI.escape title}.html"
+    return [
+      "<a href='#{url}'>",
+      title,
+      "</a>"
+    ].join
+  end
 end

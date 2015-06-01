@@ -1,0 +1,7 @@
+h2 ページ一覧
+
+- sitemap.resources.each do |x|
+  - next if File.basename(x.path) == "CNAME"
+  - next if x.data.old
+  p
+    = link_to title_of(x.path), "/w/#{x.path.gsub('%', '%25')}"
