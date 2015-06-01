@@ -18,5 +18,15 @@ module Middleman::PreviewServer
 end
 
 Middleman::PreviewServer.preview_in_rack
-run Middleman::PreviewServer.app.class.to_rack_app
+
+app = Middleman::PreviewServer.app.class.to_rack_app
+wrapper = proc{|env|
+  if env["PATH_INFO"] =~ %r{/w/(.*)}
+    [301, {"Location" => "http://#{env['SERVER_NAME']}/#{$1}"}, []]
+  else
+    app.call(env)
+  end
+}
+
+run wrapper
 
