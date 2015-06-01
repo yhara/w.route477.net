@@ -1,4 +1,4 @@
-[[R6RSMemo]]
+[[R6RSMemo.html]]
 
 * record has_many fields
 * record has_one(belongs_to?) record-type descripter

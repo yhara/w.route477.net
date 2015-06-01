@@ -1,6 +1,7 @@
 R6RSに関するメモです。
 
-{{toc_here}}
+* [[R6RSMemo/Records|R6RSMemo%252FRecords.html]]
+* [[R6RSMemo/Exception|R6RSMemo%252FException.html]]
 
 ! 7 ライブラリ
 ある機能を提供するコードを名前空間に分ける機能を提供する。
